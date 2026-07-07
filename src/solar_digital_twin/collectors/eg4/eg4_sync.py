@@ -6,9 +6,9 @@ from datetime import datetime
 
 import yaml
 
-from eg4_client import EG4PortalClient, save_json
-from eg4_database import connect, upsert_runtime, upsert_energy, upsert_day_multiline, upsert_month_column, upsert_set_records
-from eg4_reports import export_reports
+from solar_digital_twin.collectors.eg4.eg4_client import EG4PortalClient, save_json
+from solar_digital_twin.collectors.eg4.eg4_database import connect, upsert_runtime, upsert_energy, upsert_day_multiline, upsert_month_column, upsert_set_records
+from solar_digital_twin.collectors.eg4.eg4_reports import export_reports
 
 
 def sha256_file(path):
