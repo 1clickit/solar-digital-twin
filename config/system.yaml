@@ -1,0 +1,8 @@
+project:
+  name: Solar Digital Twin
+  site: The Gardners
+
+paths:
+  database: eg4_digital_twin.sqlite
+  evidence: evidence
+  reports: reports
