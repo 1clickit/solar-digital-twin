@@ -13,3 +13,6 @@ reports/
 
 # Local configuration overrides
 config/*.local.yaml
+
+# Packaging/build artifacts
+*.egg-info/
