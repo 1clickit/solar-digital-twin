@@ -12,7 +12,7 @@
 
 ## Last Verified Commit
 
-`1d91f1e` — Configure EG4 collector with YAML
+`25b164e` — Add initial system configuration
 
 ## Completed
 
@@ -24,9 +24,13 @@
 - Engineering Bible established.
 - EG4 collector imported and working.
 - Added `config/eg4.yaml`.
-- EG4 collector now reads serial/database/evidence/reports paths from YAML.
+- Added `config/system.yaml`.
+- Added `config/logging.yaml`.
+- Runtime artifacts ignored by Git (`.gitignore`).
+- EG4 collector reads configuration from YAML.
 - EG4 username/password are prompted interactively and are not stored.
 - Collector successfully tested on 2026-07-07.
+- Repository verified clean after all commits.
 
 ## Current Development Rules
 
@@ -35,13 +39,15 @@
 - Engineering Bible is the design authority.
 - Git is the source of truth for code.
 - Preserve working functionality.
+- Verify a clean working tree after every commit.
 
 ## Next Milestone
 
-Standardize project configuration:
+Create a shared configuration loader.
 
-```text
-config/
-    eg4.yaml
-    system.yaml
-    logging.yaml
+Objectives:
+
+- One module loads all YAML configuration.
+- Every collector uses the same configuration API.
+- Keep the change to one small tested commit.
+- Preserve existing collector behavior.
