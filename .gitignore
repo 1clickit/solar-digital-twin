@@ -1,6 +1,15 @@
+# Python
 .venv/
 __pycache__/
 *.pyc
+
+# Generated project data
+evidence/
+reports/
+
+# SQLite database
 *.sqlite
 *.db
-logs/
+
+# Local configuration overrides
+config/*.local.yaml
