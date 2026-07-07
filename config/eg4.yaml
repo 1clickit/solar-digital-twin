@@ -1,0 +1,7 @@
+serial: "44830P0125"
+
+database: "eg4_digital_twin.sqlite"
+
+evidence_dir: "evidence"
+
+reports_dir: "reports"
