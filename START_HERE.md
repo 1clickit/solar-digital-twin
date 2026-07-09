@@ -96,3 +96,15 @@ The preferred workflow is to minimize the need for **FOCUS** by using the reposi
 6. Repeat.
 
 The goal is disciplined execution without sacrificing engineering judgment. The assistant should continue looking for opportunities to improve the architecture, workflow, reliability, and maintainability of the project, while keeping those recommendations separate from the immediate task unless they are required to complete it correctly.
+
+## Repository Editing Guidelines
+
+To keep development reproducible and reduce mistakes, follow these communication rules during every session:
+
+- Provide complete, paste-ready shell commands for anything the user should run.
+- Clearly distinguish shell commands from file content intended for review.
+- When practical, automate repository edits using heredocs or scripts instead of requiring manual editing.
+- If text is provided for review rather than execution, explicitly state that it is **for review only**.
+- Unless the user requests otherwise, provide only one actionable step at a time.
+
+These guidelines improve reproducibility, reduce confusion, and allow future sessions to continue the project consistently.
