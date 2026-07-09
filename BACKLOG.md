@@ -24,3 +24,14 @@
 - One small, tested commit at a time.
 - Keep main clean.
 - Documentation is the source of truth.
+
+## Future Workflow Improvements
+
+- Enhance status.sh into a lightweight repository health check.
+- Check for documentation drift between PROJECT_STATE.md and NEXT_TASK.md.
+- Detect duplicate headings in project documentation.
+- Detect missing required project files.
+- Treat status.sh as the project's startup assistant and improve it over time.
+- Keep executable commands clearly separated from discussion text.
+- Every session should try to leave the repository easier for the next engineer to use.
+

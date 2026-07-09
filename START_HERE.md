@@ -25,6 +25,22 @@ repository.
 These documents contain everything required to resume
 development.
 
+## Session Lifecycle
+
+Every session follows the same lifecycle:
+
+1. Beginning of session: Follow `START_HERE.md`.
+2. Review repository status and documentation.
+3. Complete one small, tested engineering step.
+4. Update documentation as needed.
+5. End of session: Follow `SESSION_END.md`.
+
+When conversation length begins reducing response quality:
+
+1. Finish the current small task.
+2. Follow `SESSION_END.md`.
+3. Recommend beginning a new session.
+
 ## Engineering Philosophy
 
 The repository remembers the project.
@@ -102,10 +118,19 @@ The goal is disciplined execution without sacrificing engineering judgment. The 
 To keep development reproducible and reduce mistakes, follow these communication rules during every session:
 
 - Provide complete, paste-ready shell commands for anything the user should run.
+- Introduce executable terminal commands with exactly: **Please run the following command:**
+- Only use shell command blocks when the user is expected to execute them.
+- Do not use shell command blocks for examples, filenames, future ideas, or possible utilities.
+- When discussing possible future files, scripts, directories, or utilities, describe them in plain text.
+- Example: **Possible future utilities:** `check_repo.sh`, `tools/check_repository.py`
 - Clearly distinguish shell commands from file content intended for review.
 - When practical, automate repository edits using heredocs or scripts instead of requiring manual editing.
 - If text is provided for review rather than execution, explicitly state that it is **for review only**.
 - Unless the user requests otherwise, provide only one actionable step at a time.
+- End responses with a clear status or decision point when practical.
+- Use phrases such as: **Ready to execute**, **Waiting for results**, **Discussion only**, **For review only**, or **A natural checkpoint has been reached**.
+- When appropriate, ask whether the user wants to proceed with the suggested changes.
+- If a natural checkpoint has been reached, ask whether the user would like to stop and follow `SESSION_END.md`.
 
 These guidelines improve reproducibility, reduce confusion, and allow future sessions to continue the project consistently.
 
