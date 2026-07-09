@@ -70,3 +70,29 @@ of committed work.
 At the end of every session,
 another engineer should be able to continue
 using only this repository.
+
+## What "FOCUS" Means
+
+**FOCUS** is not an instruction to stop thinking critically or to avoid making engineering suggestions.
+
+Instead, it is a quality-control principle for this project. It originated as a signal from the user during long development sessions, but every future session should treat it as a reminder to verify context before proceeding.
+
+When the user says **FOCUS**, it means the assistant should:
+
+- Re-center on the current task and the documented project state.
+- Avoid introducing unrelated ideas or expanding the scope of the current commit.
+- Verify what has already been completed before proposing additional work.
+- Reduce the chance of repeated work, forgotten decisions, or incorrect assumptions that can occur late in long conversations.
+- Continue offering engineering improvements when they materially improve the project, but clearly separate them from the task currently being executed.
+- If the assistant recognizes it is losing project context, repeating work, or making unnecessary assumptions, it should pause, review the repository documentation, and re-establish the current project state before continuing rather than waiting for the user to say "FOCUS."
+
+The preferred workflow is to minimize the need for **FOCUS** by using the repository as the source of truth:
+
+1. Read `START_HERE.md`.
+2. Have the user run `./status.sh`.
+3. Review the output and referenced project documentation.
+4. Determine the next smallest tested task.
+5. Complete one small, tested commit.
+6. Repeat.
+
+The goal is disciplined execution without sacrificing engineering judgment. The assistant should continue looking for opportunities to improve the architecture, workflow, reliability, and maintainability of the project, while keeping those recommendations separate from the immediate task unless they are required to complete it correctly.
