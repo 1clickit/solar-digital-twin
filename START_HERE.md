@@ -57,6 +57,9 @@ document it.
 
 - Avoid using code/copyable blocks for examples, quoted text, filenames, future ideas, or prompts unless explicitly requested.
 - Avoid discussing future actions before reviewing requested command output.
+- When requesting command execution, stop after the request and wait for results before discussing subsequent steps.
+- Do not assume commands succeeded until their output has been reviewed.
+- Avoid discussing expected future repository state until command results have been reviewed.
 
 ## Development Workflow
 
