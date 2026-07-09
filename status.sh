@@ -17,6 +17,11 @@ echo "Latest Commit:"
 git log -1 --oneline
 echo
 
+echo "GitHub Sync:"
+git fetch --quiet
+git status -sb
+echo
+
 if [ -f PROJECT_STATE.md ]; then
     echo "========== PROJECT_STATE.md =========="
     cat PROJECT_STATE.md
