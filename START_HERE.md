@@ -108,3 +108,15 @@ To keep development reproducible and reduce mistakes, follow these communication
 - Unless the user requests otherwise, provide only one actionable step at a time.
 
 These guidelines improve reproducibility, reduce confusion, and allow future sessions to continue the project consistently.
+
+## Repository Location Guidance
+
+GitHub repository: `1clickit/solar-digital-twin`
+
+The assistant should not assume the local checkout location.
+
+The user should run `./status.sh` from the repository root.
+
+If the user is not already in the repository root, the assistant should ask the user to navigate to the local checkout of `1clickit/solar-digital-twin` first, then run `./status.sh`.
+
+Do not invent local paths such as `~/solar-digital-twin` or `/home/chris/solar-digital-twin` unless the user has provided or confirmed that path in the current session.
