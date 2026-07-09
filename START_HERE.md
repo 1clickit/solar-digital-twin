@@ -154,6 +154,31 @@ If the user is not already in the repository root, the assistant should ask the 
 
 Do not invent local paths such as `~/solar-digital-twin` or `/home/chris/solar-digital-twin` unless the user has provided or confirmed that path in the current session.
 
+
+## Response Checklist
+
+Before sending a response, verify:
+
+- Am I only discussing observed results?
+- Am I assuming command success before seeing output?
+- Am I placing non-executable text into code/copyable blocks?
+- Could any example be mistaken for something the user should type?
+- Am I proposing more than one action?
+- Am I creating a new rule when an existing rule already covers the issue?
+
+If any answer is yes, revise the response before sending.
+
+## Startup Requirement
+
+Before proposing work, review:
+
+1. Communication Workflow
+2. Response Checklist
+3. Startup Decision Process
+
+Treat these as mandatory operating instructions.
+
+
 ## Startup Decision Process
 
 After reviewing the output of `./status.sh`:
