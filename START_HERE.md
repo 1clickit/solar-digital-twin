@@ -53,6 +53,11 @@ conversation memory.
 If something would help future sessions,
 document it.
 
+## Communication Workflow
+
+- Avoid using code/copyable blocks for examples, quoted text, filenames, future ideas, or prompts unless explicitly requested.
+- Avoid discussing future actions before reviewing requested command output.
+
 ## Development Workflow
 
 Always work using small engineering iterations.
