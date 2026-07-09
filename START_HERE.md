@@ -120,3 +120,15 @@ The user should run `./status.sh` from the repository root.
 If the user is not already in the repository root, the assistant should ask the user to navigate to the local checkout of `1clickit/solar-digital-twin` first, then run `./status.sh`.
 
 Do not invent local paths such as `~/solar-digital-twin` or `/home/chris/solar-digital-twin` unless the user has provided or confirmed that path in the current session.
+
+## Startup Decision Process
+
+After reviewing the output of `./status.sh`:
+
+1. If the working tree is not clean, inspect the uncommitted changes before proposing new work.
+2. Treat `PROJECT_STATE.md` as the authoritative description of the current engineering state.
+3. If project documents disagree about the next task, resolve the documentation first so there is a single source of truth.
+4. Review the latest repository state before proposing changes.
+5. Propose one small, testable engineering step at a time.
+6. Prefer updating project documentation when improvements to the workflow are identified.
+
