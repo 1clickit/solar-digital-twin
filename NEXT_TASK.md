@@ -50,15 +50,11 @@ Generate:
 
 reports/engineering_daily_report.md
 
-## Communication Improvements To Test
+## Communication Improvements
 
-Before continuing major engineering work, verify and improve:
+These have been promoted into START_HERE.md.
 
-1. Avoid using code/copyable blocks for examples, quoted text, filenames, future ideas, or prompts unless explicitly requested.
-
-2. Avoid discussing future actions before reviewing requested command output.
-
-After validating these communication improvements, continue with:
+Continue with:
 
 Create:
 
