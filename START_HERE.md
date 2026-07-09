@@ -132,3 +132,43 @@ After reviewing the output of `./status.sh`:
 5. Propose one small, testable engineering step at a time.
 6. Prefer updating project documentation when improvements to the workflow are identified.
 
+
+## Generated Artifacts
+
+Generated output is not considered source code.
+
+Examples include:
+
+- reports/
+- evidence/
+- cache/
+- temporary analysis output
+
+Unless there is a specific engineering reason to preserve an artifact, generated files should remain ignored by Git.
+
+When working on generators:
+
+1. Modify the source code.
+2. Generate the artifacts locally.
+3. Verify the results.
+4. Commit the source code only.
+
+## Generated Artifacts
+
+Generated output is not considered source code.
+
+Examples include:
+
+- reports/
+- evidence/
+- cache/
+- temporary analysis output
+
+Unless the project documentation explicitly states otherwise, generated artifacts such as reports, evidence captures, caches, and temporary analysis output should not be committed to Git.
+
+When working on generators:
+
+1. Modify the source code.
+2. Generate the artifacts locally.
+3. Verify the generated output.
+4. Commit the source code unless the generated artifact is intentionally version-controlled.
