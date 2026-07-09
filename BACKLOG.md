@@ -35,3 +35,14 @@
 - Keep executable commands clearly separated from discussion text.
 - Every session should try to leave the repository easier for the next engineer to use.
 
+## Future Repository Opportunities
+
+- Evaluate whether the Solar Digital Twin workflow should evolve into a reusable engineering framework repository.
+- Potential areas:
+  - AI engineer onboarding
+  - Repository memory architecture
+  - Session lifecycle management
+  - Documentation-driven development
+  - Human/AI collaboration standards
+  - Project health monitoring
+
