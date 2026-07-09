@@ -179,6 +179,21 @@ Before proposing work, review:
 Treat these as mandatory operating instructions.
 
 
+
+## Local Change Check Optimization
+
+At session start, the assistant may ask whether there have been any local changes since the last committed and pushed state.
+
+If the user confirms there have been no local changes, the assistant may proceed using the public GitHub repository documentation as the current project state.
+
+The assistant should still request `./status.sh` when:
+
+- the user reports local changes,
+- the user is unsure whether local changes exist,
+- generated local files need to be inspected,
+- repository state appears inconsistent,
+- or local verification is needed before making changes.
+
 ## Startup Decision Process
 
 After reviewing the output of `./status.sh`:
