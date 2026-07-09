@@ -1,0 +1,78 @@
+# PROJECT INDEX
+
+This document is the navigation map for the
+Solar Digital Twin repository.
+
+The repository is the project's memory.
+
+Every important document, script and
+directory should be referenced here.
+
+## Session Startup
+
+Read in this order:
+
+1. START_HERE.md
+2. TEAM.md
+3. CONTRIBUTING.md
+4. PROJECT_STATE.md
+5. NEXT_TASK.md
+6. SESSION_END.md
+
+## Engineering Documents
+
+START_HERE.md
+    Session startup instructions.
+
+TEAM.md
+    Team roles and communication.
+
+CONTRIBUTING.md
+    Engineering workflow and standards.
+
+PROJECT_STATE.md
+    Current engineering status.
+
+NEXT_TASK.md
+    Exactly where development resumes.
+
+BACKLOG.md
+    Future work and deferred ideas.
+
+SESSION_END.md
+    End-of-session checklist.
+
+## Repository Layout
+
+src/
+    Application source code.
+
+config/
+    Configuration files.
+
+docs/
+    Project documentation.
+
+database/
+    SQLite schemas and databases.
+
+reports/
+    Generated engineering reports.
+
+evidence/
+    Captured forensic evidence.
+
+scripts/
+    Utility and maintenance scripts.
+
+## Repository Philosophy
+
+GitHub is the authoritative record of
+all committed engineering work.
+
+The local VM is the engineering workspace.
+
+Every session should improve the repository
+so that future engineers require less
+conversation and more documentation.
+
