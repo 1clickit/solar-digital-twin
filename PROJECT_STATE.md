@@ -1,0 +1,58 @@
+# Solar Digital Twin - Project State
+
+Current Milestone:
+Visible EG4 MVP
+
+Next Task:
+Create eg4_daily_report.py
+
+## Repository
+https://github.com/1clickit/solar-digital-twin
+
+## VM
+solardt
+
+## Working Directory
+/home/chris/solar-digital-twin
+
+## Current Branch
+main
+
+## Current Status
+- EG4 collector operational
+- SQLite database operational
+- Evidence capture operational
+- CSV report generation operational
+- Project published to GitHub
+
+## Next Task
+Create reporting package:
+
+src/solar_digital_twin/reporting/
+
+Implement:
+
+src/solar_digital_twin/reporting/eg4_daily_report.py
+
+First output:
+
+reports/engineering_daily_report.md
+
+## Do Not Change Yet
+- EG4 collector behavior
+- SQLite schema
+- Home Assistant integration
+- Additional collectors
+
+## Startup Command
+cd /home/chris/solar-digital-twin
+source .venv/bin/activate
+./status.sh
+
+## Workflow
+- One tested step at a time.
+- Test before every commit.
+- Commit every completed milestone.
+- Keep main clean.
+- Push to GitHub at session end.
+- Engineering Bible is the design authority.
