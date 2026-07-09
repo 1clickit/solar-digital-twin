@@ -172,3 +172,13 @@ When working on generators:
 2. Generate the artifacts locally.
 3. Verify the generated output.
 4. Commit the source code unless the generated artifact is intentionally version-controlled.
+
+## Terminal Paste Guidance
+
+When providing shell commands for this project:
+
+- Prefer small, pasteable command blocks.
+- Keep heredocs short when practical, usually about 30-40 lines or less.
+- Prefer appending or patching existing files over replacing large files in one paste.
+- If a heredoc appears to fail, first suspect an incomplete paste or browser issue before suspecting Bash, the terminal, or the VM.
+- Do not recommend rebooting the VM unless the shell or system itself is clearly malfunctioning.
