@@ -2,26 +2,24 @@
 
 ## Objective
 
-Document the EG4 refresh/report script.
+Review the refreshed EG4 engineering report and choose the next MVP improvement.
 
 ## Context
 
-eg4_refresh_report.sh now runs the existing EG4 sync script and then regenerates engineering_daily_report.md.
+The EG4 refresh/report script is complete, tested, pushed, and documented.
 
-The script was tested successfully and pushed.
+Current standard refresh command:
+
+./eg4_refresh_report.sh
 
 ## Data Source
 
-Repository documentation.
-
-Do not modify collector behavior.
+Use the refreshed engineering report and repository documentation.
 
 ## Next Improvement
 
-Add the refresh/report command to project documentation so future sessions know the standard way to refresh EG4 data and regenerate the report.
+Review current report findings and decide whether the next MVP improvement should be reporting, collector refinement, Home Assistant integration, or another visible output.
 
 ## Success
 
-Repository documentation clearly shows that EG4 data and the engineering report can be refreshed with:
-
-./eg4_refresh_report.sh
+The next engineering target is clearly documented before code changes begin.
