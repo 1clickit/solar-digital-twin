@@ -6,7 +6,15 @@ Improve engineering_daily_report.md content.
 
 ## Context
 
-The EG4 month energy unit normalization task is complete.
+Recent reporting-only improvements are complete:
+
+- Month energy units normalized.
+- AC-couple active/off percentages added.
+- AC-couple transition counts added.
+- AC-couple/PV-channel finding added.
+- Missing frequency telemetry documented.
+- Source data coverage and source data age added.
+- AC-couple active threshold shown.
 
 ## Data Source
 
@@ -14,6 +22,10 @@ Use existing collector CSV output only.
 
 Do not modify the collector.
 
+## Next Improvement
+
+Add clearer stale-data guidance when source data is old.
+
 ## Success
 
-The report gives clearer engineering insight from existing EG4 data while remaining reporting-only.
+The report makes it obvious whether the generated report reflects current EG4 data or older collector output.
