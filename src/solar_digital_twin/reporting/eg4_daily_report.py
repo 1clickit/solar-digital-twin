@@ -205,6 +205,7 @@ def build_report() -> str:
         day_rows = [
             ["Sample range", summarize_range(day, "sample_time")],
             ["Samples", str(len(day))],
+            ["AC-couple active threshold", "> 50 W"],
             ["AC-couple active samples", str(len(active_ac))],
             ["AC-couple active percent", fmt_num(active_pct, "%")],
             ["AC-couple low/off samples", str(len(low_ac))],
