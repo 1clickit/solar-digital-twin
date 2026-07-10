@@ -117,14 +117,24 @@ def build_report() -> str:
     month = read_csv("month_energy_days.csv")
     records = read_csv("set_records.csv")
 
+    coverage_rows = [
+        ["Runtime snapshots", summarize_range(runtime, "server_time")],
+        ["Energy snapshots", summarize_range(energy, "server_time")],
+        ["Day telemetry", summarize_range(day, "sample_time")],
+        ["Month energy days", summarize_range(month, "day")],
+        ["Remote setting records", summarize_range(records, "record_time")],
+    ]
+
     lines: list[str] = [
         "# EG4 Engineering Daily Report",
         "",
         f"Generated: {now}",
         "",
-        "## Source Files",
+        "## Source Data Coverage",
         "",
     ]
+    lines.extend(markdown_table(["Dataset", "Range"], coverage_rows))
+    lines.extend(["", "## Source Files", ""])
 
     source_rows = []
     for filename in CSV_FILES:
