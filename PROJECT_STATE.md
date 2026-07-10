@@ -4,7 +4,7 @@ Current Milestone:
 Visible EG4 MVP
 
 Next Task:
-Improve engineering_daily_report.md content
+Document EG4 refresh/report script
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -31,6 +31,9 @@ src/solar_digital_twin/reporting/eg4_daily_report.py
 
 Primary output:
 reports/engineering_daily_report.md
+
+Refresh command:
+./eg4_refresh_report.sh
 
 ## Do Not Change Yet
 - EG4 collector behavior
