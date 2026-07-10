@@ -2,7 +2,7 @@
 
 ## Objective
 
-Add an engineering findings section to the generated EG4 daily report.
+Verify and normalize EG4 month energy units in the generated daily report.
 
 ## Existing Implementation
 
@@ -14,25 +14,31 @@ reports/engineering_daily_report.md
 
 ## Completed Previous Work
 
-The EG4 daily report now:
+The EG4 daily report now includes:
 
-- Reads existing collector CSV output.
-- Summarizes source files.
-- Shows latest runtime data.
-- Shows latest energy data.
-- Summarizes day telemetry.
-- Reads remote setting names from raw JSON records.
-- Ignores empty future month energy rows.
+- Source file summary.
+- Latest runtime snapshot.
+- Latest energy snapshot.
+- Day telemetry summary.
+- Month energy summary using the latest non-empty day.
+- Remote setting names read from raw JSON records.
+- Plain-English engineering findings.
+
+## Reason
+
+The month energy CSV appears to report values such as `121.0`, while the daily energy snapshot reports values such as `12.7 kWh`.
+
+The report should avoid misleading unit labels until the month-column scale is confirmed.
 
 ## Data Source
 
-Read the existing CSV reports produced by the EG4 collector.
+Read existing collector CSV output.
 
 Do not modify the collector.
 
 ## Success
 
-The Markdown report includes a plain-English engineering findings section that highlights notable conditions such as AC-couple activity, low/off samples, latest real month-energy day, and recent remote setting changes.
+The month energy section clearly reports correct units or explicitly labels unconfirmed raw values.
 
 ## Notes
 
