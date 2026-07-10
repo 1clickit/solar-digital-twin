@@ -291,9 +291,11 @@ def build_report() -> str:
         ac_values = values(day, "ac_couple_power_w")
         active_ac = [value for value in ac_values if value > 50]
         low_ac = [value for value in ac_values if value <= 50]
+        active_pct = (len(active_ac) / len(ac_values) * 100) if ac_values else None
+        low_pct = (len(low_ac) / len(ac_values) * 100) if ac_values else None
 
         findings.append(
-            f"- AC-couple activity appeared in {len(active_ac)} of {len(day)} day samples."
+            f"- AC-couple activity appeared in {len(active_ac)} of {len(day)} day samples ({fmt_num(active_pct, '%')})."
         )
 
         if ac_values:
@@ -303,7 +305,7 @@ def build_report() -> str:
 
         if low_ac:
             findings.append(
-                f"- AC-couple low/off samples were present: {len(low_ac)} samples."
+                f"- AC-couple low/off samples were present: {len(low_ac)} samples ({fmt_num(low_pct, '%')})."
             )
     else:
         findings.append("- No day telemetry samples were available.")
