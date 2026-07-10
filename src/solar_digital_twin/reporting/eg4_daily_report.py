@@ -90,6 +90,18 @@ def summarize_range(rows: list[dict[str, str]], key: str) -> str:
     return f"{items[0]} to {items[-1]}"
 
 
+def latest_datetime(rows: list[dict[str, str]], key: str) -> datetime | None:
+    timestamps = []
+    for row in rows:
+        value = field(row, key)
+        if value == "n/a":
+            continue
+        try:
+            timestamps.append(datetime.fromisoformat(value))
+        except ValueError:
+            continue
+    return max(timestamps) if timestamps else None
+
 
 def month_energy_kwh(row: dict[str, str], key: str) -> float | None:
     value = as_float(row, key)
@@ -108,7 +120,8 @@ def markdown_table(headers: list[str], rows: list[list[str]]) -> list[str]:
 
 
 def build_report() -> str:
-    now = datetime.now().isoformat(timespec="seconds")
+    now_dt = datetime.now()
+    now = now_dt.isoformat(timespec="seconds")
 
     runtime = read_csv("runtime_snapshots.csv")
     energy = read_csv("energy_snapshots.csv")
@@ -117,7 +130,25 @@ def build_report() -> str:
     month = read_csv("month_energy_days.csv")
     records = read_csv("set_records.csv")
 
+    latest_source_dt = max(
+        [
+            dt for dt in [
+                latest_datetime(runtime, "server_time"),
+                latest_datetime(energy, "server_time"),
+                latest_datetime(day, "sample_time"),
+                latest_datetime(records, "record_time"),
+            ]
+            if dt is not None
+        ],
+        default=None,
+    )
+    source_age = "n/a"
+    if latest_source_dt is not None:
+        source_age = f"{(now_dt - latest_source_dt).total_seconds() / 3600:.1f} hours"
+
     coverage_rows = [
+        ["Latest timestamped source", latest_source_dt.isoformat(sep=" ") if latest_source_dt else "n/a"],
+        ["Source data age", source_age],
         ["Runtime snapshots", summarize_range(runtime, "server_time")],
         ["Energy snapshots", summarize_range(energy, "server_time")],
         ["Day telemetry", summarize_range(day, "sample_time")],
