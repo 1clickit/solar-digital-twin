@@ -188,12 +188,16 @@ def build_report() -> str:
 
         active_ac = [v for v in ac_values if v > 50]
         low_ac = [v for v in ac_values if v <= 50]
+        active_pct = (len(active_ac) / len(ac_values) * 100) if ac_values else None
+        low_pct = (len(low_ac) / len(ac_values) * 100) if ac_values else None
 
         day_rows = [
             ["Sample range", summarize_range(day, "sample_time")],
             ["Samples", str(len(day))],
             ["AC-couple active samples", str(len(active_ac))],
+            ["AC-couple active percent", fmt_num(active_pct, "%")],
             ["AC-couple low/off samples", str(len(low_ac))],
+            ["AC-couple low/off percent", fmt_num(low_pct, "%")],
             ["Max AC-couple power", fmt_num(max(ac_values) if ac_values else None, " W")],
             ["Average active AC-couple power", fmt_num(mean(active_ac) if active_ac else None, " W")],
             ["Max solar PV power", fmt_num(max(pv_values) if pv_values else None, " W")],
