@@ -2,22 +2,24 @@
 
 ## Objective
 
-Refresh EG4 source data and regenerate engineering_daily_report.md.
+Create a single EG4 refresh/report command.
 
 ## Context
 
-Recent reporting-only improvements are complete, including stale source data detection.
+EG4 source data was refreshed and engineering_daily_report.md was regenerated successfully.
+
+The report now shows fresh source data with no stale-data warning.
 
 ## Data Source
 
-Use existing collector CSV output.
+Use the existing EG4 sync script and existing report generator.
 
-Do not modify the collector.
+Do not modify collector behavior.
 
 ## Next Improvement
 
-Run the existing EG4 collector/report workflow so the report reflects current data instead of stale July 7 data.
+Add a short repeatable command or script that runs EG4 sync and then regenerates engineering_daily_report.md.
 
 ## Success
 
-engineering_daily_report.md shows current source data coverage and no stale-data warning when collector output is fresh.
+The user can refresh EG4 data and regenerate the daily engineering report with one clear command.
