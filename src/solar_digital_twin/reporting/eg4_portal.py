@@ -127,7 +127,7 @@ def engineering_findings() -> list[str]:
     return findings or ["No engineering findings found."]
 
 
-def latest_rows() -> tuple[dict[str, str], dict[str, str], datetime | None]:
+def latest_rows() -> tuple[dict[str, str], dict[str, str], dict[str, str], datetime | None]:
     runtime = read_csv("runtime_snapshots.csv")
     energy = read_csv("energy_snapshots.csv")
     day = read_csv("day_multiline_samples.csv")
@@ -138,7 +138,8 @@ def latest_rows() -> tuple[dict[str, str], dict[str, str], datetime | None]:
     )
     latest_runtime = runtime[-1] if runtime else {}
     latest_energy = energy[-1] if energy else {}
-    return latest_runtime, latest_energy, latest_time
+    latest_day = day[-1] if day else {}
+    return latest_runtime, latest_energy, latest_day, latest_time
 
 
 CSS = """
@@ -159,12 +160,12 @@ li{margin:8px 0}
 
 def build_portal() -> str:
     now = datetime.now()
-    runtime, energy, latest_time = latest_rows()
+    runtime, energy, day, latest_time = latest_rows()
 
     status = field(runtime, "status_text")
     soc = as_float(runtime, "soc")
-    ac_power = as_float(runtime, "ac_couple_power_w")
-    consumption = as_float(runtime, "consumption_power_w")
+    ac_power = as_float(day, "ac_couple_power_w")
+    load = as_float(day, "consumption_w")
     source_time = latest_time.isoformat(sep=" ") if latest_time else "n/a"
 
     if latest_time:
@@ -194,7 +195,7 @@ def build_portal() -> str:
 {metric_card("System Status", status, field(runtime, "fw_code"))}
 {gauge_card("Battery SOC", soc, 100, "%")}
 {gauge_card("AC-couple Power", ac_power, 5400, " W")}
-{gauge_card("Consumption", consumption, 12000, " W")}
+{gauge_card("Load", load, 12000, " W")}
 {metric_card("Latest Source Time", source_time, freshness)}
 {metric_card("Today Usage", fmt_num(as_float(energy, "today_usage_kwh"), " kWh"))}
 </div>

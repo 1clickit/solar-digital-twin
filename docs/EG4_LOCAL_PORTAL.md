@@ -43,6 +43,6 @@ Current dashboard shows:
 - system status
 - battery SOC gauge
 - AC-couple power gauge
-- consumption gauge
+- load gauge
 - data freshness/latest source time
 - latest engineering findings
