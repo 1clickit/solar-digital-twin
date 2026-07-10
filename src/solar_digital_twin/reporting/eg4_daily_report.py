@@ -90,6 +90,13 @@ def summarize_range(rows: list[dict[str, str]], key: str) -> str:
     return f"{items[0]} to {items[-1]}"
 
 
+
+def month_energy_kwh(row: dict[str, str], key: str) -> float | None:
+    value = as_float(row, key)
+    if value is None:
+        return None
+    return value / 10
+
 def markdown_table(headers: list[str], rows: list[list[str]]) -> list[str]:
     lines = [
         "| " + " | ".join(headers) + " |",
@@ -223,13 +230,13 @@ def build_report() -> str:
             ["Month", field(latest_day, "month_text")],
             ["Days reported", str(len(month))],
             ["Latest day", field(latest_day, "day")],
-            ["Latest AC-couple energy", fmt_num(as_float(latest_day, "e_ac_couple_day"), " kWh")],
-            ["Latest load energy", fmt_num(as_float(latest_day, "e_load_day"), " kWh")],
-            ["Latest consumption energy", fmt_num(as_float(latest_day, "e_consumption_day"), " kWh")],
-            ["Latest PV1 energy", fmt_num(as_float(latest_day, "e_pv1_day"), " kWh")],
-            ["Latest PV2 energy", fmt_num(as_float(latest_day, "e_pv2_day"), " kWh")],
-            ["Latest battery charge", fmt_num(as_float(latest_day, "e_chg_day"), " kWh")],
-            ["Latest battery discharge", fmt_num(as_float(latest_day, "e_dischg_day"), " kWh")],
+            ["Latest AC-couple energy", fmt_num(month_energy_kwh(latest_day, "e_ac_couple_day"), " kWh")],
+            ["Latest load energy", fmt_num(month_energy_kwh(latest_day, "e_load_day"), " kWh")],
+            ["Latest consumption energy", fmt_num(month_energy_kwh(latest_day, "e_consumption_day"), " kWh")],
+            ["Latest PV1 energy", fmt_num(month_energy_kwh(latest_day, "e_pv1_day"), " kWh")],
+            ["Latest PV2 energy", fmt_num(month_energy_kwh(latest_day, "e_pv2_day"), " kWh")],
+            ["Latest battery charge", fmt_num(month_energy_kwh(latest_day, "e_chg_day"), " kWh")],
+            ["Latest battery discharge", fmt_num(month_energy_kwh(latest_day, "e_dischg_day"), " kWh")],
         ]
         lines.extend(markdown_table(["Metric", "Value"], month_rows))
     else:
