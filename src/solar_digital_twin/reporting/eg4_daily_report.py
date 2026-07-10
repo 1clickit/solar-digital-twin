@@ -202,7 +202,23 @@ def build_report() -> str:
     lines.extend(["", "## Month Energy Summary", ""])
 
     if month:
-        latest_day = month[-1]
+        energy_fields = [
+            "e_ac_couple_day",
+            "e_load_day",
+            "e_consumption_day",
+            "e_pv1_day",
+            "e_pv2_day",
+            "e_chg_day",
+            "e_dischg_day",
+        ]
+
+        nonzero_days = [
+            row for row in month
+            if any((as_float(row, key) or 0) != 0 for key in energy_fields)
+        ]
+
+        latest_day = nonzero_days[-1] if nonzero_days else month[-1]
+
         month_rows = [
             ["Month", field(latest_day, "month_text")],
             ["Days reported", str(len(month))],
