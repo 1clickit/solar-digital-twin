@@ -30,7 +30,10 @@ If no, proceed from the public GitHub repository documentation.
   - `Proposed file contents:`
   - `Discussion only:`
   - `For review only:`
-- Do not place examples, filenames, future ideas, or quoted text into executable-looking blocks.
+- Do not place examples, filenames, future ideas, expected output, or quoted text into executable-looking blocks.
+- Command blocks must contain commands only.
+- If `git status --short` has no output, the user may simply say `Clean`.
+- If the `code` command is unavailable, use short terminal patches instead of assuming VS Code CLI exists.
 - When the user corrects communication behavior:
   1. acknowledge,
   2. briefly restate understanding,
