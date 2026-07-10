@@ -289,6 +289,7 @@ def build_report() -> str:
 
     if day:
         ac_values = values(day, "ac_couple_power_w")
+        pv_values = values(day, "solar_pv_w")
         active_ac = [value for value in ac_values if value > 50]
         low_ac = [value for value in ac_values if value <= 50]
         active_pct = (len(active_ac) / len(ac_values) * 100) if ac_values else None
@@ -301,6 +302,11 @@ def build_report() -> str:
         if ac_values:
             findings.append(
                 f"- Peak AC-couple power was {fmt_num(max(ac_values), ' W')}."
+            )
+
+        if active_ac and pv_values and max(pv_values) == 0:
+            findings.append(
+                "- AC-coupled production is present while parsed solar PV remains 0 W."
             )
 
         if low_ac:
