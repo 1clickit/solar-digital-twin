@@ -320,6 +320,11 @@ def build_report() -> str:
         findings.append(
             f"- AC-couple active/off transitions detected: {ac_transitions}."
         )
+
+        if day and "grid_freq_hz" not in day[0] and "eps_freq_hz" not in day[0]:
+            findings.append(
+                "- Day telemetry does not include frequency fields, so frequency correlation is unavailable from this CSV."
+            )
     else:
         findings.append("- No day telemetry samples were available.")
 
