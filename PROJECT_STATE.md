@@ -23,7 +23,7 @@ main
 - SQLite database operational
 - Evidence capture operational
 - CSV report generation operational
-- Reporting package exists
+- EG4 collector/report MVP complete
 - Project published to GitHub
 
 ## Current Reporting Implementation
