@@ -142,9 +142,11 @@ def build_report() -> str:
         ],
         default=None,
     )
+    source_age_hours = None
     source_age = "n/a"
     if latest_source_dt is not None:
-        source_age = f"{(now_dt - latest_source_dt).total_seconds() / 3600:.1f} hours"
+        source_age_hours = (now_dt - latest_source_dt).total_seconds() / 3600
+        source_age = f"{source_age_hours:.1f} hours"
 
     coverage_rows = [
         ["Latest timestamped source", latest_source_dt.isoformat(sep=" ") if latest_source_dt else "n/a"],
@@ -330,6 +332,11 @@ def build_report() -> str:
     lines.extend(["", "## Engineering Findings", ""])
 
     findings = []
+
+    if source_age_hours is not None and source_age_hours > 24:
+        findings.append(
+            f"- Source data is stale: latest timestamped source is {source_age} old."
+        )
 
     if day:
         ac_values = values(day, "ac_couple_power_w")
