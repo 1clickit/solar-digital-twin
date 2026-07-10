@@ -2,24 +2,41 @@
 
 ## Objective
 
-Review the refreshed EG4 engineering report and choose the next MVP improvement.
+Create a clean read-only local EG4 web portal MVP.
 
 ## Context
 
-The EG4 refresh/report script is complete, tested, pushed, and documented.
+The EG4 collector/report MVP is complete.
 
-Current standard refresh command:
+The current standard refresh command is:
 
 ./eg4_refresh_report.sh
 
+The next milestone is to see the collected EG4 data as a useful local web portal.
+
 ## Data Source
 
-Use the refreshed engineering report and repository documentation.
+Use existing CSV/report output under reports/.
 
-## Next Improvement
+Generated portal output should go under reports/ and should not be committed.
 
-Review current report findings and decide whether the next MVP improvement should be reporting, collector refinement, Home Assistant integration, or another visible output.
+## First Portal Version
+
+Show:
+
+- system status
+- battery SOC gauge
+- AC-couple power gauge
+- consumption gauge
+- data freshness/latest source time
+- latest engineering findings
+
+## Rules
+
+Do not modify collector behavior yet.
+Do not add Home Assistant, SolarAssistant, ESP32, or control functions yet.
+Do not add dependencies unless necessary.
 
 ## Success
 
-The next engineering target is clearly documented before code changes begin.
+A local generated HTML dashboard can be opened and viewed as a useful EG4 status portal.
