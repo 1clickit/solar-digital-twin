@@ -2,24 +2,26 @@
 
 ## Objective
 
-Create a single EG4 refresh/report command.
+Document the EG4 refresh/report script.
 
 ## Context
 
-EG4 source data was refreshed and engineering_daily_report.md was regenerated successfully.
+eg4_refresh_report.sh now runs the existing EG4 sync script and then regenerates engineering_daily_report.md.
 
-The report now shows fresh source data with no stale-data warning.
+The script was tested successfully and pushed.
 
 ## Data Source
 
-Use the existing EG4 sync script and existing report generator.
+Repository documentation.
 
 Do not modify collector behavior.
 
 ## Next Improvement
 
-Add a short repeatable command or script that runs EG4 sync and then regenerates engineering_daily_report.md.
+Add the refresh/report command to project documentation so future sessions know the standard way to refresh EG4 data and regenerate the report.
 
 ## Success
 
-The user can refresh EG4 data and regenerate the daily engineering report with one clear command.
+Repository documentation clearly shows that EG4 data and the engineering report can be refreshed with:
+
+./eg4_refresh_report.sh
