@@ -1,4 +1,5 @@
 import csv
+import json
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -43,9 +44,34 @@ def fmt_num(value: float | None, suffix: str = "") -> str:
     return f"{value:,.1f}{suffix}"
 
 
+RAW_JSON_FIELD_MAP = {
+    "param_name": "paramNameText",
+    "value_text": "paramValue",
+    "result_text": "success",
+    "username": "actionUsername",
+    "client_type": "clientType",
+}
+
+
 def field(row: dict[str, str], key: str) -> str:
     value = (row.get(key) or "").strip()
-    return value if value else "n/a"
+    if value:
+        return value
+
+    raw_key = RAW_JSON_FIELD_MAP.get(key)
+    raw_json = row.get("raw_json") or ""
+
+    if raw_key and raw_json:
+        try:
+            data = json.loads(raw_json)
+        except json.JSONDecodeError:
+            return "n/a"
+
+        raw_value = data.get(raw_key)
+        if raw_value is not None:
+            return str(raw_value)
+
+    return "n/a"
 
 
 def values(rows: list[dict[str, str]], key: str) -> list[float]:
