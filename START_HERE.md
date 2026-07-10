@@ -154,6 +154,24 @@ If the user is not already in the repository root, the assistant should ask the 
 
 Do not invent local paths such as `~/solar-digital-twin` or `/home/chris/solar-digital-twin` unless the user has provided or confirmed that path in the current session.
 
+## Development Environment
+
+The user has Visual Studio Code with Remote SSH configured and may edit repository files directly.
+
+For larger changes, prefer:
+
+- direct file edits,
+- small patches,
+- line replacements,
+
+instead of large heredocs.
+
+Continue providing copyable shell commands for:
+
+- testing,
+- Git operations,
+- repository inspection,
+- and small file creation tasks.
 
 ## Response Checklist
 

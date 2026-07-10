@@ -4,7 +4,7 @@ Current Milestone:
 Visible EG4 MVP
 
 Next Task:
-Create eg4_daily_report.py
+Improve engineering_daily_report.md content
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
