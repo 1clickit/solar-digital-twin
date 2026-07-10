@@ -2,7 +2,7 @@
 
 ## Objective
 
-Create a clean read-only local EG4 web portal MVP.
+Document EG4 local portal open/test workflow.
 
 ## Context
 
@@ -12,7 +12,7 @@ The current standard refresh command is:
 
 ./eg4_refresh_report.sh
 
-The next milestone is to see the collected EG4 data as a useful local web portal.
+The EG4 local portal MVP exists and passed a LAN browser smoke test.
 
 ## Data Source
 
@@ -20,9 +20,9 @@ Use existing CSV/report output under reports/.
 
 Generated portal output should go under reports/ and should not be committed.
 
-## First Portal Version
+## Completed Portal MVP
 
-Show:
+Currently shows:
 
 - system status
 - battery SOC gauge
@@ -39,4 +39,4 @@ Do not add dependencies unless necessary.
 
 ## Success
 
-A local generated HTML dashboard can be opened and viewed as a useful EG4 status portal.
+The documented workflow explains how to refresh data, start a temporary local web server, open the portal from the LAN, and stop the server.

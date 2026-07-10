@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Visible EG4 MVP
+Clean read-only local EG4 web portal MVP
 
 Next Task:
-Document EG4 refresh/report script
+Document EG4 local portal open/test workflow
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -24,13 +24,17 @@ main
 - Evidence capture operational
 - CSV report generation operational
 - EG4 collector/report MVP complete
+- EG4 local portal generator operational
+- Browser smoke test passed on LAN
 - Project published to GitHub
 
 ## Current Reporting Implementation
 src/solar_digital_twin/reporting/eg4_daily_report.py
+src/solar_digital_twin/reporting/eg4_portal.py
 
 Primary output:
 reports/engineering_daily_report.md
+reports/eg4_portal.html
 
 Refresh command:
 ./eg4_refresh_report.sh
