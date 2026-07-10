@@ -272,6 +272,46 @@ def build_report() -> str:
     else:
         lines.append("No remote setting records found.")
 
+    lines.extend(["", "## Engineering Findings", ""])
+
+    findings = []
+
+    if day:
+        ac_values = values(day, "ac_couple_power_w")
+        active_ac = [value for value in ac_values if value > 50]
+        low_ac = [value for value in ac_values if value <= 50]
+
+        findings.append(
+            f"- AC-couple activity appeared in {len(active_ac)} of {len(day)} day samples."
+        )
+
+        if ac_values:
+            findings.append(
+                f"- Peak AC-couple power was {fmt_num(max(ac_values), ' W')}."
+            )
+
+        if low_ac:
+            findings.append(
+                f"- AC-couple low/off samples were present: {len(low_ac)} samples."
+            )
+    else:
+        findings.append("- No day telemetry samples were available.")
+
+    if month:
+        findings.append(
+            f"- Latest month-energy day with real data was day {field(latest_day, 'day')}."
+        )
+
+    if records:
+        latest_record = records[-1]
+        findings.append(
+            "- Latest remote setting change: "
+            f"{field(latest_record, 'param_name')} = {field(latest_record, 'value_text')} "
+            f"at {field(latest_record, 'record_time')}."
+        )
+
+    lines.extend(findings)
+
     lines.extend(
         [
             "",
