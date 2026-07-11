@@ -1,7 +1,7 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Repository health-aware Solar Digital Twin workflow
+Reusable AI engineering framework MVP boundary design
 
 Next Task:
 Design a reusable AI engineering framework MVP from the Solar Digital Twin workflow.
