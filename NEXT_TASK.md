@@ -2,7 +2,7 @@
 
 ## Objective
 
-Document EG4 local portal open/test workflow.
+Add EG4 local portal systemd service.
 
 ## Context
 
@@ -39,4 +39,4 @@ Do not add dependencies unless necessary.
 
 ## Success
 
-The documented workflow explains how to refresh data, start a temporary local web server, open the portal from the LAN, and stop the server.
+A systemd service keeps the read-only EG4 local portal available without an open SSH terminal.

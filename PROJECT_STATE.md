@@ -4,7 +4,7 @@ Current Milestone:
 Clean read-only local EG4 web portal MVP
 
 Next Task:
-Document EG4 local portal open/test workflow
+Add EG4 local portal systemd service
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -26,6 +26,7 @@ main
 - EG4 collector/report MVP complete
 - EG4 local portal generator operational
 - Browser smoke test passed on LAN
+- Portal Load gauge uses day_multiline_samples.csv consumption_w
 - Project published to GitHub
 
 ## Current Reporting Implementation
