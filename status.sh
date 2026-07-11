@@ -23,19 +23,10 @@ git status -sb
 echo
 
 echo "Repository Health:"
-required_files=(
-    START_HERE.md AI_PROMPT.md TEAM.md CONTRIBUTING.md
-    PROJECT_STATE.md NEXT_TASK.md BACKLOG.md SESSION_END.md
-)
-missing=0
-for file in "${required_files[@]}"; do
-    if [[ ! -f "$file" ]]; then
-        echo "MISSING: $file"
-        missing=1
-    fi
-done
-if [[ "$missing" -eq 0 ]]; then
-    echo "Required files: OK"
+if [[ -x scripts/repo_health_check.sh ]]; then
+    ./scripts/repo_health_check.sh
+else
+    echo "MISSING: scripts/repo_health_check.sh"
 fi
 echo
 duplicate_headings=0
