@@ -219,7 +219,7 @@ Do not apply this configuration until solardt is confirmed to be serving NTP and
 
 ## Planned Report: AC-Couple Event Correlation Report
 
-### Purpose
+### Report Purpose
 
 Use EG4 data to detect aggregate AC-couple collapse and recovery events, then inspect ESP32 1-second voltage, frequency, power, ramp-rate, and forensic-log evidence around the same timestamp.
 

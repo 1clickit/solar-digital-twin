@@ -120,6 +120,55 @@ fi
 
 echo
 
+shell_scripts=()
+while IFS= read -r -d '' file; do
+    shell_scripts+=("$file")
+done < <(git ls-files -z -- '*.sh')
+
+if [[ "${#shell_scripts[@]}" -eq 0 ]]; then
+    pass "no tracked shell scripts found"
+else
+    for file in "${shell_scripts[@]}"; do
+        if bash -n "$file"; then
+            pass "shell syntax valid: $file"
+        else
+            fail "shell syntax invalid: $file"
+        fi
+    done
+fi
+
+echo
+
+python_files=()
+while IFS= read -r -d '' file; do
+    python_files+=("$file")
+done < <(git ls-files -z -- '*.py')
+
+if [[ "${#python_files[@]}" -eq 0 ]]; then
+    pass "no tracked Python source files found"
+else
+    if command -v python >/dev/null 2>&1; then
+        python_command=python
+    elif command -v python3 >/dev/null 2>&1; then
+        python_command=python3
+    else
+        fail "python and python3 commands are unavailable"
+        python_command=
+    fi
+
+    if [[ -n "$python_command" ]]; then
+        python_cache_dir=$(mktemp -d)
+        if PYTHONPYCACHEPREFIX="$python_cache_dir" "$python_command" -m compileall -q "${python_files[@]}"; then
+            pass "tracked Python source files compile with $python_command"
+        else
+            fail "tracked Python source files failed to compile"
+        fi
+        rm -rf "$python_cache_dir"
+    fi
+fi
+
+echo
+
 if [[ "$failures" -eq 0 ]]; then
     echo "RESULT: PASS"
 else
