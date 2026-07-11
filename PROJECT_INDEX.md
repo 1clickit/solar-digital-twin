@@ -53,6 +53,15 @@ config/
 docs/
     Project documentation.
 
+docs/Engineering_Bible.md
+    Solar Digital Twin design authority.
+
+docs/EG4_LOCAL_PORTAL.md
+    EG4 local portal operation notes.
+
+docs/AI_ENGINEERING_FRAMEWORK_MVP.md
+    Reusable AI engineering framework MVP boundary design.
+
 database/
     SQLite schemas and databases.
 
