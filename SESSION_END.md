@@ -22,6 +22,7 @@ verify the repository can stand on its own.
 - [ ] Intended files staged.
 - [ ] Descriptive commit created.
 - [ ] Changes pushed to GitHub.
+- [ ] Confirm the public GitHub repository contains the completed commit; a local-only commit is incomplete.
 - [ ] Working tree clean.
 
 ## Knowledge Transfer

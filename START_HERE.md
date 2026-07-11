@@ -70,6 +70,7 @@ Always work using small engineering iterations.
 - One commit at a time.
 - Test before committing.
 - Push completed work to GitHub.
+- A local-only commit is not complete; GitHub must contain the committed work before the task is declared complete.
 
 Never leave important project knowledge
 only in a conversation.
