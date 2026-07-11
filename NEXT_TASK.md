@@ -12,7 +12,21 @@ The repository currently mixes reusable engineering workflow rules with Solar Di
 
 ## Scope
 
-Define the boundary between reusable framework components and project-specific components. Do not extract or fork the framework yet.
+Design the framework boundary and structure only.
+
+Include:
+
+- reusable workflow components versus Solar Digital Twin-specific components
+- mandatory safety and correctness rules versus judgment-based guidance
+- automated local checks that can catch common workflow mistakes
+- post-push public GitHub audit checks
+- future template or bootstrap process ideas
+- stable terminal/session workflow guidance for long AI-assisted engineering work
+- Solar Digital Twin-specific terminal preference: Debian WSL -> SSH -> VM-side tmux
+- paste guidance: larger edits may be allowed only when reviewable, reversible, and appropriate to risk
+- guidance that preserves Solar Digital Twin as an active project
+
+Do not extract, fork, or build the full framework yet.
 
 ## Success
 
