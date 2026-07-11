@@ -109,6 +109,23 @@ Possible reusable checks:
 - Python files compile
 - tests or smoke checks run where available
 
+## Candidate First Automation Checks
+
+The first automation checks should be small, local, and easy to trust.
+
+Good first candidates:
+
+- verify required project memory files exist
+- verify `PROJECT_STATE.md` has a current milestone and next task
+- verify `NEXT_TASK.md` has objective, scope, success, and exclusions or Consider Later sections
+- verify docs referenced from `PROJECT_INDEX.md` exist
+- verify generated directories such as `reports/` and `evidence/` are ignored by Git
+- verify no obvious credential filenames are staged
+- verify shell scripts parse with `bash -n`
+- verify Python source files compile with `python -m compileall`
+
+These checks should report clear failures without changing files.
+
 ## Post-Push Public GitHub Audit
 
 After pushing, verify public repository state rather than relying only on local success.
