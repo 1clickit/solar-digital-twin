@@ -1,0 +1,323 @@
+# EG4 and ESP32 AC-Couple Forensic Correlation
+
+## Status
+
+This document records planned investigation and reporting features.
+
+These features are not the current implementation task. They must not replace the active task in `NEXT_TASK.md` until deliberately promoted through the normal project workflow.
+
+The proposed work must remain:
+
+- read-only
+- non-mutating toward EG4 equipment
+- conservative toward EG4 portal endpoints
+- evidence-based
+- explicit about uncertainty
+- separate from normal portal and collector behavior until tested
+
+## Investigation Background
+
+A review of EG4 AC-couple data from July 11, 2026 showed that the original simple dropout concept was too narrow.
+
+The original concept looked for total AC-couple output falling near zero. That can detect a complete loss of AC-coupled production, but it does not describe the field behavior observed at the CP-100.
+
+The observed behavior was:
+
+- one or more microinverters appeared to drop completely offline
+- other microinverters continued producing
+- aggregate AC-couple power therefore remained above zero
+- the offline production later returned
+- returning production sometimes ramped upward over several samples
+
+EG4 provides aggregate AC-couple power and cannot directly identify which individual microinverter may have stopped producing.
+
+## Important Finding
+
+The July 11, 2026 EG4 data showed repeated partial AC-couple collapse and recovery signatures rather than complete AC-couple dropouts.
+
+Common sequence:
+
+1. High aggregate AC-couple output
+2. Sharp partial reduction
+3. Continued non-zero AC-couple production
+4. Recovery during following samples
+5. In some cases, a gradual ramp toward the earlier output level
+
+Example aggregate changes:
+
+| Before | After | Character |
+| ---: | ---: | --- |
+| 4138 W | 523 W | Sharp partial collapse |
+| 4126 W | 724 W | Sharp partial collapse |
+| 3449 W | 496 W | Sharp partial collapse |
+| 3069 W | 526 W | Sharp partial collapse |
+
+During the detected examples, `grid_power_w` remained at 0 W.
+
+These observations are signatures requiring investigation. They are not proof that a particular microinverter failed or disconnected.
+
+## Planned Feature: AC-Couple Microinverter Dropout Signature Review
+
+### Purpose
+
+Detect likely partial microinverter dropout behavior from aggregate EG4 data while clearly acknowledging that EG4 cannot identify individual microinverters.
+
+### Event Classes
+
+#### Full Dropout
+
+Total AC-couple power falls to or near zero.
+
+#### Partial Collapse
+
+AC-couple power falls sharply but remains meaningfully above zero because some AC-coupled production continues.
+
+#### Rebound or Recovery
+
+AC-couple power rises substantially after a full dropout or partial collapse.
+
+#### Slow Ramp Recovery
+
+Power returns over multiple samples rather than immediately returning to its earlier level.
+
+#### Volatility
+
+Repeated large upward and downward movements occur within a short time window.
+
+#### Repeated Drop-Size Buckets
+
+Similar absolute or percentage reductions recur.
+
+Repeated drop sizes may suggest one or more repeatable production units cycling, but aggregate data alone cannot establish that conclusion.
+
+### Candidate Measurements
+
+A future detector may calculate:
+
+- power before the event
+- lowest power during the event
+- absolute drop in watts
+- percentage drop
+- duration of the lower-output plateau
+- time to initial rebound
+- time to approximate recovery
+- recovery slope or ramp rate
+- number of large movements within a rolling window
+- recurring absolute and percentage drop-size groups
+- grid power, load, SOC, and available runtime measurements around the event
+
+Thresholds must be configurable and tested against recorded evidence rather than treated as universal constants.
+
+## Cloud-Cover Limitation
+
+Partly cloudy conditions can resemble partial microinverter dropout behavior because EG4 sees only aggregate AC-couple power.
+
+Both cloud cover and individual microinverter dropout may appear as reductions in total AC-couple output.
+
+Every report must state this limitation clearly.
+
+### Clues More Consistent With Cloud or Solar Variability
+
+Possible clues include:
+
+- smoother or broader reductions
+- gradual changes across several samples
+- no lower-output step or plateau
+- no repeated similar-sized reductions
+- no corresponding voltage or frequency disturbance
+
+### Clues More Consistent With Microinverter Dropout and Rejoin
+
+Possible clues include:
+
+- sharp step-like reduction
+- a lower-output plateau while other production remains active
+- slow ramp back toward prior output
+- recurring similar-sized reductions
+- repeated cycling during otherwise strong solar conditions
+- possible timing relationship with voltage or frequency events
+
+These clues should affect confidence or interpretation. They must not be presented as definitive identification.
+
+## EG4 Frequency Review
+
+Nearby EG4 runtime snapshots were reviewed around large aggregate AC-couple events.
+
+Available readings were generally close to 60 Hz:
+
+- grid frequency approximately 59.93 to 60.12 Hz
+- EPS frequency approximately 59.94 to 60.11 Hz
+
+The available EG4 readings did not show an obvious frequency cause.
+
+However, EG4 runtime snapshots may be several minutes away from the actual collapse event and may miss short voltage or frequency disturbances.
+
+The absence of an EG4-recorded disturbance must not be interpreted as proof that no brief disturbance occurred.
+
+## Evidence Roles
+
+### EG4 Data
+
+EG4 data is useful for detecting aggregate symptoms and operating context:
+
+- aggregate AC-couple collapse and recovery
+- load
+- grid power
+- battery SOC
+- runtime frequency snapshots
+- event timing at the EG4 sampling resolution
+
+### ESP32 Forensic Logger Data
+
+The ESP32 forensic logger may provide higher-resolution evidence about possible causes:
+
+- 1-second GEN voltage
+- 1-second GEN frequency
+- 1-second estimated AC-coupled power
+- power ramp rate
+- voltage ramp rate
+- frequency ramp rate
+- timestamped forensic event entries
+
+Discussed ESP32 event names include:
+
+- `POWER_DROP`
+- `POWER_RISE`
+- `FREQ_DROP`
+- `FREQ_RISE`
+- `VOLT_DROP`
+- `VOLT_RISE`
+
+The deployed ESPHome configuration must be reviewed before future correlation code depends on these sensors or event names.
+
+## Planned Time Synchronization
+
+Accurate event correlation requires the solardt VM and ESP32 logger to use closely aligned timestamps.
+
+Target concept:
+
+- configure solardt as a LAN NTP server
+- point the ESP32 SNTP client to solardt as its preferred server
+- retain public NTP servers as fallbacks
+- use `America/Chicago` consistently
+- verify actual clock alignment before relying on correlation results
+
+The VM address has previously been observed as `192.168.3.11`, but it must be confirmed before being placed into deployed configuration.
+
+Possible ESPHome configuration, for design reference only:
+
+    time:
+      - platform: sntp
+        id: esptime
+        timezone: America/Chicago
+        servers:
+          - 192.168.3.11
+          - 0.pool.ntp.org
+          - 1.pool.ntp.org
+
+Do not apply this configuration until solardt is confirmed to be serving NTP and the VM address is confirmed.
+
+## Planned Report: AC-Couple Event Correlation Report
+
+### Purpose
+
+Use EG4 data to detect aggregate AC-couple collapse and recovery events, then inspect ESP32 1-second voltage, frequency, power, ramp-rate, and forensic-log evidence around the same timestamp.
+
+### Example Event Section
+
+    Event: Possible microinverter dropout
+    EG4 event time: 2026-07-11 13:38:08
+    EG4 AC-couple: 4126 W -> 724 W
+    EG4 grid power: 0 W
+    EG4 load: 1732 W
+
+    Nearest ESP32 evidence:
+    - voltage, frequency, and power before, during, and after the event
+    - matching power, voltage, or frequency forensic events
+    - measurement gaps or timestamp uncertainty
+
+### Interpretation Categories
+
+#### Likely Microinverter Dropout
+
+- EG4 AC-couple output drops sharply
+- ESP32 estimated power also drops
+- voltage and frequency remain mostly normal
+- a step, plateau, rebound, or slow-ramp pattern is present
+
+#### Possible Grid or Electrical Disturbance
+
+- EG4 AC-couple output drops sharply
+- ESP32 records a voltage or frequency disturbance near the event
+- matching forensic event entries are present
+
+This indicates correlation, not proven causation.
+
+#### Likely Cloud or Solar Variability
+
+- output changes gradually or broadly
+- no voltage or frequency disturbance is recorded
+- no repeatable step-like signature is present
+
+#### Uncertain
+
+Use this category when data is missing, timestamps are misaligned, sample gaps are too large, or more than one explanation remains plausible.
+
+## Planned Full-Sun Diagnostic Collection
+
+A full-sun diagnostic period may reduce cloud-cover uncertainty.
+
+Normal mode should keep the existing refresh and reporting schedule unchanged.
+
+A future diagnostic mode may:
+
+- temporarily collect EG4 data every five minutes
+- run only during a limited strong-sun window
+- remain read-only and non-mutating
+- leave EG4 settings unchanged
+- label diagnostic runs clearly
+- store diagnostic evidence separately where practical
+- preserve normal collection behavior outside the diagnostic window
+
+A one-minute interval should be considered only after five-minute testing shows the endpoint tolerates it and the risk is approved.
+
+EG4 cloud and portal endpoints must not be hammered.
+
+## CP-100 Local Data Access Research
+
+Direct CP-100 data may expose individual microinverter behavior that aggregate EG4 measurements cannot identify.
+
+Research possibilities include:
+
+- local web interface
+- documented or discoverable local API
+- local network service
+- data export capability
+- supported integration interface
+- RS485 only if evidence shows it is practical
+
+CP-100 integration remains a research and backlog item until its local interfaces, permissions, protocol, and data fields are confirmed.
+
+## Future Implementation Boundaries
+
+Before implementing this design:
+
+1. Preserve existing EG4 collector and portal behavior.
+2. Define event thresholds from recorded evidence.
+3. Confirm timestamp semantics for every source.
+4. Confirm ESP32 measurement and log formats.
+5. Establish and test time synchronization.
+6. Keep raw evidence available for review.
+7. Separate observations from interpretations.
+8. Include confidence and uncertainty in reports.
+9. Do not identify individual microinverters without supporting data.
+10. Promote the work through `NEXT_TASK.md` before implementation.
+
+## Documentation Follow-Up
+
+After this design note is reviewed:
+
+- add it to `PROJECT_INDEX.md`
+- add concise investigation items to `BACKLOG.md`
+- leave `NEXT_TASK.md` unchanged
+- leave repository health-check work paused until this documentation is safely committed

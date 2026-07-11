@@ -20,6 +20,20 @@
 - Weather collector
 - Utility collector, if useful later
 
+### AC-Couple Forensic Investigation
+- Develop an AC-Couple Microinverter Dropout Signature Review.
+- Distinguish full dropouts, partial collapses, rebounds, slow-ramp recoveries, volatility, and repeated drop-size patterns.
+- State clearly that cloud cover and individual microinverter dropout can look similar in aggregate EG4 data.
+- Correlate EG4 events with ESP32 1-second voltage, frequency, estimated power, ramp-rate, and forensic-log evidence.
+- Create a future AC-Couple Event Correlation Report with confidence and uncertainty categories.
+- Configure and verify time synchronization between solardt and the ESP32 before relying on event correlation.
+- Evaluate a temporary five-minute EG4 sampling mode for limited full-sun diagnostic windows.
+- Consider one-minute sampling only after conservative endpoint testing and explicit risk approval.
+- Research local CP-100 web, API, export, network, or supported integration access before considering RS485.
+- Keep all investigation work read-only and preserve existing EG4 collector and portal behavior.
+
+See `docs/EG4_FORENSIC_CORRELATION.md` for the detailed design note.
+
 ## Rules
 - One small, tested commit at a time.
 - Keep main clean.

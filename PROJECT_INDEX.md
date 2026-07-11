@@ -59,6 +59,9 @@ docs/Engineering_Bible.md
 docs/EG4_LOCAL_PORTAL.md
     EG4 local portal operation notes.
 
+docs/EG4_FORENSIC_CORRELATION.md
+    Planned EG4 and ESP32 AC-couple forensic correlation design.
+
 docs/AI_ENGINEERING_FRAMEWORK_MVP.md
     Reusable AI engineering framework MVP boundary design.
 
