@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Persistent automatically refreshed read-only local EG4 web portal
+Repository health-aware Solar Digital Twin workflow
 
 Next Task:
-Enhance status.sh into a lightweight repository health check
+Design a reusable AI engineering framework MVP from the Solar Digital Twin workflow.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -33,6 +33,8 @@ main
 - Portal timestamps normalized to Central time
 - AC-couple and Load gauges reject day telemetry older than 30 minutes
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
+- status.sh repository health checks operational
+- Required-file, duplicate-heading, and documentation-drift checks tested
 - Project published to GitHub
 
 ## Current Reporting Implementation

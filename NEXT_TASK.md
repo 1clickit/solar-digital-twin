@@ -2,37 +2,27 @@
 
 ## Objective
 
-Enhance `status.sh` into a lightweight repository health check.
+Design a reusable AI engineering framework MVP from the Solar Digital Twin workflow.
 
 ## Context
 
-The EG4 portal service and automated 15-minute refresh timer are operational.
+The EG4 portal, automated refresh timer, timezone handling, stale-data protection, and repository health checks are operational.
 
-The current `status.sh` already reports:
-
-- current branch
-- Git status
-- latest commit
-- GitHub synchronization
-- `PROJECT_STATE.md`
-- `NEXT_TASK.md`
+The repository currently mixes reusable engineering workflow rules with Solar Digital Twin-specific instructions.
 
 ## Scope
 
-Add concise checks for:
-
-- required project files
-- duplicate Markdown headings
-- documentation drift between `PROJECT_STATE.md` and `NEXT_TASK.md`
-
-Preserve the existing startup status output.
-
-## Rules
-
-Keep the script dependency-free.
-Do not modify EG4 collector or portal behavior.
-Report problems clearly without making automatic changes.
+Define the boundary between reusable framework components and project-specific components. Do not extract or fork the framework yet.
 
 ## Success
 
-`./status.sh` continues to show normal session status and also reports repository health-check results.
+A reviewed framework MVP design identifies what can be reused by unrelated coding projects without carrying Solar Digital Twin-specific assumptions.
+
+## Consider Later
+
+Improve portal browser freshness without changing data collection:
+
+- discourage browser caching so newly opened windows show the latest generated HTML
+- optionally reload an open portal tab automatically
+- preserve generated time, source time, and stale-data warnings
+- keep browser reloads separate from the 15-minute EG4 collection timer
