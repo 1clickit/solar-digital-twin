@@ -2,7 +2,7 @@
 
 ## Objective
 
-Add EG4 local portal systemd service.
+Add automated EG4 portal refresh timer.
 
 ## Context
 
@@ -13,6 +13,8 @@ The current standard refresh command is:
 ./eg4_refresh_report.sh
 
 The EG4 local portal MVP exists and passed a LAN browser smoke test.
+
+The EG4 local portal systemd service is enabled and verified with HTTP 200.
 
 ## Data Source
 
@@ -39,4 +41,4 @@ Do not add dependencies unless necessary.
 
 ## Success
 
-A systemd service keeps the read-only EG4 local portal available without an open SSH terminal.
+A systemd timer runs `./eg4_refresh_report.sh` automatically on a documented schedule.

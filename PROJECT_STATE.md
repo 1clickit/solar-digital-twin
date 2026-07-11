@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Clean read-only local EG4 web portal MVP
+Persistent read-only local EG4 web portal
 
 Next Task:
-Add EG4 local portal systemd service
+Add automated EG4 portal refresh timer
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -26,6 +26,7 @@ main
 - EG4 collector/report MVP complete
 - EG4 local portal generator operational
 - Browser smoke test passed on LAN
+- EG4 local portal systemd service enabled and verified with HTTP 200
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
 - Project published to GitHub
 

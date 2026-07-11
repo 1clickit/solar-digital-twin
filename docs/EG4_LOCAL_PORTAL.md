@@ -46,3 +46,21 @@ Current dashboard shows:
 - load gauge
 - data freshness/latest source time
 - latest engineering findings
+
+## Systemd Service
+
+Service source: `systemd/eg4-local-portal.service`
+
+Install and start the service:
+
+`sudo install -m 0644 systemd/eg4-local-portal.service /etc/systemd/system/eg4-local-portal.service`
+
+`sudo systemctl daemon-reload`
+
+`sudo systemctl enable --now eg4-local-portal.service`
+
+Check service status:
+
+`systemctl status eg4-local-portal.service --no-pager`
+
+The service starts automatically at boot and serves the portal on port 8000.
