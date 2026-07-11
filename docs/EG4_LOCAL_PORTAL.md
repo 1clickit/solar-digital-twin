@@ -92,3 +92,13 @@ Install and enable the timer:
 Check the timer:
 
 `systemctl status eg4-refresh-report.timer --no-pager`
+
+## Timezone and Data Freshness
+
+The VM timezone must be `America/Chicago` so the collector requests the correct EG4 calendar day.
+
+EG4 runtime and energy `server_time` values are interpreted as UTC and displayed in Central time.
+
+Day telemetry timestamps are interpreted as Central time.
+
+AC-couple and Load retain valid zero readings. If day telemetry is missing or more than 30 minutes old, those gauges display `n/a` with a stale-data warning instead of presenting an old reading as current.

@@ -1,10 +1,13 @@
 import csv
-from datetime import datetime
+from datetime import datetime, timezone, tzinfo
 from html import escape
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 REPORTS_DIR = Path("reports")
 OUTPUT_FILE = REPORTS_DIR / "eg4_portal.html"
+LOCAL_TZ = ZoneInfo("America/Chicago")
+DAY_TELEMETRY_MAX_AGE_MINUTES = 30
 
 
 def read_csv(filename: str) -> list[dict[str, str]]:
@@ -38,23 +41,30 @@ def fmt_num(value: float | None, suffix: str = "") -> str:
     return f"{value:,.1f}{suffix}"
 
 
-def latest_datetime(rows: list[dict[str, str]], key: str) -> datetime | None:
+def latest_datetime(
+    rows: list[dict[str, str]], key: str, source_tz: tzinfo
+) -> datetime | None:
     timestamps: list[datetime] = []
     for row in rows:
         value = field(row, key)
         if value == "n/a":
             continue
         try:
-            timestamps.append(datetime.fromisoformat(value))
+            parsed = datetime.fromisoformat(value)
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=source_tz)
+            timestamps.append(parsed.astimezone(LOCAL_TZ))
         except ValueError:
             continue
     return max(timestamps) if timestamps else None
 
 
-def latest_source_time(*datasets: tuple[list[dict[str, str]], str]) -> datetime | None:
+def latest_source_time(
+    *datasets: tuple[list[dict[str, str]], str, tzinfo]
+) -> datetime | None:
     timestamps = [
-        latest_datetime(rows, key)
-        for rows, key in datasets
+        latest_datetime(rows, key, source_tz)
+        for rows, key, source_tz in datasets
     ]
     found = [item for item in timestamps if item is not None]
     return max(found) if found else None
@@ -93,7 +103,13 @@ def metric_card(title: str, value: str, detail: str = "") -> str:
     )
 
 
-def gauge_card(title: str, value: float | None, maximum: float, suffix: str) -> str:
+def gauge_card(
+    title: str,
+    value: float | None,
+    maximum: float,
+    suffix: str,
+    detail: str = "",
+) -> str:
     pct = percent(value, maximum)
     label = fmt_num(value, suffix)
     return (
@@ -101,7 +117,7 @@ def gauge_card(title: str, value: float | None, maximum: float, suffix: str) -> 
         f"<h2>{html(title)}</h2>"
         f"<div class='gauge'><div style='width:{pct:.0f}%'></div></div>"
         f"<div class='value'>{html(label)}</div>"
-        f"<div class='detail'>Scale: 0 to {html(fmt_num(maximum, suffix))}</div>"
+        f"<div class='detail'>{html(detail or f'Scale: 0 to {fmt_num(maximum, suffix)}')}</div>"
         "</section>"
     )
 
@@ -132,9 +148,9 @@ def latest_rows() -> tuple[dict[str, str], dict[str, str], dict[str, str], datet
     energy = read_csv("energy_snapshots.csv")
     day = read_csv("day_multiline_samples.csv")
     latest_time = latest_source_time(
-        (runtime, "server_time"),
-        (energy, "server_time"),
-        (day, "sample_time"),
+        (runtime, "server_time", timezone.utc),
+        (energy, "server_time", timezone.utc),
+        (day, "sample_time", LOCAL_TZ),
     )
     latest_runtime = runtime[-1] if runtime else {}
     latest_energy = energy[-1] if energy else {}
@@ -159,14 +175,27 @@ li{margin:8px 0}
 
 
 def build_portal() -> str:
-    now = datetime.now()
+    now = datetime.now(LOCAL_TZ)
     runtime, energy, day, latest_time = latest_rows()
 
     status = field(runtime, "status_text")
     soc = as_float(runtime, "soc")
-    ac_power = as_float(day, "ac_couple_power_w")
-    load = as_float(day, "consumption_w")
-    source_time = latest_time.isoformat(sep=" ") if latest_time else "n/a"
+    day_time = latest_datetime([day], "sample_time", LOCAL_TZ) if day else None
+    day_age_minutes = (
+        (now - day_time).total_seconds() / 60 if day_time else None
+    )
+    day_is_fresh = (
+        day_age_minutes is not None
+        and 0 <= day_age_minutes <= DAY_TELEMETRY_MAX_AGE_MINUTES
+    )
+    ac_power = as_float(day, "ac_couple_power_w") if day_is_fresh else None
+    load = as_float(day, "consumption_w") if day_is_fresh else None
+    day_detail = (
+        f"Sample: {day_time.strftime('%Y-%m-%d %H:%M:%S %Z')}"
+        if day_is_fresh
+        else "Day telemetry stale or unavailable"
+    )
+    source_time = latest_time.strftime("%Y-%m-%d %H:%M:%S %Z") if latest_time else "n/a"
 
     if latest_time:
         age_hours = (now - latest_time).total_seconds() / 3600
@@ -194,8 +223,8 @@ def build_portal() -> str:
 <div class="grid">
 {metric_card("System Status", status, field(runtime, "fw_code"))}
 {gauge_card("Battery SOC", soc, 100, "%")}
-{gauge_card("AC-couple Power", ac_power, 5400, " W")}
-{gauge_card("Load", load, 12000, " W")}
+{gauge_card("AC-couple Power", ac_power, 5400, " W", day_detail)}
+{gauge_card("Load", load, 12000, " W", day_detail)}
 {metric_card("Latest Source Time", source_time, freshness)}
 {metric_card("Today Usage", fmt_num(as_float(energy, "today_usage_kwh"), " kWh"))}
 </div>

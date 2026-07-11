@@ -29,6 +29,9 @@ main
 - EG4 local portal systemd service enabled and verified with HTTP 200
 - Automated EG4 refresh timer enabled on a 15-minute schedule
 - Unattended EG4 refresh verified successfully through systemd
+- VM timezone set to America/Chicago for correct EG4 calendar-day collection
+- Portal timestamps normalized to Central time
+- AC-couple and Load gauges reject day telemetry older than 30 minutes
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
 - Project published to GitHub
 
