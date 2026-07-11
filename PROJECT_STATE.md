@@ -4,7 +4,7 @@ Current Milestone:
 Framework-informed local automation checks
 
 Next Task:
-Implement the first small local automation checks from the AI engineering framework MVP design.
+Extend repository health checks with shell and Python syntax validation.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,6 +19,8 @@ solardt
 main
 
 ## Current Status
+- Repository health check script operational
+- status.sh runs repository health check script at startup
 - AI engineering framework MVP boundary design documented
 - EG4 collector operational
 - SQLite database operational
