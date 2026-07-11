@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Persistent read-only local EG4 web portal
+Persistent automatically refreshed read-only local EG4 web portal
 
 Next Task:
-Add automated EG4 portal refresh timer
+Enhance status.sh into a lightweight repository health check
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -27,6 +27,8 @@ main
 - EG4 local portal generator operational
 - Browser smoke test passed on LAN
 - EG4 local portal systemd service enabled and verified with HTTP 200
+- Automated EG4 refresh timer enabled on a 15-minute schedule
+- Unattended EG4 refresh verified successfully through systemd
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
 - Project published to GitHub
 

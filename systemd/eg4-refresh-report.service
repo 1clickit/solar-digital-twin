@@ -1,0 +1,15 @@
+[Unit]
+Description=Refresh Solar Digital Twin EG4 reports and portal
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/solar-digital-twin/eg4.env
+User=chris
+Group=chris
+WorkingDirectory=/home/chris/solar-digital-twin
+Environment=PATH=/home/chris/solar-digital-twin/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/home/chris/solar-digital-twin/eg4_refresh_report.sh
+NoNewPrivileges=true
+PrivateTmp=true

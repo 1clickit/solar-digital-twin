@@ -2,43 +2,37 @@
 
 ## Objective
 
-Add automated EG4 portal refresh timer.
+Enhance `status.sh` into a lightweight repository health check.
 
 ## Context
 
-The EG4 collector/report MVP is complete.
+The EG4 portal service and automated 15-minute refresh timer are operational.
 
-The current standard refresh command is:
+The current `status.sh` already reports:
 
-./eg4_refresh_report.sh
+- current branch
+- Git status
+- latest commit
+- GitHub synchronization
+- `PROJECT_STATE.md`
+- `NEXT_TASK.md`
 
-The EG4 local portal MVP exists and passed a LAN browser smoke test.
+## Scope
 
-The EG4 local portal systemd service is enabled and verified with HTTP 200.
+Add concise checks for:
 
-## Data Source
+- required project files
+- duplicate Markdown headings
+- documentation drift between `PROJECT_STATE.md` and `NEXT_TASK.md`
 
-Use existing CSV/report output under reports/.
-
-Generated portal output should go under reports/ and should not be committed.
-
-## Completed Portal MVP
-
-Currently shows:
-
-- system status
-- battery SOC gauge
-- AC-couple power gauge
-- load gauge
-- data freshness/latest source time
-- latest engineering findings
+Preserve the existing startup status output.
 
 ## Rules
 
-Do not modify collector behavior yet.
-Do not add Home Assistant, SolarAssistant, ESP32, or control functions yet.
-Do not add dependencies unless necessary.
+Keep the script dependency-free.
+Do not modify EG4 collector or portal behavior.
+Report problems clearly without making automatic changes.
 
 ## Success
 
-A systemd timer runs `./eg4_refresh_report.sh` automatically on a documented schedule.
+`./status.sh` continues to show normal session status and also reports repository health-check results.

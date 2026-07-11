@@ -64,3 +64,31 @@ Check service status:
 `systemctl status eg4-local-portal.service --no-pager`
 
 The service starts automatically at boot and serves the portal on port 8000.
+
+## Automated Refresh Timer
+
+Refresh service: `systemd/eg4-refresh-report.service`
+
+Refresh timer: `systemd/eg4-refresh-report.timer`
+
+The timer runs `./eg4_refresh_report.sh` every 15 minutes and starts five minutes after boot.
+
+The collector reads unattended credentials from:
+
+`/etc/solar-digital-twin/eg4.env`
+
+This protected file is owned by root with mode `0600` and must not be committed.
+
+Install and enable the timer:
+
+`sudo install -m 0644 systemd/eg4-refresh-report.service /etc/systemd/system/eg4-refresh-report.service`
+
+`sudo install -m 0644 systemd/eg4-refresh-report.timer /etc/systemd/system/eg4-refresh-report.timer`
+
+`sudo systemctl daemon-reload`
+
+`sudo systemctl enable --now eg4-refresh-report.timer`
+
+Check the timer:
+
+`systemctl status eg4-refresh-report.timer --no-pager`

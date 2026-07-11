@@ -1,6 +1,7 @@
 import argparse
 import hashlib
 import getpass
+import os
 from pathlib import Path
 from datetime import datetime
 
@@ -32,8 +33,8 @@ def main():
     db = cfg['database']
     output_dir = cfg['evidence_dir']
     reports_dir = cfg['reports_dir']
-    username = input('EG4 Username: ')
-    password = getpass.getpass('EG4 Password: ')
+    username = os.environ.get("EG4_USERNAME") or input("EG4 Username: ")
+    password = os.environ.get("EG4_PASSWORD") or getpass.getpass("EG4 Password: ")
 
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     captured_at = datetime.now().isoformat(timespec="seconds")
