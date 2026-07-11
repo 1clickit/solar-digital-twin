@@ -2,35 +2,38 @@
 
 ## Objective
 
-Design a reusable AI engineering framework MVP from the Solar Digital Twin workflow.
+Implement the first small local automation checks from the AI engineering framework MVP design.
 
 ## Context
 
-The EG4 portal, automated refresh timer, timezone handling, stale-data protection, and repository health checks are operational.
+The reusable AI engineering framework MVP boundary design is documented in:
 
-The repository currently mixes reusable engineering workflow rules with Solar Digital Twin-specific instructions.
+`docs/AI_ENGINEERING_FRAMEWORK_MVP.md`
+
+The design identifies candidate first automation checks that should be small, local, and easy to trust.
 
 ## Scope
 
-Design the framework boundary and structure only.
+Create or extend a lightweight local check script for Solar Digital Twin repository health.
 
-Include:
+Initial checks should focus on:
 
-- reusable workflow components versus Solar Digital Twin-specific components
-- mandatory safety and correctness rules versus judgment-based guidance
-- automated local checks that can catch common workflow mistakes
-- post-push public GitHub audit checks
-- future template or bootstrap process ideas
-- stable terminal/session workflow guidance for long AI-assisted engineering work
-- Solar Digital Twin-specific terminal preference: Debian WSL -> SSH -> VM-side tmux
-- paste guidance: larger edits may be allowed only when reviewable, reversible, and appropriate to risk
-- guidance that preserves Solar Digital Twin as an active project
+- required project memory files exist
+- `PROJECT_STATE.md` has a current milestone and next task
+- `NEXT_TASK.md` has objective, scope, and success sections
+- docs referenced from `PROJECT_INDEX.md` exist
+- generated directories such as `reports/` and `evidence/` remain ignored by Git
+- obvious credential filenames are not staged
 
-Do not extract, fork, or build the full framework yet.
+## Exclusions
+
+- Do not create a separate framework repository.
+- Do not generate a full project template yet.
+- Do not modify EG4 collector or portal behavior.
 
 ## Success
 
-A reviewed framework MVP design identifies what can be reused by unrelated coding projects without carrying Solar Digital Twin-specific assumptions.
+A local check command reports clear pass/fail results without changing files.
 
 ## Consider Later
 

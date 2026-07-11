@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Reusable AI engineering framework MVP boundary design
+Framework-informed local automation checks
 
 Next Task:
-Design a reusable AI engineering framework MVP from the Solar Digital Twin workflow.
+Implement the first small local automation checks from the AI engineering framework MVP design.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,6 +19,7 @@ solardt
 main
 
 ## Current Status
+- AI engineering framework MVP boundary design documented
 - EG4 collector operational
 - SQLite database operational
 - Evidence capture operational
