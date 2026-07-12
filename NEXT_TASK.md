@@ -2,25 +2,29 @@
 
 ## Objective
 
-Establish and verify time synchronization for future EG4 and ESP32 forensic correlation.
+Review and standardize time synchronization across all deployed solar equipment using solardt at 192.168.3.11 as the preferred LAN NTP server.
 
 ## Scope
 
-- confirm the solardt VM IPv4 address
-- confirm the solardt timezone
-- inspect the current solardt time-synchronization service
-- configure solardt to serve time on the LAN if appropriate
-- verify solardt remains synchronized to reliable upstream time sources
-- document the verified configuration and test results
+- inventory all deployed solar equipment and supporting monitoring devices
+- confirm each device's IPv4 address and network reachability
+- identify each device's current time source, timezone, and NTP configuration
+- determine which devices support configurable NTP servers
+- include the ESP32 forensic logger, EG4 equipment, CP-100, BMS interfaces, and other relevant solar devices
+- verify each supported device can reach solardt UDP port 123
+- prepare the minimum configuration change needed to prefer 192.168.3.11
+- retain reliable public NTP servers as fallbacks where supported
+- document equipment that lacks configurable NTP or requires further interface research
+- verify clock alignment after each future configuration change
 
 ## Exclusions
 
-- do not modify the ESP32 configuration yet
-- do not implement event-correlation code
-- do not change EG4 collection frequency
-- do not modify EG4 collector behavior or SQLite schema
-- do not change equipment settings
+- do not upload firmware or deploy device configuration changes yet
+- do not alter ESP32 thresholds or forensic-event logic
+- do not change inverter, battery, charger, or protection settings
+- do not implement EG4 and ESP32 correlation code
+- do not change EG4 collection behavior
 
 ## Success
 
-The solardt VM has a verified IPv4 address, uses America/Chicago, remains synchronized to upstream time, and is ready to provide reliable LAN time for the ESP32.
+Every relevant solar device is inventoried and classified as synchronized, ready for configuration, unsupported, or requiring further research. A reviewed plan exists for making solardt the preferred NTP server wherever the equipment supports it.

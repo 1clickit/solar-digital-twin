@@ -33,6 +33,10 @@ main
 - Automated EG4 refresh timer enabled on a 15-minute schedule
 - Unattended EG4 refresh verified successfully through systemd
 - VM timezone set to America/Chicago for correct EG4 calendar-day collection
+- solardt Chrony service synchronized to upstream NTP sources
+- solardt LAN NTP server bound to 192.168.3.11:123
+- NTP access restricted to the 192.168.3.0/24 LAN
+- External NTP response verified successfully from WS01
 - Portal timestamps normalized to Central time
 - AC-couple and Load gauges reject day telemetry older than 30 minutes
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
