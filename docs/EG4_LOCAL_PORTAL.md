@@ -47,6 +47,23 @@ Current dashboard shows:
 - data freshness/latest source time
 - latest engineering findings
 
+## Browser Freshness
+
+The generated portal HTML discourages browser caching.
+
+An open portal tab reloads the HTML every 60 seconds using a cache-busting `_refresh` query parameter.
+
+This browser reload:
+
+- requests only the existing generated HTML
+- does not run the EG4 collector
+- does not regenerate the portal
+- remains separate from the 15-minute systemd collection timer
+
+A direct HTTP reload test confirmed that the modification time of `reports/eg4_portal.html` does not change when the browser requests the page.
+
+A LAN browser test confirmed that an open portal tab displayed newly generated HTML after the scheduled refresh without triggering additional EG4 collection.
+
 ## Systemd Service
 
 Service source: `systemd/eg4-local-portal.service`

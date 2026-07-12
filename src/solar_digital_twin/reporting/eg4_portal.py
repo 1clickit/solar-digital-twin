@@ -211,8 +211,18 @@ def build_portal() -> str:
 <html>
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>EG4 Local Portal</title>
 <style>{CSS}</style>
+<script>
+setTimeout(() => {{
+    const url = new URL(window.location.href);
+    url.searchParams.set("_refresh", Date.now().toString());
+    window.location.replace(url.toString());
+}}, 60000);
+</script>
 </head>
 <body>
 <main>
