@@ -41,6 +41,9 @@ See `docs/EG4_FORENSIC_CORRELATION.md` for the detailed design note.
 
 ## Future Workflow Improvements
 
+- Raise the VM-side tmux history limit beyond 50000 lines if long output continues to cause copy or scrollback problems.
+- Document the preferred Debian WSL -> SSH -> VM-side tmux workflow.
+
 - Enhance status.sh into a lightweight repository health check.
 - Check for documentation drift between PROJECT_STATE.md and NEXT_TASK.md.
 - Detect duplicate headings in project documentation.

@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Framework-informed local automation checks
+Portal freshness and operator experience
 
 Next Task:
-Extend repository health checks with shell and Python syntax validation.
+Improve portal browser freshness without changing EG4 data collection.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -38,6 +38,9 @@ main
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
 - status.sh repository health checks operational
 - Required-file, duplicate-heading, and documentation-drift checks tested
+- Tracked shell scripts validated with `bash -n`
+- Tracked Python source validated with `python -m compileall`
+- EG4 and ESP32 forensic correlation design documented
 - Project published to GitHub
 
 ## Current Reporting Implementation
