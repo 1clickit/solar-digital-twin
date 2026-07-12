@@ -2,23 +2,25 @@
 
 ## Objective
 
-Improve portal browser freshness without changing EG4 data collection.
+Establish and verify time synchronization for future EG4 and ESP32 forensic correlation.
 
 ## Scope
 
-- discourage browser caching of the generated portal HTML
-- optionally reload an already-open portal tab automatically
-- preserve generated time, source time, and stale-data warnings
-- keep browser refresh behavior separate from the 15-minute collection timer
-- keep the portal read-only
+- confirm the solardt VM IPv4 address
+- confirm the solardt timezone
+- inspect the current solardt time-synchronization service
+- configure solardt to serve time on the LAN if appropriate
+- verify solardt remains synchronized to reliable upstream time sources
+- document the verified configuration and test results
 
 ## Exclusions
 
+- do not modify the ESP32 configuration yet
+- do not implement event-correlation code
 - do not change EG4 collection frequency
-- do not modify collector behavior or SQLite schema
-- do not require EG4 credentials
-- do not implement forensic correlation yet
+- do not modify EG4 collector behavior or SQLite schema
+- do not change equipment settings
 
 ## Success
 
-A newly opened portal shows the current generated HTML, and any automatic browser reload does not trigger additional EG4 collection.
+The solardt VM has a verified IPv4 address, uses America/Chicago, remains synchronized to upstream time, and is ready to provide reliable LAN time for the ESP32.
