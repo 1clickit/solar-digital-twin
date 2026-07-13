@@ -262,3 +262,14 @@ When providing shell commands for this project:
 - Prefer appending or patching existing files over replacing large files in one paste.
 - If a heredoc appears to fail, first suspect an incomplete paste or browser issue before suspecting Bash, the terminal, or the VM.
 - Do not recommend rebooting the VM unless the shell or system itself is clearly malfunctioning.
+
+## Low-Output Chat Workflow
+
+To reduce chat bloat and avoid tmux/browser paste issues:
+
+- Avoid full diffs in chat after files exceed about 40 lines.
+- Prefer compact checks such as `git status --short`, `wc -l`, `grep`, `tail`, and targeted file snippets.
+- Redirect large logs to `/tmp` and paste only the relevant summary or last 20 to 40 lines.
+- For larger documentation edits, write in small chunks or use file patches instead of one large heredoc.
+- Commit and push completed work, then verify important file contents from the public GitHub repository when practical.
+- Do not request large pasted output when a compact local check or public GitHub verification is sufficient.

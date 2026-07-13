@@ -75,3 +75,6 @@ then:
 ## Workflow Improvements
 
 Repository workflow improvements are part of the project and may be updated when deficiencies are discovered.
+## Low-Output Chat Workflow
+
+Avoid full diffs and large pasted logs when compact checks or public GitHub verification are sufficient. Prefer short targeted checks, small write chunks, commit/push, and public GitHub verification.
