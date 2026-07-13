@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Portal freshness and operator experience
+Device time synchronization and solar equipment inventory
 
 Next Task:
-Improve portal browser freshness without changing EG4 data collection.
+Review and standardize time synchronization across all deployed solar equipment using solardt at 192.168.3.11 as the preferred LAN NTP server.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -37,6 +37,7 @@ main
 - solardt LAN NTP server bound to 192.168.3.11:123
 - NTP access restricted to the 192.168.3.0/24 LAN
 - External NTP response verified successfully from WS01
+- Portal browser freshness verified: no-cache headers and 60-second URL-busting reload are present
 - Portal timestamps normalized to Central time
 - AC-couple and Load gauges reject day telemetry older than 30 minutes
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
