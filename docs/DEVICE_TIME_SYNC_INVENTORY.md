@@ -55,7 +55,7 @@ Latest verification:
 | solardt | 192.168.3.11 | synchronized | Current preferred LAN NTP source |
 | Starlink management | 192.168.100.1 | NTP verified | UDP 123 open; read-only Chrony query worked |
 | LAN gateway | 192.168.3.1 | NTP inconclusive | Reachable; UDP 123 open/filtered |
-| Solar Assistant | 192.168.3.231 | unknown | Raspberry Pi; monitors PB / JK BMS devices |
+| Solar Assistant | 192.168.3.12 | static IP verified | Raspberry Pi; monitors PB / JK BMS devices; moved from DHCP 192.168.3.231 |
 | Home Assistant | 192.168.3.221 | unknown | Supporting automation system |
 | CP-100 / Chilicon gateway | 192.168.3.46 | research required | Espressif MAC 08:3A:F2:13:42:88; no open TCP ports found |
 | ESP32 forensic logger | unknown | needs identification | Multiple Espressif devices visible on LAN |
