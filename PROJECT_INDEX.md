@@ -87,4 +87,4 @@ The local VM is the engineering workspace.
 Every session should improve the repository
 so that future engineers require less
 conversation and more documentation.
-
+- docs/DEVICE_TIME_SYNC_INVENTORY.md - Device time synchronization inventory and NTP evidence
