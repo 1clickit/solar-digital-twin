@@ -2,29 +2,37 @@
 
 ## Objective
 
-Review and standardize time synchronization across all deployed solar equipment using solardt at 192.168.3.11 as the preferred LAN NTP server.
+Plan read-only ESP32 forensic telemetry collection for EG4 AC-couple event correlation.
+
+## Context
+
+The ESPHome forensic logger config has been saved in the repository and OTA-deployed to the live ESP32.
+
+Current deployed ESP32 forensic logger:
+
+- hostname: `eg4-forensic-logger.local`
+- static IPv4: `192.168.3.13`
+- preferred LAN NTP server: `192.168.3.11`
+- web portal reachable on port 80 from solardt
 
 ## Scope
 
-- inventory all deployed solar equipment and supporting monitoring devices
-- confirm each device's IPv4 address and network reachability
-- identify each device's current time source, timezone, and NTP configuration
-- determine which devices support configurable NTP servers
-- include the ESP32 forensic logger, EG4 equipment, CP-100, BMS interfaces, and other relevant solar devices
-- verify each supported device can reach solardt UDP port 123
-- prepare the minimum configuration change needed to prefer 192.168.3.11
-- retain reliable public NTP servers as fallbacks where supported
-- document equipment that lacks configurable NTP or requires further interface research
-- verify clock alignment after each future configuration change
+- inspect the ESPHome device's read-only telemetry access options
+- identify which 1-second values are available from the ESP32
+- determine whether ESPHome native API, web endpoint, logs, or another read-only method is best for collection
+- document fields useful for EG4 AC-couple correlation
+- define the smallest safe collector/reporting step
+- keep timestamp alignment with Central time and LAN NTP in mind
 
 ## Exclusions
 
-- do not upload firmware or deploy device configuration changes yet
-- do not alter ESP32 thresholds or forensic-event logic
+- do not change ESP32 thresholds or forensic-event logic
 - do not change inverter, battery, charger, or protection settings
-- do not implement EG4 and ESP32 correlation code
+- do not implement full EG4 and ESP32 correlation code yet
 - do not change EG4 collection behavior
+- do not add database schema changes yet
+- do not commit or display Wi-Fi secrets
 
 ## Success
 
-Every relevant solar device is inventoried and classified as synchronized, ready for configuration, unsupported, or requiring further research. A reviewed plan exists for making solardt the preferred NTP server wherever the equipment supports it.
+A reviewed plan exists for collecting ESP32 1-second telemetry read-only from solardt and using it later for EG4 AC-couple event correlation.

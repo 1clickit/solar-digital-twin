@@ -46,6 +46,11 @@ main
 - Tracked shell scripts validated with `bash -n`
 - Tracked Python source validated with `python -m compileall`
 - EG4 and ESP32 forensic correlation design documented
+- ESPHome forensic logger config saved at `firmware/esphome/eg4_forensic_probe_v3.yaml`
+- ESPHome Wi-Fi secrets protected with `firmware/esphome/secrets.yaml` ignored by Git
+- ESP32 forensic logger configured and OTA-updated for static IPv4 `192.168.3.13`
+- ESP32 forensic logger configured to prefer LAN NTP server `192.168.3.11`
+- ESP32 forensic logger reachability verified from desktop and solardt
 - Project published to GitHub
 
 ## Current Reporting Implementation
