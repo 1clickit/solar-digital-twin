@@ -65,6 +65,12 @@ docs/EG4_FORENSIC_CORRELATION.md
 docs/ESP32_FORENSIC_TELEMETRY_PLAN.md
     Read-only ESPHome SSE collection and timestamp design.
 
+docs/TELEMETRY_SOURCE_ROLES.md
+    Agreed authority, comparison, forensic, and display roles for telemetry sources.
+
+docs/SOLARASSISTANT_TELEMETRY_PLAN.md
+    Read-only SolarAssistant REST collection and timestamp design.
+
 src/solar_digital_twin/collectors/esp32_sse.py
     Standalone read-only ESPHome SSE evidence collector.
 

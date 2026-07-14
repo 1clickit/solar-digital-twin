@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-ESP32 forensic telemetry collection
+SolarAssistant read-only telemetry collection
 
 Next Task:
-Discuss and document telemetry-source roles and trust priorities before selecting any primary source for portal display.
+Implement the smallest safe standalone read-only SolarAssistant REST telemetry collector.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -57,6 +57,11 @@ main
 - ESP32 forensic telemetry collection plan documented
 - Standalone read-only ESP32 SSE collector implemented and manually verified
 - UTC-stamped ignored NDJSON evidence and clean interruption verified
+- SolarAssistant static IPv4 `192.168.3.12` and REST API verified
+- SolarAssistant software updated to version `2026-07-02`
+- Live combined and per-JK-BMS battery telemetry verified
+- SolarAssistant/JK BMS established as trusted battery source
+- Telemetry source roles and SolarAssistant collection plan documented
 - Project published to GitHub
 
 ## Current Reporting Implementation
