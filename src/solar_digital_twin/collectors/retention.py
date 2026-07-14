@@ -28,3 +28,20 @@ def meaningful_change(
         return False
 
     return difference >= threshold
+
+
+def heartbeat_due(
+    seconds_since_retained: float | None,
+    heartbeat_seconds: float,
+) -> bool:
+    """Return whether an unchanged metric needs a retained heartbeat."""
+    if heartbeat_seconds <= 0:
+        raise ValueError("heartbeat_seconds must be positive")
+
+    if seconds_since_retained is None:
+        return True
+
+    if seconds_since_retained < 0:
+        raise ValueError("seconds_since_retained must not be negative")
+
+    return seconds_since_retained >= heartbeat_seconds

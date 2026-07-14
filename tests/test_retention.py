@@ -23,5 +23,26 @@ class MeaningfulChangeTests(unittest.TestCase):
             meaningful_change(60.00, 60.01, -0.04)
 
 
+class HeartbeatDueTests(unittest.TestCase):
+    def test_heartbeat_boundary(self):
+        from solar_digital_twin.collectors.retention import heartbeat_due
+
+        self.assertFalse(heartbeat_due(29.9, 30))
+        self.assertTrue(heartbeat_due(30, 30))
+        self.assertTrue(heartbeat_due(31, 30))
+
+    def test_first_retention_is_due(self):
+        from solar_digital_twin.collectors.retention import heartbeat_due
+
+        self.assertTrue(heartbeat_due(None, 30))
+
+    def test_invalid_intervals_rejected(self):
+        from solar_digital_twin.collectors.retention import heartbeat_due
+
+        with self.assertRaises(ValueError):
+            heartbeat_due(10, 0)
+        with self.assertRaises(ValueError):
+            heartbeat_due(-1, 30)
+
 if __name__ == "__main__":
     unittest.main()
