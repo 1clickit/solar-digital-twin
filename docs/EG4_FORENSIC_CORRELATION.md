@@ -154,6 +154,45 @@ However, EG4 runtime snapshots may be several minutes away from the actual colla
 
 The absence of an EG4-recorded disturbance must not be interpreted as proof that no brief disturbance occurred.
 
+## Initial ESP32 Frequency Retention Policy
+
+During the current investigation, observe ESP32 frequency at one-second cadence.
+
+For normal database history:
+
+- store a frequency row when the value changes by at least 0.04 Hz from the last stored value
+- continue updating the metric's last-observed timestamp for suppressed samples
+- store a periodic heartbeat even when the value remains unchanged
+- always store threshold crossings, sensor availability transitions, and forensic events
+- retain a rolling raw buffer so significant AC-couple events can preserve complete one-second pre-event, event, and post-event samples, including duplicates
+
+The 0.04 Hz deadband is an initial configurable value. Review actual evidence and widen or narrow it only after measuring normal frequency variation.
+
+Field observation indicates that the EG4 inverter appears to switch AC-coupled microinverters on and off when operating conditions are met rather than continuously ramping their output. Event detection should therefore treat abrupt power steps, lower-output plateaus, and later step recovery as primary signatures. Ramp-rate measurements remain useful supporting evidence but should not be required for event detection.
+
+## Initial Telemetry Observation and Retention Schedule
+
+The following schedule is an initial configurable design, not yet implemented.
+
+| Source and telemetry | Observation cadence | Normal database retention |
+|---|---:|---|
+| ESP32 AC-couple power | Continuous, aligned to one-second samples | On change, plus 30-second heartbeat while producing |
+| ESP32 active-microinverter count | Continuous | Immediately on every change |
+| ESP32 status, curtailment, and binary events | Continuous | Immediately on every transition |
+| ESP32 frequency | Every second while solar is active | Change of at least 0.04 Hz, plus 30-second heartbeat |
+| ESP32 voltage, current, and ramp rates | Every second while active | On meaningful change, plus 30-second heartbeat |
+| SolarAssistant load power | Every 10 seconds | On change, plus 60-second heartbeat |
+| Battery voltage, current, and power | Every 10 seconds | On change, plus 60-second heartbeat |
+| Battery 1, Battery 2, and combined SOC | Every 60 seconds | On SOC change, plus 5-minute heartbeat |
+| Cell voltage and imbalance | Every 60 seconds | On meaningful change, plus 5-minute heartbeat |
+| Battery temperatures | Every 60 seconds | On meaningful change, plus 5-minute heartbeat |
+| Health, capacity, and cycle count | Every 15 minutes | On change, plus daily heartbeat |
+| EG4 telemetry | Existing established cadence | Preserve as a separate inverter and aggregate source |
+
+SolarAssistant returns the complete metrics response on each authenticated request and topics are filtered locally. Different database retention intervals therefore reduce evidence and database volume, but do not reduce SolarAssistant API traffic unless the overall polling interval is changed.
+
+Suppressed duplicate values must still update a last-observed timestamp so unchanged current values cannot be mistaken for stale data. Significant forensic events may override normal suppression and preserve complete one-second pre-event, event, and post-event evidence.
+
 ## Evidence Roles
 
 ### EG4 Data

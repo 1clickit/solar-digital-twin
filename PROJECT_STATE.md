@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-SolarAssistant telemetry operating design
+Persistent multi-rate telemetry collection design
 
 Next Task:
-Discuss and choose the smallest safe operating mode for SolarAssistant collection before any portal or systemd integration.
+Harden the standalone collectors for configurable observation, selective retention, evidence rotation, freshness tracking, and controlled recovery before portal, SQLite, or systemd integration.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -43,6 +43,11 @@ main
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
 - status.sh repository health checks operational
 - Required-file, duplicate-heading, and documentation-drift checks tested
+- Persistent SolarAssistant collection selected with a 10-second base polling interval
+- Topic-specific change retention and heartbeat policy documented
+- ESP32 frequency observed at one-second cadence with an initial 0.04 Hz storage deadband
+- Complete one-second evidence retained around significant forensic events
+- EG4 AC-couple step transitions treated as primary evidence; ramp rate is supporting evidence
 - Tracked shell scripts validated with `bash -n`
 - Tracked Python source validated with `python -m compileall`
 - EG4 and ESP32 forensic correlation design documented
