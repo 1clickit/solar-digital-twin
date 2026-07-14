@@ -80,6 +80,9 @@ src/solar_digital_twin/collectors/esp32_sse.py
 docs/AI_ENGINEERING_FRAMEWORK_MVP.md
     Reusable AI engineering framework MVP boundary design.
 
+docs/REPOMIX_REVIEW_WORKFLOW.md
+    Safe Repomix workflow for temporary architecture-review snapshots.
+
 database/
     SQLite schemas and databases.
 
