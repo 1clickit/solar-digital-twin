@@ -62,6 +62,9 @@ docs/EG4_LOCAL_PORTAL.md
 docs/EG4_FORENSIC_CORRELATION.md
     Planned EG4 and ESP32 AC-couple forensic correlation design.
 
+docs/ESP32_FORENSIC_TELEMETRY_PLAN.md
+    Read-only ESPHome SSE collection and timestamp design.
+
 docs/AI_ENGINEERING_FRAMEWORK_MVP.md
     Reusable AI engineering framework MVP boundary design.
 

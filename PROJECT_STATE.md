@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Device time synchronization and solar equipment inventory
+ESP32 forensic telemetry collection
 
 Next Task:
-Review and standardize time synchronization across all deployed solar equipment using solardt at 192.168.3.11 as the preferred LAN NTP server.
+Implement the smallest safe standalone read-only ESP32 SSE collector described in `docs/ESP32_FORENSIC_TELEMETRY_PLAN.md`.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -51,6 +51,9 @@ main
 - ESP32 forensic logger configured and OTA-updated for static IPv4 `192.168.3.13`
 - ESP32 forensic logger configured to prefer LAN NTP server `192.168.3.11`
 - ESP32 forensic logger reachability verified from desktop and solardt
+- ESP32 read-only SSE telemetry verified from solardt at one-second cadence
+- ESP32 telemetry receipt timestamps verified in America/Chicago
+- ESP32 forensic telemetry collection plan documented
 - Project published to GitHub
 
 ## Current Reporting Implementation

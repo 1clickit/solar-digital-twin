@@ -2,37 +2,39 @@
 
 ## Objective
 
-Plan read-only ESP32 forensic telemetry collection for EG4 AC-couple event correlation.
+Implement the smallest safe standalone read-only ESP32 SSE telemetry collector.
 
 ## Context
 
-The ESPHome forensic logger config has been saved in the repository and OTA-deployed to the live ESP32.
+The reviewed collection design is documented in
+`docs/ESP32_FORENSIC_TELEMETRY_PLAN.md`.
 
-Current deployed ESP32 forensic logger:
+The ESPHome `/events` stream has been verified from `solardt` over IPv4.
+Required telemetry arrives at approximately one-second intervals.
 
-- hostname: `eg4-forensic-logger.local`
-- static IPv4: `192.168.3.13`
-- preferred LAN NTP server: `192.168.3.11`
-- web portal reachable on port 80 from solardt
+Because SSE updates do not contain complete timestamps, the collector must
+assign synchronized receipt timestamps using the `solardt` clock.
 
 ## Scope
 
-- inspect the ESPHome device's read-only telemetry access options
-- identify which 1-second values are available from the ESP32
-- determine whether ESPHome native API, web endpoint, logs, or another read-only method is best for collection
-- document fields useful for EG4 AC-couple correlation
-- define the smallest safe collector/reporting step
-- keep timestamp alignment with Central time and LAN NTP in mind
+- connect read-only to `http://192.168.3.13/events`
+- filter an explicit allowlist of approved public entities
+- assign canonical UTC receipt timestamps
+- preserve entity name, numeric value, state text, and domain
+- append raw newline-delimited JSON under ignored `evidence/`
+- reconnect using bounded backoff
+- stop cleanly without corrupting evidence
+- verify a short manual collection run
 
 ## Exclusions
 
-- do not change ESP32 thresholds or forensic-event logic
-- do not change inverter, battery, charger, or protection settings
-- do not implement full EG4 and ESP32 correlation code yet
-- do not change EG4 collection behavior
-- do not add database schema changes yet
-- do not commit or display Wi-Fi secrets
+- no ESP32 firmware or threshold changes
+- no EG4 collector or SQLite schema changes
+- no EG4-to-ESP32 correlation yet
+- no permanent systemd service yet
+- no committed evidence or secrets
 
 ## Success
 
-A reviewed plan exists for collecting ESP32 1-second telemetry read-only from solardt and using it later for EG4 AC-couple event correlation.
+A short manual run records valid timestamped ESP32 telemetry without changing
+the ESP32, EG4 collector, database, or generated-artifact policy.
