@@ -9,6 +9,8 @@ reports/
 
 # SQLite database
 *.sqlite
+*.sqlite-shm
+*.sqlite-wal
 *.db
 
 # Local configuration overrides
