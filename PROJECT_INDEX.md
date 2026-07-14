@@ -20,6 +20,8 @@ Read in this order:
 6. SESSION_END.md
 
 ## Engineering Documents
+AGENTS.md
+    Codex CLI entry point and local-agent operating rules.
 
 START_HERE.md
     Session startup instructions.
@@ -80,8 +82,6 @@ src/solar_digital_twin/collectors/esp32_sse.py
 docs/AI_ENGINEERING_FRAMEWORK_MVP.md
     Reusable AI engineering framework MVP boundary design.
 
-docs/REPOMIX_REVIEW_WORKFLOW.md
-    Safe Repomix workflow for temporary architecture-review snapshots.
 
 database/
     SQLite schemas and databases.

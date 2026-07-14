@@ -41,6 +41,8 @@ See `docs/EG4_FORENSIC_CORRELATION.md` for the detailed design note.
 
 ## Future Workflow Improvements
 
+- Consider Repomix or a similar repository snapshot tool only for occasional future architecture audits; do not treat it as active workflow or authoritative memory.
+
 - Raise the VM-side tmux history limit beyond 50000 lines if long output continues to cause copy or scrollback problems.
 - Document the preferred Debian WSL -> SSH -> VM-side tmux workflow.
 

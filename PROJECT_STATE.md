@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Persistent multi-rate telemetry collection design
+Safe Codex CLI preparation
 
 Next Task:
-Harden the standalone collectors for configurable observation, selective retention, evidence rotation, freshness tracking, and controlled recovery before portal, SQLite, or systemd integration.
+Prepare the repository and solardt VM for safe OpenAI Codex CLI use before resuming collector implementation.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -73,6 +73,9 @@ main
 - Combined, Battery 1, and Battery 2 telemetry verified
 - Clean interruption verified during password prompt and active collection
 - Project published to GitHub
+
+- Repomix evaluation stopped as an active task; Repomix remains only an optional future architecture-audit tool.
+- Preparing repository rules for safe Codex CLI use on solardt before installation or evaluation.
 
 ## Current Reporting Implementation
 src/solar_digital_twin/reporting/eg4_daily_report.py

@@ -2,91 +2,46 @@
 
 ## Objective
 
-Define and implement the smallest safe foundation for persistent,
-multi-rate telemetry collection before portal or systemd integration.
+Prepare the repository and `solardt` VM for safe OpenAI Codex CLI use before
+resuming collector implementation.
+
+## Context
+
+Repomix evaluation has stopped as the active workflow task. Repomix may be
+considered later as an occasional architecture-audit snapshot tool, but it is
+not current project workflow, authoritative memory, or a recovery backup.
+
+The current engineering implementation goal remains persistent multi-rate
+telemetry collection. Codex preparation is a workflow improvement intended to
+reduce manual copy/paste load and preserve project momentum.
 
 ## Scope
 
-- harden persistent SolarAssistant collection
-- define configurable observation and retention intervals
-- suppress routine duplicate history while preserving freshness
-- define ESP32 one-second forensic retention behavior
-- document evidence rotation, credentials, recovery, and error visibility
-- defer portal, SQLite schema, and systemd integration
+- Add `AGENTS.md` as the Codex CLI entry point.
+- Distinguish manual ChatGPT relay rules from Codex local-agent rules.
+- Allow Codex to perform bounded, reviewable local work units rather than one
+  pasted terminal command at a time.
+- Preserve repository documentation as authoritative project memory.
+- Keep commits and pushes under explicit user approval.
+- Keep actual secret values out of chat, logs, commits, and generated output.
+- Install and evaluate Codex CLI only after this documentation is committed and
+  pushed.
 
-## Agreed Design
+## Initial Codex Evaluation Boundary
 
-- Use a persistent SolarAssistant collector.
-- Poll the complete authenticated read-only metrics endpoint every 10 seconds.
-- Apply topic-specific retention locally; separate intervals do not reduce API traffic.
-- Keep SolarAssistant/JK BMS as the trusted battery source.
-- Keep EG4 SOC as a separate inverter-reported comparison estimate.
-- Do not apply a fixed correction to EG4 SOC.
-- Update current-state freshness after every successful observation.
-- Insert history only for meaningful changes, required heartbeats,
-  availability transitions, and diagnostic-event overrides.
-- Preserve source, last-observed time, and last-changed time separately.
-- Keep portal and long-term archive design outside the first implementation.
+The first Codex evaluation should be read-only or documentation-only.
 
-## Initial Retention Policy
+Codex should read the repository guidance, inspect status, run safe local
+checks, and summarize what it would do next before making code changes.
 
-- Load power and battery voltage/current/power: observe every 10 seconds;
-  retain changes plus a 60-second heartbeat.
-- Battery 1, Battery 2, and combined SOC: retain changes plus a
-  5-minute heartbeat.
-- Cell voltage, imbalance, and temperatures: observe every 60 seconds;
-  retain meaningful changes plus a 5-minute heartbeat.
-- Health, capacity, and cycle count: observe every 15 minutes;
-  retain changes plus a daily heartbeat.
-- ESP32 AC-couple and electrical telemetry: observe at one-second cadence.
-- ESP32 frequency: retain changes of at least 0.04 Hz plus a
-  30-second heartbeat during active solar operation.
-- Significant events may preserve complete one-second pre-event,
-  event, and post-event samples, including duplicates.
+## Resume Afterward
 
-## Event Interpretation
-
-Field observation indicates that the EG4 appears to switch AC-coupled
-microinverters on and off rather than continuously ramping them.
-
-Primary event signatures are:
-
-- abrupt AC-couple power steps
-- reduced-output plateaus
-- active-microinverter count changes
-- later step recovery
-
-Ramp rate remains useful supporting evidence but is not required for
-event detection.
-
-## Implementation Boundary
-
-First harden standalone collection for:
-
-- evidence rotation and retention
-- protected credential handling
-- single-instance operation
-- last-observed and last-changed timestamps
-- controlled retry and restart behavior
-- visible collector and storage errors
-- configurable telemetry intervals and change thresholds
-
-Do not add portal, SQLite schema, or systemd integration until the
-standalone design and implementation boundary are reviewed.
-
-
-## Recovery Safeguards
-
-- Keep validated source code and documentation committed and pushed to GitHub.
-- Create and verify a dated Git bundle after important milestones.
-- Copy recovery files off the solardt VM to protect against VM or disk failure.
-- Back up databases, evidence, reports, credentials, and systemd configuration
-  separately using encrypted storage.
-- Test restoration periodically rather than assuming a backup is usable.
-- Treat Repomix output as a temporary architecture-review snapshot, not as
-  authoritative memory or a recovery backup.
+After Codex is safely evaluated, resume hardening the standalone collectors for
+configurable observation, selective retention, evidence rotation, freshness
+tracking, and controlled recovery before portal, SQLite, or systemd integration.
 
 ## Success
 
-The operating and retention policy is documented, configurable,
-testable, and ready for one small standalone implementation step.
+The repository clearly tells Codex how to operate safely, Repomix is no longer
+an active task, and the project is ready for a conservative Codex CLI install
+and evaluation on `solardt`.
