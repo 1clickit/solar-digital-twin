@@ -4,7 +4,7 @@ Current Milestone:
 ESP32 forensic telemetry collection
 
 Next Task:
-Implement the smallest safe standalone read-only ESP32 SSE collector described in `docs/ESP32_FORENSIC_TELEMETRY_PLAN.md`.
+Discuss and document telemetry-source roles and trust priorities before selecting any primary source for portal display.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -50,10 +50,13 @@ main
 - ESPHome Wi-Fi secrets protected with `firmware/esphome/secrets.yaml` ignored by Git
 - ESP32 forensic logger configured and OTA-updated for static IPv4 `192.168.3.13`
 - ESP32 forensic logger configured to prefer LAN NTP server `192.168.3.11`
+- ESP32 NTP requests to `solardt` verified with `chronyc clients`; forensic log uses the same Central-time basis
 - ESP32 forensic logger reachability verified from desktop and solardt
 - ESP32 read-only SSE telemetry verified from solardt at one-second cadence
 - ESP32 telemetry receipt timestamps verified in America/Chicago
 - ESP32 forensic telemetry collection plan documented
+- Standalone read-only ESP32 SSE collector implemented and manually verified
+- UTC-stamped ignored NDJSON evidence and clean interruption verified
 - Project published to GitHub
 
 ## Current Reporting Implementation

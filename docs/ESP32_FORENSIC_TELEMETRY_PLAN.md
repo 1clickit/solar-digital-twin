@@ -1,7 +1,7 @@
 # ESP32 Forensic Telemetry Collection Plan
 
 ## Status
-Reviewed design. Implementation is deferred to a later task.
+Implemented and manually verified on 2026-07-13. The standalone collector is `src/solar_digital_twin/collectors/esp32_sse.py`.
 
 ## Collection Decision
 Use the read-only ESPHome HTTP server-sent-event stream at `http://192.168.3.13/events` from `solardt`.

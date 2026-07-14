@@ -65,6 +65,9 @@ docs/EG4_FORENSIC_CORRELATION.md
 docs/ESP32_FORENSIC_TELEMETRY_PLAN.md
     Read-only ESPHome SSE collection and timestamp design.
 
+src/solar_digital_twin/collectors/esp32_sse.py
+    Standalone read-only ESPHome SSE evidence collector.
+
 docs/AI_ENGINEERING_FRAMEWORK_MVP.md
     Reusable AI engineering framework MVP boundary design.
 

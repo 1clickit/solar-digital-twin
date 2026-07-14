@@ -2,39 +2,36 @@
 
 ## Objective
 
-Implement the smallest safe standalone read-only ESP32 SSE telemetry collector.
+Discuss and document telemetry-source roles and trust priorities before
+selecting any primary source for portal display.
 
 ## Context
 
-The reviewed collection design is documented in
-`docs/ESP32_FORENSIC_TELEMETRY_PLAN.md`.
+The standalone ESP32 SSE collector is implemented and manually verified.
 
-The ESPHome `/events` stream has been verified from `solardt` over IPv4.
-Required telemetry arrives at approximately one-second intervals.
+ESP32 evidence now has canonical UTC receipt timestamps from the synchronized
+`solardt` clock. ESP32 NTP requests to `solardt` have also been verified.
 
-Because SSE updates do not contain complete timestamps, the collector must
-assign synchronized receipt timestamps using the `solardt` clock.
+No decision has been made about which available source should be treated as
+primary for display or engineering conclusions.
 
 ## Scope
 
-- connect read-only to `http://192.168.3.13/events`
-- filter an explicit allowlist of approved public entities
-- assign canonical UTC receipt timestamps
-- preserve entity name, numeric value, state text, and domain
-- append raw newline-delimited JSON under ignored `evidence/`
-- reconnect using bounded backoff
-- stop cleanly without corrupting evidence
-- verify a short manual collection run
+- inventory the available telemetry sources
+- distinguish authoritative, derived, forensic, and display roles
+- compare measurement location, update rate, timestamp quality, and gaps
+- compare known failure modes and uncertainty
+- identify values that should be shown side by side rather than merged
+- document decision criteria before choosing any primary source
 
 ## Exclusions
 
-- no ESP32 firmware or threshold changes
-- no EG4 collector or SQLite schema changes
-- no EG4-to-ESP32 correlation yet
-- no permanent systemd service yet
-- no committed evidence or secrets
+- no portal changes yet
+- no database schema changes
+- no source-priority decision before discussion
+- no EG4-to-ESP32 correlation implementation yet
 
 ## Success
 
-A short manual run records valid timestamped ESP32 telemetry without changing
-the ESP32, EG4 collector, database, or generated-artifact policy.
+A documented source-role comparison and agreed decision criteria exist before
+any source is designated primary for portal display.
