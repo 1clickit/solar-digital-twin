@@ -74,6 +74,18 @@ First harden standalone collection for:
 Do not add portal, SQLite schema, or systemd integration until the
 standalone design and implementation boundary are reviewed.
 
+
+## Recovery Safeguards
+
+- Keep validated source code and documentation committed and pushed to GitHub.
+- Create and verify a dated Git bundle after important milestones.
+- Copy recovery files off the solardt VM to protect against VM or disk failure.
+- Back up databases, evidence, reports, credentials, and systemd configuration
+  separately using encrypted storage.
+- Test restoration periodically rather than assuming a backup is usable.
+- Treat Repomix output as a temporary architecture-review snapshot, not as
+  authoritative memory or a recovery backup.
+
 ## Success
 
 The operating and retention policy is documented, configurable,
