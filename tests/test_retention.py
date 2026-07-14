@@ -1,6 +1,6 @@
 import unittest
 
-from solar_digital_twin.collectors.retention import meaningful_change
+from solar_digital_twin.collectors.retention import meaningful_change, retention_reason
 
 
 class MeaningfulChangeTests(unittest.TestCase):
@@ -43,6 +43,25 @@ class HeartbeatDueTests(unittest.TestCase):
             heartbeat_due(10, 0)
         with self.assertRaises(ValueError):
             heartbeat_due(-1, 30)
+
+
+class RetentionReasonTests(unittest.TestCase):
+    def test_meaningful_change_takes_priority(self):
+        self.assertEqual(
+            retention_reason(60.00, 60.04, 0.04, 30, 30),
+            "change",
+        )
+
+    def test_heartbeat_retains_unchanged_value(self):
+        self.assertEqual(
+            retention_reason(60.00, 60.00, 0.04, 30, 30),
+            "heartbeat",
+        )
+
+    def test_unchanged_value_before_heartbeat_is_not_retained(self):
+        self.assertIsNone(
+            retention_reason(60.00, 60.00, 0.04, 29.9, 30)
+        )
 
 if __name__ == "__main__":
     unittest.main()

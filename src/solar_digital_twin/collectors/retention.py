@@ -45,3 +45,20 @@ def heartbeat_due(
         raise ValueError("seconds_since_retained must not be negative")
 
     return seconds_since_retained >= heartbeat_seconds
+
+
+def retention_reason(
+    previous: Any,
+    current: Any,
+    deadband: float,
+    seconds_since_retained: float | None,
+    heartbeat_seconds: float,
+) -> str | None:
+    """Return why a telemetry value should be retained, if at all."""
+    if meaningful_change(previous, current, deadband):
+        return "change"
+
+    if heartbeat_due(seconds_since_retained, heartbeat_seconds):
+        return "heartbeat"
+
+    return None
