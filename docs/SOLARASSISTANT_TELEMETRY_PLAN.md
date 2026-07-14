@@ -2,7 +2,7 @@
 
 ## Status
 
-Reviewed planning task. Implementation has not started.
+Implemented and manually verified on 2026-07-14. Collector: `src/solar_digital_twin/collectors/solarassistant.py`.
 
 ## Purpose
 

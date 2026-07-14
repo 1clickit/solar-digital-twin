@@ -71,6 +71,9 @@ docs/TELEMETRY_SOURCE_ROLES.md
 docs/SOLARASSISTANT_TELEMETRY_PLAN.md
     Read-only SolarAssistant REST collection and timestamp design.
 
+src/solar_digital_twin/collectors/solarassistant.py
+    Standalone read-only SolarAssistant battery evidence collector.
+
 src/solar_digital_twin/collectors/esp32_sse.py
     Standalone read-only ESPHome SSE evidence collector.
 

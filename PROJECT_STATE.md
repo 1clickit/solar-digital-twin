@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-SolarAssistant read-only telemetry collection
+SolarAssistant telemetry operating design
 
 Next Task:
-Implement the smallest safe standalone read-only SolarAssistant REST telemetry collector.
+Discuss and choose the smallest safe operating mode for SolarAssistant collection before any portal or systemd integration.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -62,6 +62,11 @@ main
 - Live combined and per-JK-BMS battery telemetry verified
 - SolarAssistant/JK BMS established as trusted battery source
 - Telemetry source roles and SolarAssistant collection plan documented
+- Standalone read-only SolarAssistant REST collector implemented
+- Explicit battery-topic allowlist manually verified
+- UTC-stamped ignored NDJSON evidence manually verified
+- Combined, Battery 1, and Battery 2 telemetry verified
+- Clean interruption verified during password prompt and active collection
 - Project published to GitHub
 
 ## Current Reporting Implementation

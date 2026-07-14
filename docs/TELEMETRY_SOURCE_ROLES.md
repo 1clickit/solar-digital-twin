@@ -27,8 +27,13 @@ Retain EG4 SOC as a separate comparison value.
 The difference between trusted SOC and EG4 SOC may be useful for identifying
 estimation drift or loss of alignment.
 
-A difference greater than 40 percentage points has been observed, but no alert
-threshold has been established.
+The disagreement is variable rather than a fixed offset. A difference greater
+than 40 percentage points has been observed, while near full charge EG4 was
+within approximately 3 percentage points of the trusted SOC.
+
+Do not apply a fixed correction. Preserve and compare the difference over time
+and under different charging and discharging conditions. No alert threshold has
+been established.
 
 ## ESP32 Role
 
