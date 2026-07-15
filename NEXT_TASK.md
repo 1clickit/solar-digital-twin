@@ -2,46 +2,43 @@
 
 ## Objective
 
-Prepare the repository and `solardt` VM for safe OpenAI Codex CLI use before
-resuming collector implementation.
+Complete the smallest safe standalone SolarAssistant collector-hardening work
+unit while preserving its existing raw evidence output.
 
 ## Context
 
-Repomix evaluation has stopped as the active workflow task. Repomix may be
-considered later as an occasional architecture-audit snapshot tool, but it is
-not current project workflow, authoritative memory, or a recovery backup.
+Codex CLI setup and its first bounded coding workflow are complete. The ESP32
+collector now preserves raw NDJSON evidence and writes a separate selectively
+retained stream.
 
 The current engineering implementation goal remains persistent multi-rate
-telemetry collection. Codex preparation is a workflow improvement intended to
-reduce manual copy/paste load and preserve project momentum.
+telemetry collection. The standalone SolarAssistant collector and its raw
+NDJSON evidence have already been manually verified. Existing telemetry plans
+document topic-specific observation and retention direction.
 
 ## Scope
 
-- Add `AGENTS.md` as the Codex CLI entry point.
-- Distinguish manual ChatGPT relay rules from Codex local-agent rules.
-- Allow Codex to perform bounded, reviewable local work units rather than one
-  pasted terminal command at a time.
-- Preserve repository documentation as authoritative project memory.
-- Keep commits and pushes under explicit user approval.
-- Keep actual secret values out of chat, logs, commits, and generated output.
-- Install and evaluate Codex CLI only after this documentation is committed and
-  pushed.
+- Harden only the existing standalone SolarAssistant collector.
+- Preserve its existing raw NDJSON evidence filename and record format.
+- Select the smallest coherent retained-output step authorized by the existing
+  telemetry plans.
+- Add focused offline tests requiring no device, credentials, network access,
+  or existing evidence files.
+- Keep portal, SQLite, and systemd integration deferred.
+- Do not modify SolarAssistant device behavior or issue control requests.
+- Keep credentials, generated evidence, and secrets out of the repository and
+  command output.
 
-## Initial Codex Evaluation Boundary
+## Boundaries
 
-The first Codex evaluation should be read-only or documentation-only.
-
-Codex should read the repository guidance, inspect status, run safe local
-checks, and summarize what it would do next before making code changes.
-
-## Resume Afterward
-
-After Codex is safely evaluated, resume hardening the standalone collectors for
-configurable observation, selective retention, evidence rotation, freshness
-tracking, and controlled recovery before portal, SQLite, or systemd integration.
+- Keep the work standalone, bounded, and reviewable.
+- Preserve existing polling, authentication, timestamp, allowlist, flushing,
+  duration, backoff, and clean-interruption behavior unless the bounded task
+  explicitly requires and tests a change.
+- Do not add portal, SQLite, systemd, or device-control integration.
+- Do not expand retention policy beyond existing repository plans.
 
 ## Success
 
-The repository clearly tells Codex how to operate safely, Repomix is no longer
-an active task, and the project is ready for a conservative Codex CLI install
-and evaluation on `solardt`.
+One focused SolarAssistant hardening step is implemented and verified offline,
+raw evidence remains intact, and no deferred integration boundary is crossed.

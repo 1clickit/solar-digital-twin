@@ -17,11 +17,15 @@ Read in this order:
 3. CONTRIBUTING.md
 4. PROJECT_STATE.md
 5. NEXT_TASK.md
-6. SESSION_END.md
+6. AI_PROMPT.md
+7. SESSION_END.md
 
 ## Engineering Documents
 AGENTS.md
-    Codex CLI entry point and local-agent operating rules.
+    Codex CLI entry point, communication guidance, guardrails, and local-agent operating rules.
+
+AI_PROMPT.md
+    Manual ChatGPT operating and communication guidance.
 
 START_HERE.md
     Session startup instructions.

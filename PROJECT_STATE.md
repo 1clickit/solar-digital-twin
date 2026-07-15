@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Safe Codex CLI preparation
+Persistent multi-rate telemetry collection
 
 Next Task:
-Prepare the repository and solardt VM for safe OpenAI Codex CLI use before resuming collector implementation.
+Complete the smallest safe standalone SolarAssistant collector-hardening unit while preserving raw evidence and deferring integration work.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -75,7 +75,13 @@ main
 - Project published to GitHub
 
 - Repomix evaluation stopped as an active task; Repomix remains only an optional future architecture-audit tool.
-- Preparing repository rules for safe Codex CLI use on solardt before installation or evaluation.
+- Codex CLI installation and ChatGPT authentication successfully validated on `solardt`.
+- Native Bubblewrap/AppArmor sandboxing, workspace-write mode, and explicit approval boundaries successfully validated.
+- First bounded Codex coding workflow completed successfully.
+- Existing ESP32 raw NDJSON filename and record stream remain intact as complete approved raw evidence.
+- Separate selectively retained ESP32 NDJSON output implemented with the documented 0.04 Hz frequency deadband and 30-second heartbeat.
+- ESP32 collector-level offline tests and repository health checks passed; the retained stream has not yet been verified against the live device.
+- Commit `5fef46b` pushed to `origin/main`; `main` was clean and synchronized afterward.
 
 ## Current Reporting Implementation
 src/solar_digital_twin/reporting/eg4_daily_report.py

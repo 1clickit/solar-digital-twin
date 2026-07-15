@@ -34,6 +34,21 @@ preserving the safety intent of the other documents.
 A bounded work unit may include local inspection, related file edits, targeted
 tests, repository health checks, and a concise summary.
 
+## Communication
+
+Chris is the project owner and system operator, not a software developer. Use
+clear, plain language, and do not assume he can independently review source
+code, full diffs, stack traces, or architecture decisions.
+
+- Clearly distinguish informational output from decisions or actions that need
+  Chris's approval.
+- Prefer focused tests and code review over asking Chris to judge raw code.
+- An external ChatGPT project-management session may provide bounded work
+  instructions and review final summaries, but Codex cannot access that
+  separate conversation.
+- Repository documentation and the current Codex task remain authoritative.
+- Preserve all existing approval requirements and safety guardrails.
+
 ## Guardrails
 
 - Prefer direct local inspection over asking the user to paste file contents.
