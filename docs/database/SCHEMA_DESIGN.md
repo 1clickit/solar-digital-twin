@@ -18,11 +18,23 @@ The database must support long-term engineering analysis across multiple data so
 
 The goal is not just to store readings. The goal is to preserve engineering evidence, normalize observations, and make every future report traceable back to raw source data.
 
+## Current Status
+
+EG4 SQLite storage is operational. It is the current normalized engineering
+history and query layer for EG4 data. Raw evidence files remain the authoritative
+source material.
+
+The broader multi-source schema remains a design direction. SolarAssistant and
+ESP32 currently write standalone NDJSON evidence under ignored `evidence/`
+directories; neither source is yet normalized into SQLite. Reports, the portal,
+Home Assistant, and future APIs are derived consumers rather than authoritative
+stores.
+
 ## Design Principles
 
 1. Devices exist independently of collectors.
 2. Multiple collectors may observe the same physical device.
-3. Raw evidence must be preserved.
+3. Raw evidence files are authoritative and must be preserved.
 4. Normalized measurements must be queryable over time.
 5. Events must be distinct from measurements.
 6. Derived analysis must be reproducible.
@@ -78,7 +90,8 @@ Examples:
 - Weather collector
 - Utility collector
 
-Collectors produce evidence and normalized measurements.
+Collectors produce evidence. A later normalization stage may produce SQLite
+measurements when that source's integration is implemented.
 
 ### Measurement
 
@@ -150,9 +163,9 @@ Examples:
 
 Derived analysis should be reproducible from stored data.
 
-## Initial Core Tables
+## Target Multi-Source Tables
 
-The first database version should likely include:
+A broader multi-source database version may include:
 
 - sites
 - devices
@@ -162,9 +175,9 @@ The first database version should likely include:
 - events
 - analysis_runs
 
-## Open Design Questions
+## Open Multi-Source Design Questions
 
-Before writing SQL, we need to decide:
+Before extending SQLite beyond the current EG4 implementation, decide:
 
 1. How should physical devices be uniquely identified?
 2. How should one physical device be linked to multiple collectors?
@@ -175,11 +188,11 @@ Before writing SQL, we need to decide:
 7. How should derived reports link back to source evidence?
 
 
-## MVP Scope
+## Historical EG4 MVP Scope
 
-The first implementation will intentionally be narrow.
+The completed initial implementation was intentionally narrow.
 
-Initial scope:
+Completed scope:
 
 - One site
 - One EG4 12000XP inverter
@@ -188,14 +201,16 @@ Initial scope:
 - Normalized EG4 measurements
 - Daily engineering report
 
-Deferred until later:
+Deferred beyond the EG4 MVP:
 
-- SolarAssistant collector
+- SolarAssistant-to-SQLite normalization
+- ESP32-to-SQLite normalization
 - Home Assistant collector
-- JK BMS collector
 - Weather collector
 - Utility/grid collector
-- Web dashboard
+- Multi-source portal integration
 - Home Assistant publishing
 
-The purpose of the MVP is to create something visible and useful quickly while preserving the long-term architecture.
+Standalone SolarAssistant/JK BMS and ESP32 collectors now exist, but their
+NDJSON evidence is not yet part of normalized SQLite history. The EG4 MVP
+created something visible and useful while preserving the long-term architecture.

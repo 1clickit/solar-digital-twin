@@ -2,21 +2,27 @@
 
 ## Current Priority
 
-### Visible EG4 MVP
-- Create reporting package.
-- Generate `reports/engineering_daily_report.md`.
-- Read existing EG4 collector CSV outputs.
-- Do not modify collector behavior or SQLite schema yet.
+Current implementation work is defined by `NEXT_TASK.md`. Backlog items remain
+deferred until explicitly promoted and approved.
 
 ## Later
 
+### Collector Hardening and History
+- Harden SolarAssistant collection while preserving its existing raw evidence.
+- Add a separate SolarAssistant retained-output stage using approved topic-specific policies.
+- Normalize SolarAssistant and ESP32 history into SQLite after standalone collectors are hardened.
+- Add rolling raw buffers and automatic pre-event, event, and post-event preservation.
+- Integrate trusted JK BMS and ESP32 data into the primary engineering portal.
+
 ### Home Assistant Integration
-- Decide whether the Digital Twin reports to Home Assistant, provides a separate webpage, or both.
+- Add complementary convenience, status, and alerts without replacing the engineering portal or authoritative evidence and history.
+
+### Portal Improvements
+- Add a future secured `Refresh data now` workflow so F5 or an explicit portal control can request one bounded EG4 collection, report, and portal-generation cycle before displaying newly generated data. Prevent overlapping jobs, rapid repeated requests, uncontrolled command execution, and credential exposure; report in-progress, success, failure, and last-completed status clearly.
+- Add an optional local portal-development live-reload mode so Chris can watch visible changes while Codex works. Keep it separate from the production portal and from telemetry collection.
 
 ### Additional Collectors
-- SolarAssistant collector
 - Home Assistant collector
-- JK BMS collector
 - Weather collector
 - Utility collector, if useful later
 
@@ -26,7 +32,6 @@
 - State clearly that cloud cover and individual microinverter dropout can look similar in aggregate EG4 data.
 - Correlate EG4 events with ESP32 1-second voltage, frequency, estimated power, ramp-rate, and forensic-log evidence.
 - Create a future AC-Couple Event Correlation Report with confidence and uncertainty categories.
-- Configure and verify time synchronization between solardt and the ESP32 before relying on event correlation.
 - Evaluate a temporary five-minute EG4 sampling mode for limited full-sun diagnostic windows.
 - Consider one-minute sampling only after conservative endpoint testing and explicit risk approval.
 - Research local CP-100 web, API, export, network, or supported integration access before considering RS485.
@@ -46,11 +51,7 @@ See `docs/EG4_FORENSIC_CORRELATION.md` for the detailed design note.
 - Raise the VM-side tmux history limit beyond 50000 lines if long output continues to cause copy or scrollback problems.
 - Document the preferred Debian WSL -> SSH -> VM-side tmux workflow.
 
-- Enhance status.sh into a lightweight repository health check.
-- Check for documentation drift between PROJECT_STATE.md and NEXT_TASK.md.
-- Detect duplicate headings in project documentation.
-- Detect missing required project files.
-- Treat status.sh as the project's startup assistant and improve it over time.
+- Add narrowly scoped repository health checks when new documented failure modes justify them.
 - Keep executable commands clearly separated from discussion text.
 - Every session should try to leave the repository easier for the next engineer to use.
 
@@ -64,4 +65,3 @@ See `docs/EG4_FORENSIC_CORRELATION.md` for the detailed design note.
   - Documentation-driven development
   - Human/AI collaboration standards
   - Project health monitoring
-

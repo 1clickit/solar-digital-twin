@@ -48,6 +48,10 @@ code, full diffs, stack traces, or architecture decisions.
   separate conversation.
 - Repository documentation and the current Codex task remain authoritative.
 - Preserve all existing approval requirements and safety guardrails.
+- Codex may freely identify and propose ideas, risks, architecture improvements,
+  and future work, but must label proposals separately from authorized work.
+- Codex must not implement a proposal, expand the active task, or edit
+  `BACKLOG.md` without explicit approval.
 
 ## Guardrails
 

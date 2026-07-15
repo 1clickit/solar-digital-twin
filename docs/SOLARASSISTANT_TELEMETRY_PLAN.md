@@ -52,6 +52,25 @@ Each record will preserve:
 
 Generated evidence remains ignored by Git.
 
+Raw evidence files are authoritative source material and must be preserved.
+
+## Cadence Definitions and Status
+
+- **API polling interval:** how often the collector requests the complete REST response.
+- **Raw evidence cadence:** every approved metric from every successful poll is written and flushed to raw NDJSON.
+- **Retained-history cadence:** how often a topic is eligible for a future retained-output record.
+- **Heartbeat cadence:** the maximum planned interval between retained records when an observed value remains stable.
+
+The current collector defaults to one-second polling. That remains available for
+manual or diagnostic use, but the approved intended normal persistent polling
+interval is 10 seconds. The existing raw collector and its one-second default
+were manually verified.
+
+Topic-specific retained-history and heartbeat schedules are documented in
+`docs/EG4_FORENSIC_CORRELATION.md`; they remain planned and are not implemented
+for SolarAssistant. Changing retention does not change API traffic or raw
+evidence cadence. No persistent SolarAssistant systemd service exists yet.
+
 ## Approved Topic Scope
 
 The first collector will use an explicit allowlist.
@@ -96,7 +115,7 @@ by the first collector.
 
 ## Polling and Failure Handling
 
-The first collector will:
+The current collector will:
 
 - poll once per second by default
 - use a finite HTTP request timeout
@@ -106,8 +125,9 @@ The first collector will:
 - stop cleanly on Ctrl+C
 - flush each NDJSON record promptly
 
-The polling interval may be configurable for manual testing, but no interval
-faster than one second is required.
+The polling interval is configurable. One second is the current default and
+manual diagnostic capability; 10 seconds is the intended normal persistent
+configuration.
 
 ## Exclusions
 

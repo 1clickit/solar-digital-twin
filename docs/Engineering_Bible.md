@@ -1,19 +1,34 @@
 # Solar Digital Twin Engineering Bible
 
-**Version:** 0.1  
+**Version:** 0.2
 **Status:** Living Document
 
 ## Mission
 
 Build an engineering-grade Digital Twin for a residential power system that preserves raw evidence, correlates data from multiple sources, and produces defensible engineering analysis.
 
+## Primary User and Intended Use
+
+Chris is the primary user, project owner, and system operator. The dedicated
+local portal is the intended primary engineering interface for normal system
+awareness, historical review, and evidence-based forensic investigation.
+Home Assistant may later provide complementary convenience, status, and alerts,
+but it is not an authoritative data store.
+
+## Operational Completion Baseline
+
+The project reaches an operationally complete baseline when it provides a
+trustworthy normal-operation view, freshness awareness, source-labeled
+historical records, reproducible reports, and evidence-based forensic event
+correlation. Automatic equipment control is not required. Further integrations
+may continue after this baseline.
+
 ## Guiding Principles
 
-- Preserve raw evidence.
+- Raw evidence files are the authoritative source material.
 - Never overwrite historical evidence.
-- SQLite is the engineering source of truth.
-- Reports are derived products.
-- Home Assistant is a consumer, not the owner, of engineering data.
+- SQLite is the normalized engineering history and query layer.
+- Reports, the portal, Home Assistant, and future APIs are derived consumers.
 - Optimize only after measurement.
 - Prefer simple architectures until complexity is justified.
 
@@ -25,9 +40,12 @@ Proxmox VE
 └── Ubuntu Server (solardt)
       └── Solar Digital Twin
             ├── EG4 Collector
-            ├── SQLite
+            ├── SolarAssistant NDJSON Collector
+            ├── ESP32 NDJSON Collector
+            ├── EG4 SQLite History
             ├── Analysis Engine
             ├── Reporting
+            ├── Local Engineering Portal
             └── REST API (future)
 ```
 
@@ -72,10 +90,11 @@ Proxmox VE
 ### Accepted
 
 1. Digital Twin runs in its own Ubuntu VM.
-2. Home Assistant consumes Digital Twin data.
-3. Preserve raw evidence.
-4. SQLite first; expand only if justified.
-5. Build incrementally and verify with real data.
+2. The dedicated local portal is the primary engineering interface.
+3. Home Assistant may later consume Digital Twin data as a complementary interface.
+4. Preserve raw evidence as authoritative source material.
+5. Use SQLite for normalized history and engineering queries; expand only if justified.
+6. Build incrementally and verify with real data.
 
 ### Working Philosophy
 
@@ -97,22 +116,25 @@ Hypotheses remain separate from measured facts.
 
 ### Phase 2
 
-- Import Engineering Bible
-- Import EG4 connector
-- Build SQLite schema
-- Build reporting
+- ✅ Import Engineering Bible
+- ✅ Import EG4 connector
+- ✅ Build EG4 SQLite foundation
+- ✅ Build EG4 reporting and local portal
 
 ### Phase 3
 
-- Add Solar Assistant
-- Add JK BMS
-- Add ESP32 logger
+- ✅ Add standalone SolarAssistant access to trusted JK BMS telemetry
+- ✅ Add standalone ESP32 raw evidence collector
+- ✅ Add offline-tested ESP32 retained-frequency stage
+- Planned: normalize SolarAssistant and ESP32 history into SQLite
+- Planned: integrate trusted JK BMS and ESP32 data into the portal
 
 ### Phase 4
 
-- Event correlation
-- Engineering reports
-- REST API
+- Planned: evidence-based event correlation
+- Planned: broader engineering and forensic reports
+- Deferred: REST API
+- Deferred: Home Assistant publishing and broader automation
 
 ## Session Notes
 

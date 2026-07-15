@@ -154,44 +154,59 @@ However, EG4 runtime snapshots may be several minutes away from the actual colla
 
 The absence of an EG4-recorded disturbance must not be interpreted as proof that no brief disturbance occurred.
 
-## Initial ESP32 Frequency Retention Policy
+## ESP32 Frequency Retention Status
 
-During the current investigation, observe ESP32 frequency at one-second cadence.
+Implemented and covered by offline collector-level tests:
 
-For normal database history:
+- approved ESP32 SSE observations remain preserved in the existing raw NDJSON
+- a separate retained NDJSON stream exists
+- approved non-frequency records pass through unchanged
+- valid generator-frequency values retain changes of at least 0.04 Hz from the last retained value
+- a 30-second heartbeat uses monotonic elapsed time to retain stable frequency periodically
+- invalid frequency values remain raw-only and do not alter retention state
 
-- store a frequency row when the value changes by at least 0.04 Hz from the last stored value
-- continue updating the metric's last-observed timestamp for suppressed samples
-- store a periodic heartbeat even when the value remains unchanged
-- always store threshold crossings, sensor availability transitions, and forensic events
-- retain a rolling raw buffer so significant AC-couple events can preserve complete one-second pre-event, event, and post-event samples, including duplicates
+The retained stage has not yet been verified against the live ESP32.
+
+Still planned:
+
+- normalized database retention
+- last-observed tracking for suppressed samples in normalized history
+- rolling raw buffers
+- automatic pre-event, event, and post-event preservation
+- event-triggered suppression overrides for threshold crossings, availability transitions, and forensic events
+- the remainder of the multi-topic retention schedule
 
 The 0.04 Hz deadband is an initial configurable value. Review actual evidence and widen or narrow it only after measuring normal frequency variation.
 
 Field observation indicates that the EG4 inverter appears to switch AC-coupled microinverters on and off when operating conditions are met rather than continuously ramping their output. Event detection should therefore treat abrupt power steps, lower-output plateaus, and later step recovery as primary signatures. Ramp-rate measurements remain useful supporting evidence but should not be required for event detection.
 
-## Initial Telemetry Observation and Retention Schedule
+## Mixed-Status Telemetry Observation and Retention Schedule
 
-The following schedule is an initial configurable design, not yet implemented.
+The following is an initial configurable design. Only the ESP32 retained-file
+frequency deadband and heartbeat subset described above is implemented; the
+normal database retention schedule and other topic policies remain planned.
 
-| Source and telemetry | Observation cadence | Normal database retention |
-|---|---:|---|
-| ESP32 AC-couple power | Continuous, aligned to one-second samples | On change, plus 30-second heartbeat while producing |
-| ESP32 active-microinverter count | Continuous | Immediately on every change |
-| ESP32 status, curtailment, and binary events | Continuous | Immediately on every transition |
-| ESP32 frequency | Every second while solar is active | Change of at least 0.04 Hz, plus 30-second heartbeat |
-| ESP32 voltage, current, and ramp rates | Every second while active | On meaningful change, plus 30-second heartbeat |
-| SolarAssistant load power | Every 10 seconds | On change, plus 60-second heartbeat |
-| Battery voltage, current, and power | Every 10 seconds | On change, plus 60-second heartbeat |
-| Battery 1, Battery 2, and combined SOC | Every 60 seconds | On SOC change, plus 5-minute heartbeat |
-| Cell voltage and imbalance | Every 60 seconds | On meaningful change, plus 5-minute heartbeat |
-| Battery temperatures | Every 60 seconds | On meaningful change, plus 5-minute heartbeat |
-| Health, capacity, and cycle count | Every 15 minutes | On change, plus daily heartbeat |
-| EG4 telemetry | Existing established cadence | Preserve as a separate inverter and aggregate source |
+| Source and telemetry | Observation cadence | Normal database retention | Status |
+|---|---:|---|---|
+| ESP32 AC-couple power | Continuous, aligned to one-second samples | On change, plus 30-second heartbeat while producing | Planned |
+| ESP32 active-microinverter count | Continuous | Immediately on every change | Planned |
+| ESP32 status, curtailment, and binary events | Continuous | Immediately on every transition | Planned |
+| ESP32 frequency | Every second while solar is active | Change of at least 0.04 Hz, plus 30-second heartbeat | Retained file offline-tested; database planned |
+| ESP32 voltage, current, and ramp rates | Every second while active | On meaningful change, plus 30-second heartbeat | Planned |
+| SolarAssistant load power | Every 10 seconds | On change, plus 60-second heartbeat | Planned |
+| Battery voltage, current, and power | Every 10 seconds | On change, plus 60-second heartbeat | Planned |
+| Battery 1, Battery 2, and combined SOC | Every 60 seconds | On SOC change, plus 5-minute heartbeat | Planned |
+| Cell voltage and imbalance | Every 60 seconds | On meaningful change, plus 5-minute heartbeat | Planned |
+| Battery temperatures | Every 60 seconds | On meaningful change, plus 5-minute heartbeat | Planned |
+| Health, capacity, and cycle count | Every 15 minutes | On change, plus daily heartbeat | Planned |
+| EG4 telemetry | Existing established cadence | Preserve as a separate inverter and aggregate source | Existing EG4 workflow |
 
 SolarAssistant returns the complete metrics response on each authenticated request and topics are filtered locally. Different database retention intervals therefore reduce evidence and database volume, but do not reduce SolarAssistant API traffic unless the overall polling interval is changed.
 
-Suppressed duplicate values must still update a last-observed timestamp so unchanged current values cannot be mistaken for stale data. Significant forensic events may override normal suppression and preserve complete one-second pre-event, event, and post-event evidence.
+Planned normalized history must update a last-observed timestamp for suppressed
+duplicates so unchanged current values cannot be mistaken for stale data.
+Planned significant-event handling may override normal suppression and preserve
+complete one-second pre-event, event, and post-event evidence.
 
 ## Evidence Roles
 

@@ -23,11 +23,14 @@ main
 - status.sh runs repository health check script at startup
 - AI engineering framework MVP boundary design documented
 - EG4 collector operational
-- SQLite database operational
+- Raw evidence files are authoritative source material; reports and interfaces are derived consumers
+- SQLite normalized history and query layer operational for EG4
+- SolarAssistant and ESP32 remain standalone NDJSON collectors and are not yet normalized into SQLite
 - Evidence capture operational
 - CSV report generation operational
 - EG4 collector/report MVP complete
 - EG4 local portal generator operational
+- Dedicated local portal selected as the primary engineering interface
 - Browser smoke test passed on LAN
 - EG4 local portal systemd service enabled and verified with HTTP 200
 - Automated EG4 refresh timer enabled on a 15-minute schedule
@@ -37,16 +40,17 @@ main
 - solardt LAN NTP server bound to 192.168.3.11:123
 - NTP access restricted to the 192.168.3.0/24 LAN
 - External NTP response verified successfully from WS01
-- Portal browser freshness verified: no-cache headers and 60-second URL-busting reload are present
+- Portal browser freshness verified: cache-discouraging HTML metadata and a 60-second cache-busting reload are present
 - Portal timestamps normalized to Central time
 - AC-couple and Load gauges reject day telemetry older than 30 minutes
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
+- Current local portal is EG4-only; trusted JK BMS and ESP32 values are not yet portal inputs
 - status.sh repository health checks operational
 - Required-file, duplicate-heading, and documentation-drift checks tested
-- Persistent SolarAssistant collection selected with a 10-second base polling interval
+- SolarAssistant normal persistent polling target is 10 seconds; the current 1-second default remains available for manual diagnostics
 - Topic-specific change retention and heartbeat policy documented
 - ESP32 frequency observed at one-second cadence with an initial 0.04 Hz storage deadband
-- Complete one-second evidence retained around significant forensic events
+- Approved ESP32 observations are preserved continuously in raw NDJSON; rolling buffers and automatic pre-event, event, and post-event preservation remain planned
 - EG4 AC-couple step transitions treated as primary evidence; ramp rate is supporting evidence
 - Tracked shell scripts validated with `bash -n`
 - Tracked Python source validated with `python -m compileall`

@@ -2,7 +2,13 @@
 
 ## Purpose
 
-The EG4 local portal is a read-only local dashboard generated from existing report data.
+The dedicated local portal is the intended primary engineering interface. Its
+current implementation is a read-only EG4-only dashboard generated from
+existing report data.
+
+Home Assistant may later provide complementary convenience, status, and alerts.
+It is not an authoritative data store and does not replace raw evidence, SQLite
+history, reports, or the engineering portal.
 
 ## Generate Fresh Data
 
@@ -40,16 +46,21 @@ The portal MVP passed a LAN browser smoke test.
 
 Current dashboard shows:
 
-- system status
-- battery SOC gauge
+- EG4 system status and detail
+- EG4-estimated battery SOC gauge
 - AC-couple power gauge
 - load gauge
 - data freshness/latest source time
+- Today Usage
 - latest engineering findings
+
+Current inputs are the EG4 `runtime_snapshots.csv`, `energy_snapshots.csv`, and
+`day_multiline_samples.csv` outputs plus `engineering_daily_report.md`.
+SolarAssistant/JK BMS, ESP32, and SQLite history are not yet portal inputs.
 
 ## Browser Freshness
 
-The generated portal HTML discourages browser caching.
+The generated portal HTML uses cache-discouraging metadata.
 
 An open portal tab reloads the HTML every 60 seconds using a cache-busting `_refresh` query parameter.
 
@@ -80,7 +91,9 @@ Check service status:
 
 `systemctl status eg4-local-portal.service --no-pager`
 
-The service starts automatically at boot and serves the portal on port 8000.
+The service is documented as operational, starts automatically at boot, and
+serves the portal on port 8000. This documentation update does not revalidate
+the live service.
 
 ## Automated Refresh Timer
 
@@ -88,7 +101,9 @@ Refresh service: `systemd/eg4-refresh-report.service`
 
 Refresh timer: `systemd/eg4-refresh-report.timer`
 
-The timer runs `./eg4_refresh_report.sh` every 15 minutes and starts five minutes after boot.
+The timer is documented as operational, runs `./eg4_refresh_report.sh` every 15
+minutes, and starts five minutes after boot. This documentation update does not
+revalidate the live timer or refresh service.
 
 The collector reads unattended credentials from:
 
@@ -118,4 +133,46 @@ EG4 runtime and energy `server_time` values are interpreted as UTC and displayed
 
 Day telemetry timestamps are interpreted as Central time.
 
-AC-couple and Load retain valid zero readings. If day telemetry is missing or more than 30 minutes old, those gauges display `n/a` with a stale-data warning instead of presenting an old reading as current.
+AC-couple and Load retain valid zero readings. If day telemetry is missing,
+future-dated, or more than 30 minutes old, those gauges display `n/a` with a
+stale-data warning instead of presenting an old reading as current.
+
+Other cards do not yet have equivalent per-card stale rejection. Latest Source
+Time uses the newest timestamp from any EG4 dataset, which does not prove that
+every displayed card is equally fresh.
+
+## Planned Primary-Interface Capabilities
+
+- trusted SolarAssistant/JK BMS measurements
+- clearly labeled comparison of trusted JK SOC and EG4-estimated SOC
+- ESP32 electrical and forensic telemetry
+- per-source and per-card freshness
+- collector-health and missing-data status
+- SQLite-backed source-labeled history and historical trends
+- evidence traceability
+- evidence-based forensic event correlation with uncertainty
+
+Reports and the portal remain derived consumers of authoritative raw evidence
+and normalized SQLite history.
+
+## Planned Refresh and Development Workflows
+
+### Fresh-Data Browser Refresh
+
+A normal static HTML reload does not collect data. A future F5 workflow or
+`Refresh data now` control may request one bounded EG4 collection, report, and
+portal-generation cycle, then display the newly generated data.
+
+Implementation requires a secured local backend or controlled service
+interface. It must prevent overlapping refresh jobs, rapid repeated requests,
+uncontrolled command execution, and credential exposure. The portal must show
+refresh-in-progress, success, failure, and last-completed time clearly.
+
+### Portal-Development Live Reload
+
+An optional local development mode may automatically reload the browser when
+portal code or generated HTML changes so Chris can watch visible progress while
+Codex works. Development live reload must remain separate from the normal
+production portal and must not trigger telemetry collection.
+
+Neither workflow is implemented.

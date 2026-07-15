@@ -63,10 +63,10 @@ docs/Engineering_Bible.md
     Solar Digital Twin design authority.
 
 docs/EG4_LOCAL_PORTAL.md
-    EG4 local portal operation notes.
+    Current EG4 portal operations and the primary engineering-interface plan.
 
 docs/EG4_FORENSIC_CORRELATION.md
-    Planned EG4 and ESP32 AC-couple forensic correlation design.
+    Offline-tested ESP32 frequency retention and planned AC-couple correlation design.
 
 docs/ESP32_FORENSIC_TELEMETRY_PLAN.md
     Read-only ESPHome SSE collection and timestamp design.
