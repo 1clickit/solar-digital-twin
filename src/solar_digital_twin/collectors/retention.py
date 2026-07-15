@@ -6,6 +6,51 @@ from decimal import Decimal, InvalidOperation
 from typing import Any
 
 
+class FrequencyRetentionPolicy:
+    """Retain numeric frequency changes and periodic heartbeats."""
+
+    def __init__(self, deadband_hz: float = 0.04, heartbeat_seconds: float = 30):
+        if deadband_hz < 0:
+            raise ValueError("deadband_hz must not be negative")
+        if heartbeat_seconds <= 0:
+            raise ValueError("heartbeat_seconds must be positive")
+
+        self.deadband_hz = Decimal(str(deadband_hz))
+        self.heartbeat_seconds = heartbeat_seconds
+        self.last_value: Decimal | None = None
+        self.last_retained_at: float | None = None
+
+    def should_retain(self, value: Any, monotonic_now: float) -> bool:
+        """Return whether a frequency observation belongs in retained output."""
+        if isinstance(value, bool):
+            return False
+
+        try:
+            current = Decimal(str(value))
+        except (InvalidOperation, TypeError, ValueError):
+            return False
+
+        if not current.is_finite():
+            return False
+
+        first = self.last_value is None
+        changed = (
+            not first
+            and abs(current - self.last_value) >= self.deadband_hz
+        )
+        heartbeat = (
+            self.last_retained_at is not None
+            and monotonic_now - self.last_retained_at >= self.heartbeat_seconds
+        )
+
+        if not (first or changed or heartbeat):
+            return False
+
+        self.last_value = current
+        self.last_retained_at = monotonic_now
+        return True
+
+
 def meaningful_change(
     previous: Any,
     current: Any,

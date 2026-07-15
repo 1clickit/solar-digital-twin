@@ -1,6 +1,43 @@
 import unittest
 
-from solar_digital_twin.collectors.retention import meaningful_change, retention_reason
+from solar_digital_twin.collectors.retention import (
+    FrequencyRetentionPolicy,
+    meaningful_change,
+    retention_reason,
+)
+
+
+class FrequencyRetentionPolicyTests(unittest.TestCase):
+    def test_first_numeric_value_and_deadband_changes_are_retained(self):
+        policy = FrequencyRetentionPolicy()
+
+        self.assertTrue(policy.should_retain(60.00, 100.0))
+        self.assertFalse(policy.should_retain(60.03, 101.0))
+        self.assertTrue(policy.should_retain(60.04, 102.0))
+        self.assertFalse(policy.should_retain(60.01, 103.0))
+        self.assertTrue(policy.should_retain(60.00, 104.0))
+
+    def test_heartbeat_uses_elapsed_monotonic_time(self):
+        policy = FrequencyRetentionPolicy()
+
+        self.assertTrue(policy.should_retain("60.00", 500.0))
+        self.assertFalse(policy.should_retain("60.00", 529.9))
+        self.assertTrue(policy.should_retain("60.00", 530.0))
+
+    def test_invalid_values_do_not_retain_or_change_state(self):
+        policy = FrequencyRetentionPolicy()
+
+        for value in (None, "unknown", "nan", float("inf"), True):
+            self.assertFalse(policy.should_retain(value, 10.0))
+
+        self.assertTrue(policy.should_retain(60.00, 11.0))
+
+    def test_change_is_compared_with_last_retained_value(self):
+        policy = FrequencyRetentionPolicy()
+
+        self.assertTrue(policy.should_retain(60.00, 0.0))
+        self.assertFalse(policy.should_retain(60.03, 1.0))
+        self.assertTrue(policy.should_retain(60.04, 2.0))
 
 
 class MeaningfulChangeTests(unittest.TestCase):

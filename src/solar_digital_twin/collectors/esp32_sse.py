@@ -10,9 +10,12 @@ from pathlib import Path
 
 import requests
 
+from solar_digital_twin.collectors.retention import FrequencyRetentionPolicy
+
 
 SSE_URL = "http://192.168.3.13/events"
 MAX_BACKOFF_SECONDS = 30.0
+FREQUENCY_ID = "sensor-01_gen_frequency"
 
 APPROVED_IDS = {
     "binary_sensor-03_gen_frequency_high",
@@ -48,6 +51,34 @@ def new_output_path() -> Path:
     return Path("evidence/esp32") / f"esp32_sse_{stamp}.ndjson"
 
 
+def retained_output_path(raw_output: Path) -> Path:
+    return raw_output.with_name(f"{raw_output.stem}_retained.ndjson")
+
+
+def should_retain_record(
+    record: dict[str, object],
+    frequency_policy: FrequencyRetentionPolicy,
+    monotonic_now: float,
+) -> bool:
+    """Apply selective retention without changing the raw record."""
+    if record.get("id") != FREQUENCY_ID:
+        return True
+    return frequency_policy.should_retain(record.get("value"), monotonic_now)
+
+
+def disable_retained_output(retained: object | None, exc: Exception) -> None:
+    """Report one retained-stage failure and close its output if open."""
+    print(
+        "Retained ESP32 output disabled after "
+        f"{type(exc).__name__}. Raw collection continues."
+    )
+    if retained is not None:
+        try:
+            retained.close()
+        except Exception:
+            pass
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -59,102 +90,134 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def collect(duration: float) -> tuple[Path, int]:
+def collect(duration: float) -> tuple[Path, Path, int, int]:
     output = new_output_path()
+    retained_output = retained_output_path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     deadline = time.monotonic() + duration if duration > 0 else None
     backoff = 1.0
     written = 0
+    retained_written = 0
+    frequency_policy = FrequencyRetentionPolicy()
 
-    print(f"Writing approved ESP32 updates to {output}")
+    print(f"Writing raw approved ESP32 updates to {output}")
+    print(f"Writing retained ESP32 updates to {retained_output}")
 
     with output.open("a", encoding="utf-8", buffering=1) as evidence:
-        while deadline is None or time.monotonic() < deadline:
-            try:
-                response = requests.get(
-                    SSE_URL,
-                    headers={"Accept": "text/event-stream"},
-                    stream=True,
-                    timeout=(3, 30),
-                )
-                response.raise_for_status()
-                backoff = 1.0
+        retained = None
+        try:
+            retained = retained_output.open(
+                "a", encoding="utf-8", buffering=1
+            )
+        except Exception as exc:
+            disable_retained_output(retained, exc)
 
-                for line in response.iter_lines(
-                    chunk_size=1,
-                    decode_unicode=True,
-                ):
-                    if deadline is not None and time.monotonic() >= deadline:
-                        response.close()
-                        return output, written
-                    if not line or not line.startswith("data:"):
-                        continue
+        try:
+            while deadline is None or time.monotonic() < deadline:
+                try:
+                    response = requests.get(
+                        SSE_URL,
+                        headers={"Accept": "text/event-stream"},
+                        stream=True,
+                        timeout=(3, 30),
+                    )
+                    response.raise_for_status()
+                    backoff = 1.0
 
-                    try:
-                        event = json.loads(line[5:].strip())
-                    except json.JSONDecodeError:
-                        continue
+                    for line in response.iter_lines(
+                        chunk_size=1,
+                        decode_unicode=True,
+                    ):
+                        if deadline is not None and time.monotonic() >= deadline:
+                            response.close()
+                            return output, retained_output, written, retained_written
+                        if not line or not line.startswith("data:"):
+                            continue
 
-                    if not isinstance(event, dict):
-                        continue
-                    if event.get("id") not in APPROVED_IDS:
-                        continue
+                        try:
+                            event = json.loads(line[5:].strip())
+                        except json.JSONDecodeError:
+                            continue
 
-                    record = {
-                        "received_at_utc": receipt_timestamp(),
-                        "source_url": SSE_URL,
-                        "id": event.get("id"),
-                        "name": event.get("name"),
-                        "domain": event.get("domain"),
-                        "value": event.get("value"),
-                        "state": event.get("state"),
-                    }
+                        if not isinstance(event, dict):
+                            continue
+                        if event.get("id") not in APPROVED_IDS:
+                            continue
 
-                    evidence.write(
-                        json.dumps(
+                        record = {
+                            "received_at_utc": receipt_timestamp(),
+                            "source_url": SSE_URL,
+                            "id": event.get("id"),
+                            "name": event.get("name"),
+                            "domain": event.get("domain"),
+                            "value": event.get("value"),
+                            "state": event.get("state"),
+                        }
+
+                        encoded_record = json.dumps(
                             record,
                             separators=(",", ":"),
                             ensure_ascii=False,
-                        )
-                        + "\n"
-                    )
-                    evidence.flush()
-                    written += 1
+                        ) + "\n"
+                        evidence.write(encoded_record)
+                        evidence.flush()
+                        written += 1
 
-                response.close()
-                raise requests.ConnectionError("SSE stream ended")
+                        if retained is not None:
+                            try:
+                                if should_retain_record(
+                                    record,
+                                    frequency_policy,
+                                    time.monotonic(),
+                                ):
+                                    retained.write(encoded_record)
+                                    retained.flush()
+                                    retained_written += 1
+                            except Exception as exc:
+                                disable_retained_output(retained, exc)
+                                retained = None
 
-            except requests.RequestException as exc:
-                if "response" in locals():
                     response.close()
+                    raise requests.ConnectionError("SSE stream ended")
 
-                remaining = (
-                    None
-                    if deadline is None
-                    else deadline - time.monotonic()
-                )
-                if remaining is not None and remaining <= 0:
-                    break
+                except requests.RequestException as exc:
+                    if "response" in locals():
+                        response.close()
 
-                delay = backoff if remaining is None else min(backoff, remaining)
-                print(f"SSE connection error: {exc}; retrying in {delay:.0f}s")
-                time.sleep(delay)
-                backoff = min(backoff * 2, MAX_BACKOFF_SECONDS)
+                    remaining = (
+                        None
+                        if deadline is None
+                        else deadline - time.monotonic()
+                    )
+                    if remaining is not None and remaining <= 0:
+                        break
 
-    return output, written
+                    delay = backoff if remaining is None else min(backoff, remaining)
+                    print(f"SSE connection error: {exc}; retrying in {delay:.0f}s")
+                    time.sleep(delay)
+                    backoff = min(backoff * 2, MAX_BACKOFF_SECONDS)
+        finally:
+            if retained is not None:
+                try:
+                    retained.close()
+                except Exception as exc:
+                    disable_retained_output(None, exc)
+
+    return output, retained_output, written, retained_written
 
 
 def main() -> None:
     args = parse_args()
 
     try:
-        output, written = collect(args.duration)
+        output, retained_output, written, retained_written = collect(args.duration)
     except KeyboardInterrupt:
         print("\nStopped cleanly by user.")
     else:
         print(
             f"Stopped cleanly after writing {written} "
-            f"records to {output}."
+            f"raw records to {output} and {retained_written} "
+            f"records to {retained_output}."
         )
 
 
