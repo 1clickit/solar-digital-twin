@@ -26,6 +26,14 @@ For an interactive manual run, it may fall back to a private `getpass` prompt.
 The password must never be printed, written to evidence, committed, or included
 in command output.
 
+The approved persistent credential destination is
+`/etc/solar-digital-twin/solarassistant.env`, installed manually by Chris with
+the hidden-input process in `docs/CREDENTIAL_INSTALLATION.md`. Installation
+does not expose the secret to Codex or ChatGPT. The collector may continue to
+use its private interactive prompt for an authorized one-time manual run.
+The current collector does not load the persistent credential file; a future
+consumer requires separate review and approval. Do not shell-source the file.
+
 ## Timestamp and Evidence Policy
 
 The REST response does not contain source timestamps.

@@ -70,6 +70,16 @@ code, full diffs, stack traces, or architecture decisions.
   temporary repository snapshots unless project documentation explicitly says
   to do so.
 
+## Credential-Blocked Work
+
+When authorized work requires a credential that is not available through an
+approved external mechanism, report the requirement without requesting its
+value and stop the affected live action. Chris installs it from the normal VM
+terminal using the approved hidden-input installer or helper and reports only
+success or a non-secret error. Resume only when an approved external consumer
+exists; secure storage alone does not authorize or enable live access. Never
+read, display, return, or ask Chris to paste the secret.
+
 ## Verification
 
 After changing files, run the relevant checks. Usually this means:

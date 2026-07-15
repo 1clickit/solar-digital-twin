@@ -75,6 +75,9 @@ main
 - SolarAssistant/JK BMS established as trusted battery source
 - Telemetry source roles and SolarAssistant collection plan documented
 - Standalone read-only SolarAssistant REST collector implemented
+- Profile-locked SolarAssistant credential installer implemented for manual
+  hidden input and atomic root-owned `0600` storage outside the repository;
+  storage is not installed and has no approved unattended consumer yet
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified

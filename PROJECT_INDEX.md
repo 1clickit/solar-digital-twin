@@ -77,6 +77,12 @@ docs/TELEMETRY_SOURCE_ROLES.md
 docs/SOLARASSISTANT_TELEMETRY_PLAN.md
     Read-only SolarAssistant REST collection and timestamp design.
 
+docs/CREDENTIAL_INSTALLATION.md
+    Approved hidden-input credential installation and credential-blocked workflow.
+
+src/solar_digital_twin/credentials.py
+    Profile-locked atomic credential installer; currently SolarAssistant only.
+
 src/solar_digital_twin/collectors/solarassistant.py
     Standalone read-only SolarAssistant battery evidence collector.
 
