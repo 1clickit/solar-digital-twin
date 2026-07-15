@@ -50,7 +50,7 @@ Current dashboard shows:
 - EG4-estimated battery SOC gauge
 - AC-couple power gauge
 - load gauge
-- data freshness/latest source time
+- independent Runtime, Energy, and Day Telemetry source health
 - Today Usage
 - latest engineering findings
 
@@ -133,18 +133,30 @@ EG4 runtime and energy `server_time` values are interpreted as UTC and displayed
 
 Day telemetry timestamps are interpreted as Central time.
 
-AC-couple and Load retain valid zero readings. If day telemetry is missing,
-future-dated, or more than 30 minutes old, those gauges display `n/a` with a
-stale-data warning instead of presenting an old reading as current.
+Runtime, Energy, and Day Telemetry are evaluated independently. Each source is
+shown as Fresh, Stale, Missing, Invalid timestamp, or Future-dated with its own
+Central timestamp and approximate age. The initial stale threshold is 30
+minutes for each source, representing two expected 15-minute refresh intervals.
+The three thresholds are separate constants in the portal generator so they can
+be adjusted independently later.
 
-Other cards do not yet have equivalent per-card stale rejection. Latest Source
-Time uses the newest timestamp from any EG4 dataset, which does not prove that
-every displayed card is equally fresh.
+System Status and EG4 Estimated SOC display as unavailable unless Runtime is
+fresh. Today Usage displays as unavailable unless Energy is fresh. AC-couple
+and Load display as unavailable unless Day Telemetry is fresh. Valid zero
+readings remain valid. Normal, warning, or alert styling is applied to inverter
+status only when Runtime is fresh; unavailable or unknown status is not shown
+as healthy.
+
+The portal-generation timestamp is labeled separately from source-observation
+timestamps. Trusted Battery SOC (JK BMS via SolarAssistant) is already collected
+by the project but is not yet integrated into this portal. The EG4 SOC card is
+explicitly labeled as an inverter estimate. The two values must remain separate;
+do not merge, correct, substitute, average, or apply a fixed offset between them.
 
 ## Planned Primary-Interface Capabilities
 
-- trusted SolarAssistant/JK BMS measurements
-- clearly labeled comparison of trusted JK SOC and EG4-estimated SOC
+- trusted JK BMS measurements collected through SolarAssistant
+- clearly labeled comparison of Trusted Battery SOC (JK BMS via SolarAssistant) and EG4 Estimated SOC
 - ESP32 electrical and forensic telemetry
 - per-source and per-card freshness
 - collector-health and missing-data status

@@ -42,7 +42,10 @@ main
 - External NTP response verified successfully from WS01
 - Portal browser freshness verified: cache-discouraging HTML metadata and a 60-second cache-busting reload are present
 - Portal timestamps normalized to Central time
-- AC-couple and Load gauges reject day telemetry older than 30 minutes
+- Portal independently classifies Runtime, Energy, and Day Telemetry freshness with adjustable 30-minute thresholds
+- Portal suppresses stale, missing, invalid-timestamp, and future-dated source values instead of displaying them as current
+- System Status and EG4 Estimated SOC depend on fresh Runtime; Today Usage depends on fresh Energy; AC-couple and Load depend on fresh Day Telemetry
+- Portal source-health and card-protection behavior covered by focused offline tests; not live-browser reverified in this work unit
 - Portal Load gauge uses day_multiline_samples.csv consumption_w
 - Current local portal is EG4-only; trusted JK BMS and ESP32 values are not yet portal inputs
 - status.sh repository health checks operational
