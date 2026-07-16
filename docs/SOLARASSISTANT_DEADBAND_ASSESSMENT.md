@@ -91,13 +91,19 @@ Minimum additional evidence is several continuous hours spanning measurable ther
 
 Do not approve or implement numeric deadbands from this evidence. Continue these families as raw-only and collect a longer, explicitly authorized raw evidence window later that covers the missing operating conditions. Reassess at the same stable metric-identity level before deciding whether combined and individual batteries, or individual submetrics, can share thresholds.
 
-Before that capture, implement and review the dedicated unprivileged
-SolarAssistant runtime identity and protected credential-delivery boundary
-required by `docs/SECURITY_MODEL.md`. The later capture should aim for at least
-24 continuous hours at the normal 10-second polling interval while preserving
-complete raw and separate retained evidence. It should observe the missing
+The dedicated unprivileged runtime, protected credential boundary, metadata
+verification, and one short authenticated collector verification are now
+complete. That 25-second run created 126 raw records and a separate retained
+file and confirmed the expected combined and per-battery topics, but remains a
+point-in-time verification rather than evidence for numeric thresholds.
+
+The next capture should initially target approximately 24 hours at the normal
+10-second polling interval while preserving complete raw and separate retained
+evidence. It should seek the missing daylight charging, overnight discharge,
+idle or near-zero, ordinary transition, thermal, voltage, cell, and wider-SOC
 conditions only where they occur naturally; equipment must not be manipulated
-solely to manufacture assessment coverage.
+solely to manufacture assessment coverage. Inspect evidence integrity and
+storage growth afterward, then reassess before proposing any deadband.
 
 ## 13. Explicit exclusions
 

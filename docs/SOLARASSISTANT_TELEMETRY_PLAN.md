@@ -9,9 +9,11 @@ offline raw-evidence deadband assessment, but the evidence was insufficient for
 numeric thresholds. Collector:
 `src/solar_digital_twin/collectors/solarassistant.py`.
 
-Commit `39548b1` completed the repository-side dedicated runtime support and
-passed 37 focused collector/retention tests and the full 60-test suite. The
-runtime has not been installed and no credential or live request was used.
+Commit `39548b1` completed the repository-side dedicated runtime support. The
+runtime and credential were subsequently installed under the approved practical
+Home Assistant-style trusted-host model, runtime metadata and access boundaries
+passed committed verification, and one authenticated manual run succeeded as
+`solardt-sa`. No persistent service or long-running capture was started.
 
 ## Purpose
 
@@ -36,8 +38,9 @@ The password must never be printed, written to evidence, committed, or included
 in command output.
 
 The SolarAssistant-specific custom credential-bootstrap direction was reviewed
-and superseded before installation. No SolarAssistant credential was installed,
-and no authenticated redacted inventory-helper request occurred.
+and superseded before installation. The committed credential installer was
+later run manually, with private entry through the controlling terminal and
+approved installed metadata.
 
 Credential handling follows the approved Home Assistant-style model in
 `docs/SECURITY_MODEL.md` and the repository-side runtime design in
@@ -45,9 +48,8 @@ Credential handling follows the approved Home Assistant-style model in
 `solardt-sa` identity until the `admin` credential's effective authority is
 confirmed. The protected password path is
 `/etc/solar-digital-twin/solarassistant/password`; the collector can read but
-cannot modify it. Repository scripts now define later runtime preparation and
-credential installation, but neither has been run and no credential is
-installed.
+cannot modify it. The password and any derivative remain outside Git,
+documentation, chat, command arguments, and shell history.
 
 ## Timestamp and Evidence Policy
 
@@ -77,8 +79,8 @@ Generated evidence remains ignored by Git.
 
 Raw evidence files are authoritative source material and must be preserved.
 
-Development continues to default to `evidence/solarassistant`. The approved
-dedicated runtime will explicitly select
+Development continues to default to `evidence/solarassistant`. The installed
+dedicated runtime explicitly selects
 `/var/lib/solar-digital-twin/solarassistant/evidence` without changing raw or
 retained filenames, records, cadence, or policy.
 
@@ -92,7 +94,8 @@ retained filenames, records, cadence, or policy.
 The current collector defaults to one-second polling. That remains available for
 manual or diagnostic use, but the approved intended normal persistent polling
 interval is 10 seconds. The existing raw collector and its one-second default
-were manually verified.
+were manually verified. The dedicated runtime was additionally verified at the
+normal 10-second interval during a bounded 25-second authenticated run.
 
 Topic-specific retained-history and heartbeat schedules are documented in
 `docs/EG4_FORENSIC_CORRELATION.md`. The exact-change subset below is implemented;
@@ -122,7 +125,8 @@ Implemented and offline-tested in commit `4e069bb`:
 
 The retained-output tests passed (9), existing SolarAssistant tests passed (6),
 shared retention tests passed (14), and the full suite passed (52). Repository
-diff and health checks passed. Live-device verification remains deferred.
+diff and health checks passed. The retained file was created successfully during
+the bounded authenticated runtime verification described below.
 
 Still raw-only pending numeric deadband approval:
 
@@ -151,31 +155,37 @@ or near-zero current and power, sign or load transitions, several hours of
 temperature evolution, wider voltage movement, or cell behavior near full
 charge. Combined and individual batteries may require different thresholds.
 
-The repository-side dedicated runtime and protected credential-delivery design
-is complete. The next stage is reviewed installation and metadata verification
-of that boundary without a password or device contact. The existing interactive
-`getpass` capability may support a later controlled manual verification, but it
-does not replace the separate runtime identity required while `admin` authority
-remains unknown.
+The dedicated runtime, protected credential delivery, metadata verification,
+and one controlled manual authenticated verification are complete. That run
+used the protected password file and dedicated runtime and evidence paths at a
+10-second interval for 25 seconds. It stopped cleanly, wrote 126 approved raw
+records, and created a separate retained NDJSON file. Raw receipt times spanned
+`2026-07-16T05:41:34.125Z` through `2026-07-16T05:41:55.129Z`, representing
+approximately three successful responses without authentication rejection.
 
-Only after that runtime is installed and verified, the credential is separately
-installed, and one controlled manual authenticated verification succeeds may a
-separate task begin an initial capture aiming for at least 24 continuous hours
-at the normal 10-second polling interval. It should preserve complete raw and
-separate retained evidence and observe natural daylight charging, overnight
-discharge, idle behavior, load or charger transitions, temperature evolution,
-and near-full behavior where they occur. Missing conditions must be documented
-rather than created by manipulating equipment. Credential installation, the
-live capture, SQLite, portal, systemd, persistent service operation, and
-deadband implementation remain separately deferred.
+The run confirmed the approved combined, Battery 1, and Battery 2 telemetry,
+including SOC, state of health, voltage, current, power, capacity, charge
+capacity, cycles, cell voltage and imbalance, battery temperatures, temperature
+sensors, and MOS temperature. Representative values were 78%, 79%, and 77% SOC
+and 53.3 V, 53.4 V, and 53.2 V for combined, Battery 1, and Battery 2. Combined
+current and power were zero. These are short point-in-time observations, not a
+long-term operating characterization.
+
+The next task is a controlled longer capture at the normal 10-second interval,
+initially targeting approximately 24 hours. It will preserve complete raw and
+separate retained evidence and seek natural daylight charging, overnight
+discharge, idle or near-zero current and power, ordinary load transitions,
+temperature evolution, and voltage and cell behavior across a wider SOC range.
+Missing conditions must be documented rather than created by manipulating
+equipment. Numeric deadbands, SQLite, portal integration, systemd, and
+persistent service operation remain deferred.
 
 The collector supports `--password-file` and `--output-dir` for that runtime.
 Password-file loading precedes the existing environment and interactive prompt
 sources. Missing, unreadable, empty, or whitespace-only files stop locally
 without a request and produce only a credential-free error. Runtime preparation
 and credential installation scripts have safe non-privileged checks; their real
-installation paths remain unexecuted. Runtime installation is the next bounded
-stage; credential installation remains a later separate approval.
+installation modes have now been used under the approved manual workflow.
 
 ## Approved Topic Scope
 
@@ -254,7 +264,7 @@ configuration.
 
 ## Manual Verification
 
-A short run must demonstrate:
+The completed short run demonstrated:
 
 - successful authenticated read-only polling
 - only approved topics written
@@ -262,4 +272,7 @@ A short run must demonstrate:
 - combined and both individual batteries represented
 - valid newline-delimited JSON
 - evidence ignored by Git
-- clean interruption without evidence corruption
+- clean termination without evidence corruption
+
+It also confirmed creation of both raw and separate retained NDJSON files. This
+verification did not start persistent or long-running collection.

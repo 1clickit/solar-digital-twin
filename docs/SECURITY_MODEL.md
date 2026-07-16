@@ -8,11 +8,13 @@ well-configured Home Assistant installation: appropriate for a home office and
 home automation, not banking, military, or large-enterprise identity systems.
 
 The SolarAssistant-specific custom root-bootstrap experiment was reviewed and
-superseded before installation. No SolarAssistant password was installed and no
-authenticated SolarAssistant inventory request occurred. The project-wide
-operating model below is approved. Exact credential paths, metadata, and
-installation commands remain deferred until a bounded implementation is
-approved.
+superseded before installation. The dedicated `solardt-sa` runtime was later
+installed, and its metadata and access verification passed. The protected
+SolarAssistant credential was installed using the approved installer, and one
+short authenticated manual collector verification succeeded. No persistent
+systemd service was created or enabled. The next operational stage is a
+controlled longer evidence capture. The approved practical Home Assistant-style
+operating model below remains unchanged.
 
 ## Trusted-Host Boundary
 
@@ -72,12 +74,13 @@ protocols must not grant unrestricted access to the rest of the LAN.
 - Credential directories and files are administrator controlled; collector identities may read approved credentials but may not create, replace, modify, or delete them.
 - Credentials remain outside the project tree, logs, reports, shell history, and ordinary project backups.
 - Recovery normally uses secure re-entry, replacement, or rotation.
-- Exact paths, ownership, groups, permissions, and commands remain deferred until implementation approval.
+- SolarAssistant paths, ownership, groups, permissions, and installer commands are implemented and verified as documented in `docs/SOLARASSISTANT_RUNTIME.md`.
 
 The existing operational EG4 workflow predates this decision and remains
 documented separately. It does not establish the future project-wide credential
-architecture. No SolarAssistant credential installer or persistent credential
-consumer is currently implemented or approved.
+architecture. The approved SolarAssistant credential installer and protected
+credential consumer are implemented; no persistent systemd service has been
+created or enabled.
 
 ## Approved Runtime Isolation Decisions
 

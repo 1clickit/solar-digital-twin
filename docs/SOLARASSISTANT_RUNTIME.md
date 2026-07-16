@@ -2,16 +2,24 @@
 
 ## Implementation status
 
-Commit `39548b1` completed the repository-side collector interface, runtime
-installer, credential installer, tests, and documentation. The focused
-collector and retention tests passed (37), the full suite passed (60), both
-scripts passed `bash -n` and their non-privileged `--check` modes, password-like
-arguments were rejected, and repository checks passed.
+Commit `39548b1` completed the repository-side collector interface, installers,
+tests, and documentation. The committed runtime installer was subsequently run
+manually from the normal `solardt` terminal with private `sudo` authentication.
+The dedicated runtime and fixed paths below were installed successfully, and
+the committed verification reported: `VERIFY: SolarAssistant runtime metadata
+and access boundaries passed`.
 
-No privileged installer mode has run. No password has been installed, entered,
-read, or exposed; no device was contacted; and no account, package, `/etc`,
-`/opt`, `/var/lib`, collection, or service change occurred. The current stage is
-reviewed runtime installation and metadata verification only.
+The committed credential installer was then run manually. The trusted `solardt`
+host administrator entered the password privately through the controlling
+terminal, and the credential was installed with the approved metadata. Its
+value and derivatives were not placed in Git, repository documentation, chat,
+command arguments, or shell history. This follows the approved practical Home
+Assistant-style trusted-host security model.
+
+A one-time authenticated collector verification also completed successfully as
+`solardt-sa` using the protected password file, dedicated runtime Python
+environment, and dedicated `/var/lib` evidence output. No systemd service was
+created or enabled, and no persistent collector was started.
 
 ## Purpose and boundary
 
@@ -90,10 +98,9 @@ following HTTP `401` or `403`, automated authentication remains stopped until
 one separately approved manual collector verification succeeds. The installer
 does not start or re-enable collection.
 
-The future credential action runs `scripts/install_solarassistant_credential.sh`
-under `sudo` from Chris's normal terminal only after separate approval. The
-password is entered through the controlling terminal and never appears in the
-command.
+The completed credential action ran `scripts/install_solarassistant_credential.sh`
+under `sudo` from Chris's normal terminal. The password was entered through the
+controlling terminal and did not appear in the command.
 
 The collector's credential precedence is:
 
@@ -127,11 +134,28 @@ credential, and restore automation only after verification.
 Collector failure must not change the device password or management access.
 Device-account recovery remains independent of the collector.
 
+## Manual authenticated verification
+
+The collector ran once as `solardt-sa` at a 10-second interval for 25 seconds.
+It used the protected password-file input, dedicated runtime Python environment,
+and `/var/lib/solar-digital-twin/solarassistant/evidence`. The run stopped
+cleanly without authentication rejection, wrote 126 approved raw records, and
+created a separate retained NDJSON file. Raw receipt-time coverage was
+`2026-07-16T05:41:34.125Z` through `2026-07-16T05:41:55.129Z`, representing
+approximately three successful polling responses.
+
+This was a short point-in-time verification, not a long-term operating
+characterization. It confirmed combined, Battery 1, and Battery 2 topic families
+for SOC, state of health, voltage, current, power, capacity, charge capacity,
+cycle count, average/highest/lowest cell voltage, cell imbalance, battery
+temperatures, temperature sensor readings, and MOS temperature. Representative
+observations were 78% combined SOC, 79% Battery 1 SOC, 77% Battery 2 SOC,
+53.3 V combined voltage, 53.4 V Battery 1 voltage, and 53.2 V Battery 2 voltage.
+Combined current and power were zero during the short window.
+
 ## Deferred stages
 
-No real account, path, credential, runtime, or service was installed by commit
-`39548b1`. The next bounded stage installs and verifies only the account,
-runtime, credential-directory boundary, state, and evidence paths. Credential
-installation, manual authenticated verification, persistent systemd collection,
-and the planned 24-hour 10-second-cadence evidence capture remain separate later
-approvals.
+Persistent systemd collection, numeric deadbands, SQLite normalization, and
+portal integration remain deferred. The next bounded stage is a controlled
+longer raw and retained capture at the normal 10-second interval, initially
+targeting approximately 24 hours without enabling a persistent service.

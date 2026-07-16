@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-SolarAssistant dedicated runtime installation
+SolarAssistant secure runtime installed and manually verified
 
 Next Task:
-Perform the reviewed installation of the dedicated `solardt-sa` runtime identity, administrator-owned runtime, and writable evidence boundary, then verify metadata and permissions without installing a SolarAssistant credential or contacting the device.
+Begin a controlled longer SolarAssistant raw and retained evidence capture at the normal 10-second polling interval, initially targeting approximately 24 hours, without yet enabling a persistent systemd service.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -82,17 +82,17 @@ main
 - Project security direction now follows a practical Home Assistant-style
   trusted-host model, with future OPNsense VLANs and firewall rules planned as
   the primary network-containment boundary
-- No SolarAssistant credential was installed and no authenticated redacted
-  inventory-helper request occurred
+- The SolarAssistant credential is installed at the protected approved path;
+  its value and derivatives remain outside Git, documentation, chat, command
+  arguments, and shell history under the practical Home Assistant-style trusted-host model
 - Project-wide runtime identity, credential isolation, unknown-authority,
   authentication-failure, network-containment, and recovery decisions are approved
 - ESP32 SSE may use a shared telemetry identity; SolarAssistant and EG4 remain
   separately isolated until their credentials are proven technically read-only
 - HTTP `401` or `403` stops automated authentication attempts; operator
   correction and one manual verification are required before automation resumes
-- SolarAssistant runtime paths, metadata, and reviewed installation commands are
-  now defined; device-specific recovery details remain pending and no
-  SolarAssistant credential is installed
+- SolarAssistant runtime paths and metadata are installed and verified;
+  device-specific recovery details remain pending
 - Practical offline SolarAssistant collector hardening may resume without
   implementing credentials or performing authenticated live work
 - Commit `c7370ca` completed SolarAssistant authentication hardening: HTTP
@@ -103,7 +103,7 @@ main
 - SolarAssistant focused offline tests passed (6), the full suite passed (43),
   and the repository health check passed for commit `c7370ca`
 - The first separate SolarAssistant retained-output implementation is complete;
-  SQLite, portal, systemd, credentials, and live verification remain deferred
+  SQLite, portal, and systemd integration remain deferred
 - Commit `4e069bb` implemented a separate derived SolarAssistant retained NDJSON
   stream while preserving complete raw evidence and unchanged polling traffic
 - Raw records are written and flushed before retained processing; retained
@@ -131,12 +131,12 @@ main
   repository health check passed
 - No numeric deadband was proposed, approved, implemented, or activated;
   combined, Battery 1, and Battery 2 may ultimately require different thresholds
-- The current milestone is dedicated SolarAssistant runtime preparation under
-  the approved separate-identity and credential-isolation model
-- A later 24-hour raw and retained evidence capture at the normal 10-second
-  polling interval remains deferred until the runtime is installed and verified,
-  the credential is separately installed, and manual verification succeeds;
-  persistent service operation remains a separate later stage
+- The dedicated SolarAssistant runtime, credential, and manual authenticated
+  verification are complete under the approved separate-identity and
+  credential-isolation model
+- The next task is an initially approximately 24-hour raw and retained evidence
+  capture at the normal 10-second polling interval; persistent service
+  operation remains a separate later stage
 - Commit `39548b1` completed the repository-side dedicated SolarAssistant
   runtime preparation using the fixed `solardt-sa:solardt-sa` non-login system
   identity, administrator-owned `/opt/solar-digital-twin` runtime, protected
@@ -151,11 +151,34 @@ main
 - Focused collector and retention tests passed (37), the full suite passed (60),
   both scripts passed `bash -n` and non-privileged checks, password-like
   arguments were rejected, and repository checks passed
-- No password was installed, entered, read, or exposed; no device was contacted;
-  and no account, package, `/etc`, `/opt`, `/var/lib`, or service change occurred
-- The current milestone is installation and metadata verification of the
-  committed runtime boundary only; credential installation and all live work
-  remain separate later approvals
+- The committed runtime installer was run manually from the normal `solardt`
+  terminal with private `sudo` authentication. It installed the non-login
+  `solardt-sa:solardt-sa` identity, administrator-owned
+  `/opt/solar-digital-twin` runtime, protected credential boundary, and writable
+  `/var/lib/solar-digital-twin/solarassistant/evidence` boundary
+- Runtime verification completed with: `VERIFY: SolarAssistant runtime metadata
+  and access boundaries passed`
+- The committed credential installer was run manually with private controlling-
+  terminal entry and installed the password with approved metadata. No password
+  or derivative was placed in Git, documentation, chat, command arguments, or
+  shell history
+- A one-time authenticated collector verification ran as `solardt-sa` through
+  the dedicated runtime using the protected password file and dedicated
+  `/var/lib` evidence output at a 10-second interval for 25 seconds. It stopped
+  cleanly without authentication rejection
+- The run wrote 126 approved raw records and created a separate retained NDJSON
+  file. Raw receipt times covered `2026-07-16T05:41:34.125Z` through
+  `2026-07-16T05:41:55.129Z`, representing approximately three successful polls
+- The short point-in-time verification confirmed expected combined, Battery 1,
+  and Battery 2 telemetry: SOC, state of health, voltage, current, power,
+  capacity, charge capacity, cycles, cell voltages and imbalance, battery and
+  sensor temperatures, and MOS temperature
+- Representative point-in-time values were 78% combined SOC, 79% Battery 1
+  SOC, 77% Battery 2 SOC, and 53.3/53.4/53.2 V combined/Battery 1/Battery 2;
+  combined current and power were zero during this short window. These values
+  are not a long-term operating characterization
+- No systemd service was created or enabled, and no persistent or long-running
+  collector was started
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified
