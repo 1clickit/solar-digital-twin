@@ -74,11 +74,11 @@ code, full diffs, stack traces, or architecture decisions.
 
 When authorized work requires a credential that is not available through an
 approved external mechanism, report the requirement without requesting its
-value and stop the affected live action. Chris installs it from the normal VM
-terminal using the approved hidden-input installer or helper and reports only
-success or a non-secret error. Resume only when an approved external consumer
-exists; secure storage alone does not authorize or enable live access. Never
-read, display, return, or ask Chris to paste the secret.
+value and stop the affected live action. Never read, display, return, or ask
+Chris to paste the secret. No new credential installer, credential storage
+layout, or authenticated consumer may be implemented until the project-wide
+security decisions in `docs/SECURITY_MODEL.md` are approved. Existing approval,
+network, service, and change-control requirements remain in force.
 
 ## Verification
 

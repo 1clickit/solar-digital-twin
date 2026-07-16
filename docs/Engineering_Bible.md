@@ -105,6 +105,18 @@ Proxmox VE
 
 Hypotheses remain separate from measured facts.
 
+## Security Direction
+
+Solar Digital Twin follows the practical trusted-host security model documented
+in `docs/SECURITY_MODEL.md`, comparable to a well-configured Home Assistant
+installation. `solardt` is trusted; compromise of that host requires isolation,
+rebuild, verification, and affected credential rotation. Conventional protected
+credential files and unprivileged collectors are the default direction, while
+future OPNsense VLANs and firewall rules provide the planned primary network-
+containment boundary. Credential architecture, authentication-failure behavior,
+and recovery choices must be approved before additional credentialed collector
+work.
+
 ## Roadmap
 
 ### Phase 1

@@ -2,43 +2,40 @@
 
 ## Objective
 
-Complete the smallest safe standalone SolarAssistant collector-hardening work
-unit while preserving its existing raw evidence output.
+Review and approve the Solar Digital Twin security, credential,
+authentication-failure, and recovery model using a Home Assistant-style
+operational approach before implementing additional credentialed collectors.
 
 ## Context
 
-Codex CLI setup and its first bounded coding workflow are complete. The ESP32
-collector now preserves raw NDJSON evidence and writes a separate selectively
-retained stream.
-
-The current engineering implementation goal remains persistent multi-rate
-telemetry collection. The standalone SolarAssistant collector and its raw
-NDJSON evidence have already been manually verified. Existing telemetry plans
-document topic-specific observation and retention direction.
+The SolarAssistant-specific custom root-bootstrap experiment was reviewed and
+superseded before installation. No SolarAssistant credential was installed and
+no authenticated redacted inventory request occurred. The project has adopted
+a practical Home Assistant-style security direction, but important operating
+choices remain deliberately unresolved.
 
 ## Scope
 
-- Harden only the existing standalone SolarAssistant collector.
-- Preserve its existing raw NDJSON evidence filename and record format.
-- Select the smallest coherent retained-output step authorized by the existing
-  telemetry plans.
-- Add focused offline tests requiring no device, credentials, network access,
-  or existing evidence files.
-- Keep portal, SQLite, and systemd integration deferred.
-- Do not modify SolarAssistant device behavior or issue control requests.
-- Keep credentials, generated evidence, and secrets out of the repository and
-  command output.
+- Confirm the trusted-host boundary and accepted home-office risk level.
+- Decide shared versus separate Linux service accounts and credential-directory design.
+- Classify device access as read-only, limited control, administrative, or network-wide control.
+- Decide authentication retry, timeout, stop/disable, lockout-avoidance, and re-enable behavior.
+- Define device-level password recovery and collector credential replacement.
+- Confirm backup and recovery principles without placing plaintext credentials in Git or normal backups.
+- Define controlled outbound internet access and prohibit unsolicited inbound WAN access.
+- Assign OPNsense VLAN and firewall responsibilities, including containment of weak or open device interfaces.
 
 ## Boundaries
 
-- Keep the work standalone, bounded, and reviewable.
-- Preserve existing polling, authentication, timestamp, allowlist, flushing,
-  duration, backoff, and clean-interruption behavior unless the bounded task
-  explicitly requires and tests a change.
-- Do not add portal, SQLite, systemd, or device-control integration.
-- Do not expand retention policy beyond existing repository plans.
+- This milestone is discussion and decision, not implementation.
+- Do not add credential code, install credentials, enter passwords, or perform
+  live authenticated collector work until Chris approves the decisions.
+- Preserve existing collectors and evidence; do not alter device configuration.
+- Treat SolarAssistant as one device within the project-wide model.
 
 ## Success
 
-One focused SolarAssistant hardening step is implemented and verified offline,
-raw evidence remains intact, and no deferred integration boundary is crossed.
+Chris approves a documented project-wide security and recovery model that is
+specific enough to authorize a later bounded credential implementation work
+unit without guessing about identities, storage, retries, lockout, recovery,
+network exposure, or accepted risk.

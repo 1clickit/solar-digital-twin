@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Persistent multi-rate telemetry collection
+Security model discussion and approval
 
 Next Task:
-Complete the smallest safe standalone SolarAssistant collector-hardening unit while preserving raw evidence and deferring integration work.
+Review and approve the project-wide security, credential, authentication-failure, network-containment, and recovery model before further credentialed collector work.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -75,9 +75,18 @@ main
 - SolarAssistant/JK BMS established as trusted battery source
 - Telemetry source roles and SolarAssistant collection plan documented
 - Standalone read-only SolarAssistant REST collector implemented
-- Profile-locked SolarAssistant credential installer implemented for manual
-  hidden input and atomic root-owned `0600` storage outside the repository;
-  storage is not installed and has no approved unattended consumer yet
+- The custom SolarAssistant root-bootstrap experiment was reviewed and
+  superseded before installation; its complete uncommitted state is preserved
+  outside the repository at
+  `/home/chris/solar-digital-twin-backups/20260715-212729-superseded-solarassistant-credential-bootstrap`
+- Project security direction now follows a practical Home Assistant-style
+  trusted-host model, with future OPNsense VLANs and firewall rules planned as
+  the primary network-containment boundary
+- No SolarAssistant credential was installed and no authenticated redacted
+  inventory-helper request occurred
+- No SolarAssistant credential installer or new authenticated credential
+  consumer is currently approved; credentialed collector implementation is
+  paused pending discussion and approval
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified

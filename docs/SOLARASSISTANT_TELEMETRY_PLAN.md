@@ -19,20 +19,26 @@ from SolarAssistant.
 
 ## Credential Handling
 
-The collector will read `SOLARASSISTANT_PASSWORD` from the environment.
+The existing collector can read `SOLARASSISTANT_PASSWORD` from the environment.
 
 For an interactive manual run, it may fall back to a private `getpass` prompt.
 
 The password must never be printed, written to evidence, committed, or included
 in command output.
 
-The approved persistent credential destination is
-`/etc/solar-digital-twin/solarassistant.env`, installed manually by Chris with
-the hidden-input process in `docs/CREDENTIAL_INSTALLATION.md`. Installation
-does not expose the secret to Codex or ChatGPT. The collector may continue to
-use its private interactive prompt for an authorized one-time manual run.
-The current collector does not load the persistent credential file; a future
-consumer requires separate review and approval. Do not shell-source the file.
+The SolarAssistant-specific custom credential-bootstrap direction was reviewed
+and superseded before installation. No SolarAssistant credential was installed,
+and no authenticated redacted inventory-helper request occurred. There is no
+approved SolarAssistant credential installer, protected persistent credential
+layout, or authenticated inventory consumer now.
+
+Future credential handling must follow the project-wide Home Assistant-style
+direction in `docs/SECURITY_MODEL.md`. Final Linux identities, credential-file
+layout, authentication-failure behavior, and recovery workflow remain pending
+Chris's approval. Do not implement or install replacement credential handling,
+enter a password, or perform new authenticated collector work until then. The
+previously manually verified collector behavior remains historical evidence;
+it does not approve a persistent credential mechanism.
 
 ## Timestamp and Evidence Policy
 

@@ -77,11 +77,11 @@ docs/TELEMETRY_SOURCE_ROLES.md
 docs/SOLARASSISTANT_TELEMETRY_PLAN.md
     Read-only SolarAssistant REST collection and timestamp design.
 
-docs/CREDENTIAL_INSTALLATION.md
-    Approved hidden-input credential installation and credential-blocked workflow.
+docs/SECURITY_MODEL.md
+    Project-wide Home Assistant-style security, trust, credential, network, and recovery direction.
 
-src/solar_digital_twin/credentials.py
-    Profile-locked atomic credential installer; currently SolarAssistant only.
+docs/DEVICE_ACCESS_RECOVERY.md
+    Device and service access, authority, credential, failure, and recovery inventory.
 
 src/solar_digital_twin/collectors/solarassistant.py
     Standalone read-only SolarAssistant battery evidence collector.
