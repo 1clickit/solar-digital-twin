@@ -8,8 +8,7 @@ deferred until explicitly promoted and approved.
 ## Later
 
 ### Collector Hardening and History
-- Harden SolarAssistant collection while preserving its existing raw evidence.
-- Add a separate SolarAssistant retained-output stage using approved topic-specific policies.
+- Complete later SolarAssistant live verification and persistent-service work only after the standalone retained-output stage and credential implementation are separately approved.
 - Normalize SolarAssistant and ESP32 history into SQLite after standalone collectors are hardened.
 - Add rolling raw buffers and automatic pre-event, event, and post-event preservation.
 - Integrate trusted JK BMS and ESP32 data into the primary engineering portal.

@@ -32,13 +32,12 @@ and no authenticated redacted inventory-helper request occurred. There is no
 approved SolarAssistant credential installer, protected persistent credential
 layout, or authenticated inventory consumer now.
 
-Future credential handling must follow the project-wide Home Assistant-style
-direction in `docs/SECURITY_MODEL.md`. Final Linux identities, credential-file
-layout, authentication-failure behavior, and recovery workflow remain pending
-Chris's approval. Do not implement or install replacement credential handling,
-enter a password, or perform new authenticated collector work until then. The
-previously manually verified collector behavior remains historical evidence;
-it does not approve a persistent credential mechanism.
+Future credential handling follows the approved Home Assistant-style model in
+`docs/SECURITY_MODEL.md`. SolarAssistant uses a separate runtime identity until
+the `admin` credential's effective authority is confirmed. Exact credential
+paths, metadata, and installation commands remain deferred. The previously
+manually verified collector behavior does not approve a persistent credential
+mechanism, but credential-authority assessment does not block offline work.
 
 ## Timestamp and Evidence Policy
 
@@ -84,6 +83,35 @@ Topic-specific retained-history and heartbeat schedules are documented in
 `docs/EG4_FORENSIC_CORRELATION.md`; they remain planned and are not implemented
 for SolarAssistant. Changing retention does not change API traffic or raw
 evidence cadence. No persistent SolarAssistant systemd service exists yet.
+
+## Approved Retained-Output Direction
+
+The next stage adds a separate derived NDJSON output while preserving every
+approved observation in the existing raw NDJSON. The collector continues to
+poll and locally filter the complete response at its configured interval.
+Retention changes only storage cadence and never reduces API traffic.
+
+Use the shared source-independent retention library where its change and
+monotonic-heartbeat mechanics fit. Keep SolarAssistant topic-family policy
+separate so later collectors can reuse mechanics without inheriting battery-
+specific rules.
+
+Approved starting policies are:
+
+- battery voltage, current, and power: meaningful change plus 60-second heartbeat
+- Battery 1, Battery 2, and combined SOC: SOC change plus 5-minute heartbeat
+- cell voltage and imbalance: meaningful change plus 5-minute heartbeat
+- battery temperatures: meaningful change plus 5-minute heartbeat
+- health, capacity, and cycle count: change plus daily heartbeat
+
+No numeric deadband is approved yet for a family described as retaining on
+meaningful change. The implementation must not invent one. Threshold selection
+remains an explicit implementation question; exact-change behavior may be used
+only where the approved policy says change rather than meaningful change.
+
+The retained stage requires deterministic offline tests and does not authorize
+credential installation, device access, live verification, SQLite, portal,
+systemd, or persistent-service work.
 
 ## Approved Topic Scope
 
@@ -136,8 +164,15 @@ The current collector will:
 - timestamp only successful responses
 - skip malformed or missing metrics without inventing values
 - retry connection failures using bounded backoff
+- stop immediately without retry or backoff on HTTP `401` or `403`
+- close every received HTTP response on success and failure paths
 - stop cleanly on Ctrl+C
 - flush each NDJSON record promptly
+
+Authentication rejection produces a fixed credential-free operator message and
+process exit status 1. This behavior and response closure were completed in
+commit `c7370ca` and covered by six focused offline tests; the full 43-test suite
+and repository health check passed. Raw evidence behavior was unchanged.
 
 The polling interval is configurable. One second is the current default and
 manual diagnostic capability; 10 seconds is the intended normal persistent

@@ -2,40 +2,44 @@
 
 ## Objective
 
-Make SolarAssistant HTTP authentication failures stop automated retries and
-guarantee response closure, with focused offline tests and unchanged raw evidence.
+Implement a separate retained-output stage for SolarAssistant telemetry using
+the approved topic-specific retention and heartbeat policies while preserving
+the complete raw NDJSON evidence stream unchanged.
 
 ## Context
 
-The project-wide Home Assistant-style security model is approved. SolarAssistant
-uses a separate runtime identity until the `admin` credential's effective
-authority is confirmed. No SolarAssistant credential is installed, and exact
-credential implementation remains deferred. The existing standalone collector
-and raw NDJSON behavior were manually verified previously.
+Commit `c7370ca` completed authentication-failure and response-lifecycle
+hardening with focused offline tests. The standalone collector and complete raw
+NDJSON evidence remain intact. SolarAssistant credential authority remains
+unknown, no credential is installed, and live authenticated work remains
+deferred; those facts do not block offline retained-output work.
 
 ## Scope
 
-- Harden only the existing standalone SolarAssistant collector's HTTP failure handling.
-- Preserve its current raw NDJSON filename, record format, allowlist, receipt timestamps, and flushing.
-- Treat HTTP `401` and `403` as authentication failures that stop automated attempts and require operator correction.
-- Keep temporary network failures distinct and preserve limited controlled backoff.
-- Close every HTTP response on success and failure paths.
+- Keep raw SolarAssistant NDJSON authoritative, complete, and unchanged.
+- Write retained records to a separate derived NDJSON stream.
+- Continue polling the complete metrics response at the configured interval; retention changes storage cadence, not API traffic.
+- Preserve topic allowlists, receipt timestamps, source fields, raw write ordering, and flushing.
+- Use the shared retention library where appropriate while keeping SolarAssistant topic policy separate from reusable mechanics.
+- Implement the approved 60-second, 5-minute, and daily heartbeats and change policies documented in `docs/SOLARASSISTANT_TELEMETRY_PLAN.md`.
+- Do not invent numeric deadbands for families whose meaningful-change threshold remains undefined; keep those thresholds explicit implementation questions.
 - Add focused tests requiring no device, credential, network, or existing evidence.
-- Keep credential storage, live authentication, portal, SQLite, and systemd integration deferred.
+- Design clean reusable components for later sensors without speculative device abstractions.
 
 ## Boundaries
 
 - Keep the work bounded, standalone, and reviewable.
 - Do not implement credential storage, install credentials, enter passwords,
   contact SolarAssistant, or perform authenticated collector work.
-- Preserve current polling, backoff, duration, and interruption behavior unless
-  the bounded change explicitly requires and tests an adjustment.
-- HTTP `401` or `403` must stop automated authentication attempts; temporary
-  network failures remain distinct and may use limited controlled backoff.
-- Do not alter device configuration or expand the approved security model.
+- Preserve authentication handling, polling, backoff, duration, response
+  closure, and interruption behavior.
+- Keep SQLite, portal, systemd, persistent service installation, and live
+  retained-stream verification deferred.
+- Do not alter device configuration, existing evidence, or the approved security model.
 
 ## Success
 
-Authentication rejection stops without retrying, temporary failures retain
-bounded backoff, every response closes, raw evidence remains intact, and no
-credential, live-device, or deferred integration boundary is crossed.
+Raw output remains byte-for-byte compatible in structure and complete in
+coverage; a separate retained stream follows approved topic and heartbeat
+policy; polling traffic is unchanged; deterministic offline tests pass; and no
+undefined deadband or deferred integration boundary is crossed.

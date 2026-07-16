@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Standalone SolarAssistant collector hardening
+SolarAssistant retained-output stage
 
 Next Task:
-Make SolarAssistant HTTP authentication failures stop automated retries and guarantee response closure, with focused offline tests and unchanged raw evidence.
+Implement a separate policy-driven SolarAssistant retained NDJSON stream while preserving complete raw evidence and unchanged API polling.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -94,6 +94,15 @@ main
   recovery details remain deferred; no SolarAssistant credential is installed
 - Practical offline SolarAssistant collector hardening may resume without
   implementing credentials or performing authenticated live work
+- Commit `c7370ca` completed SolarAssistant authentication hardening: HTTP
+  `401`/`403` stop without retry or backoff, use a fixed credential-free message
+  and exit status 1, and temporary failures retain bounded exponential backoff
+- Every received SolarAssistant HTTP response now closes on success and failure
+  paths; raw NDJSON behavior remains unchanged
+- SolarAssistant focused offline tests passed (6), the full suite passed (43),
+  and the repository health check passed for commit `c7370ca`
+- The current implementation milestone is a separate SolarAssistant retained
+  NDJSON stream; SQLite, portal, systemd, credentials, and live verification remain deferred
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified

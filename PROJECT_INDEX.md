@@ -75,7 +75,7 @@ docs/TELEMETRY_SOURCE_ROLES.md
     Agreed authority, comparison, forensic, and display roles for telemetry sources.
 
 docs/SOLARASSISTANT_TELEMETRY_PLAN.md
-    Read-only SolarAssistant REST collection and timestamp design.
+    Read-only SolarAssistant collection, evidence, cadence, and retained-output policy.
 
 docs/SECURITY_MODEL.md
     Approved Home Assistant-style trust, runtime isolation, credential, authentication, network, and recovery model.
@@ -84,7 +84,10 @@ docs/DEVICE_ACCESS_RECOVERY.md
     Device access, effective-authority classification, credential, failure, and recovery inventory.
 
 src/solar_digital_twin/collectors/solarassistant.py
-    Standalone read-only SolarAssistant battery evidence collector.
+    Standalone read-only SolarAssistant raw evidence collector with hardened HTTP failure handling.
+
+src/solar_digital_twin/collectors/retention.py
+    Shared source-independent change and heartbeat retention mechanics.
 
 src/solar_digital_twin/collectors/esp32_sse.py
     Standalone read-only ESPHome SSE evidence collector.
