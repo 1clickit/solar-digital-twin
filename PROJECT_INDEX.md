@@ -77,6 +77,9 @@ docs/TELEMETRY_SOURCE_ROLES.md
 docs/SOLARASSISTANT_TELEMETRY_PLAN.md
     Read-only SolarAssistant collection, evidence, cadence, and retained-output policy.
 
+docs/SOLARASSISTANT_DEADBAND_ASSESSMENT.md
+    Offline raw-evidence characterization for candidate SolarAssistant retained-output deadbands; no thresholds are approved.
+
 docs/SECURITY_MODEL.md
     Approved Home Assistant-style trust, runtime isolation, credential, authentication, network, and recovery model.
 
