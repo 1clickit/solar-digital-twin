@@ -4,7 +4,9 @@
 
 The raw collector was manually verified on 2026-07-14. The first separate
 retained-output slice was implemented in commit `4e069bb` and verified offline;
-it has not been live-device verified. Collector:
+it has not been live-device verified. Commit `dc1adc9` completed the first
+offline raw-evidence deadband assessment, but the evidence was insufficient for
+numeric thresholds. Collector:
 `src/solar_digital_twin/collectors/solarassistant.py`.
 
 ## Purpose
@@ -125,8 +127,34 @@ specific policy, not a collector defect. Offline evidence characterization must
 distinguish resolution from meaningful variation and leave candidate values
 pending project-owner approval.
 
-Deadband assessment does not authorize implementation, credential installation,
-device access, live verification, SQLite, portal, systemd, or persistent-service work.
+The assessment used two raw files containing 294 valid records and no invalid
+records. It covered about 3 minutes 47 seconds by receipt time but only about
+7.4 seconds of active capture, with seven observations per stable metric
+identity. Raw and retained files were distinguished, only raw evidence was used,
+and matching before-and-after metadata manifests confirmed that no evidence was
+modified, created, renamed, or deleted. The full 52-test suite, diff check, and
+repository health check passed.
+
+No numeric deadband was proposed, approved, implemented, or activated. The
+evidence did not adequately cover sustained charging, broad discharging, idle
+or near-zero current and power, sign or load transitions, several hours of
+temperature evolution, wider voltage movement, or cell behavior near full
+charge. Combined and individual batteries may require different thresholds.
+
+The next stage is a reviewed dedicated unprivileged SolarAssistant runtime and
+protected credential-delivery boundary. The existing interactive `getpass`
+capability may support a controlled manual verification, but it does not replace
+the separate runtime identity required while `admin` authority remains unknown.
+
+Only after that boundary is implemented and reviewed may a separate task begin
+an initial capture aiming for at least 24 continuous hours at the normal
+10-second polling interval. It should preserve complete raw and separate
+retained evidence and observe natural daylight charging, overnight discharge,
+idle behavior, load or charger transitions, temperature evolution, and near-full
+behavior where they occur. Missing conditions must be documented rather than
+created by manipulating equipment. Credential installation, the live capture,
+SQLite, portal, systemd, persistent service operation, and deadband
+implementation remain separately deferred.
 
 ## Approved Topic Scope
 

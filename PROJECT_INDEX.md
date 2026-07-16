@@ -78,7 +78,7 @@ docs/SOLARASSISTANT_TELEMETRY_PLAN.md
     Read-only SolarAssistant collection, evidence, cadence, and retained-output policy.
 
 docs/SOLARASSISTANT_DEADBAND_ASSESSMENT.md
-    Offline raw-evidence characterization for candidate SolarAssistant retained-output deadbands; no thresholds are approved.
+    Completed offline raw-evidence characterization; evidence was insufficient and no SolarAssistant deadbands are approved.
 
 docs/SECURITY_MODEL.md
     Approved Home Assistant-style trust, runtime isolation, credential, authentication, network, and recovery model.

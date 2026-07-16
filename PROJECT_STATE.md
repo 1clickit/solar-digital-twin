@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-SolarAssistant retained-output deadband assessment
+SolarAssistant secure runtime preparation
 
 Next Task:
-Characterize existing SolarAssistant raw evidence offline and propose defensible deadbands for the six remaining meaningful-change topic families.
+Prepare and implement the minimum dedicated SolarAssistant Linux runtime identity and protected credential-delivery boundary required for controlled live evidence collection under the approved security model.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -117,8 +117,24 @@ main
   shared retention tests passed (14), the full suite passed (52), and repository checks passed
 - Voltage, current, power, cell voltage, cell imbalance, and temperature remain
   complete in raw evidence but intentionally absent from retained output pending approved deadbands
-- The current milestone is offline evidence characterization only; no deadband
-  implementation, credential work, live access, or deferred integration is authorized
+- Commit `dc1adc9` completed an offline, raw-only SolarAssistant deadband
+  assessment using two files, 294 valid records, and seven observations per
+  stable metric identity; no invalid records were found
+- Receipt-time coverage was about 3 minutes 47 seconds, but active capture was
+  only about 7.4 seconds across two short runs; it did not adequately represent
+  broad charging, discharging, idle, transition, thermal, voltage, or near-full
+  cell behavior
+- Before-and-after evidence metadata manifests matched exactly; no evidence was
+  modified, created, renamed, or deleted
+- The assessment full suite passed (52), `git diff --check` passed, and the
+  repository health check passed
+- No numeric deadband was proposed, approved, implemented, or activated;
+  combined, Battery 1, and Battery 2 may ultimately require different thresholds
+- The current milestone is dedicated SolarAssistant runtime preparation under
+  the approved separate-identity and credential-isolation model
+- A later 24-hour raw and retained evidence capture at the normal 10-second
+  polling interval remains deferred until the runtime boundary is implemented
+  and reviewed; persistent service operation remains a separate later stage
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified

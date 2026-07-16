@@ -8,8 +8,9 @@ deferred until explicitly promoted and approved.
 ## Later
 
 ### Collector Hardening and History
-- Implement approved SolarAssistant meaningful-change deadbands only after offline evidence characterization and project-owner approval.
-- Complete later SolarAssistant live verification and persistent-service work only after deadband and credential implementation are separately approved.
+- Implement approved SolarAssistant meaningful-change deadbands only after a longer evidence capture, renewed assessment, and project-owner approval.
+- After the dedicated runtime boundary is implemented and reviewed, perform a separately approved SolarAssistant capture of at least 24 continuous hours at the normal 10-second polling interval. Preserve complete raw and separate retained evidence; document naturally absent operating conditions rather than manipulating equipment.
+- Complete later SolarAssistant live verification and persistent-service work only after runtime preparation, evidence capture, deadband review, and credential-related stages are separately approved.
 - Normalize SolarAssistant and ESP32 history into SQLite after standalone collectors are hardened.
 - Add rolling raw buffers and automatic pre-event, event, and post-event preservation.
 - Integrate trusted JK BMS and ESP32 data into the primary engineering portal.
