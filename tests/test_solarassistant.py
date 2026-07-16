@@ -116,6 +116,7 @@ class SolarAssistantCollectorTests(unittest.TestCase):
             output = Path(directory) / "solarassistant_test.ndjson"
             _, written = self.run_collect(session, output, clock)
             records = [json.loads(line) for line in output.read_text().splitlines()]
+            retained = solarassistant.retained_output_path(output).read_text()
 
         self.assertTrue(response.closed)
         self.assertEqual(written, 1)
@@ -131,6 +132,7 @@ class SolarAssistantCollectorTests(unittest.TestCase):
             "unit": "V",
         }])
         self.assertNotIn("synthetic-secret", json.dumps(records))
+        self.assertEqual(retained, "")
 
     def test_invalid_json_and_top_level_structure_close_response(self):
         cases = (

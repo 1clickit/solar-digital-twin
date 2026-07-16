@@ -12,6 +12,10 @@ from pathlib import Path
 
 import requests
 
+from solar_digital_twin.collectors.solarassistant_retention import (
+    SolarAssistantRetentionPolicy,
+)
+
 
 METRICS_URL = "http://192.168.3.12/api/v1/metrics"
 USERNAME = "admin"
@@ -78,6 +82,10 @@ def new_output_path() -> Path:
     return Path("evidence/solarassistant") / f"solarassistant_{stamp}.ndjson"
 
 
+def retained_output_path(raw_output: Path) -> Path:
+    return raw_output.with_name(f"{raw_output.stem}_retained{raw_output.suffix}")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -111,16 +119,22 @@ def collect(
         raise ValueError("--interval must be at least 1 second")
 
     output = new_output_path()
+    retained_output = retained_output_path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
 
     deadline = time.monotonic() + duration if duration > 0 else None
     session = requests.Session()
     backoff = 1.0
     written = 0
+    retention = SolarAssistantRetentionPolicy()
 
     print(f"Writing approved SolarAssistant updates to {output}")
+    print(f"Writing retained SolarAssistant updates to {retained_output}")
 
-    with output.open("a", encoding="utf-8", buffering=1) as evidence:
+    with (
+        output.open("a", encoding="utf-8", buffering=1) as evidence,
+        retained_output.open("a", encoding="utf-8", buffering=1) as retained,
+    ):
         while deadline is None or time.monotonic() < deadline:
             try:
                 response = session.get(
@@ -167,6 +181,23 @@ def collect(
                         )
                         evidence.flush()
                         written += 1
+
+                        reason = retention.retention_reason(
+                            record,
+                            time.monotonic(),
+                        )
+                        if reason is not None:
+                            retained_record = dict(record)
+                            retained_record["retention_reason"] = reason
+                            retained.write(
+                                json.dumps(
+                                    retained_record,
+                                    separators=(",", ":"),
+                                    ensure_ascii=False,
+                                )
+                                + "\n"
+                            )
+                            retained.flush()
                 finally:
                     response.close()
 
