@@ -11,13 +11,13 @@ security model, not the model for every credential.
 
 - **Purpose:** Collection interface for trusted JK BMS battery telemetry.
 - **Network location:** `192.168.3.12`.
-- **Access type:** Read-only telemetry for the existing manually verified collector.
+- **Access type:** Collector behavior is read-only telemetry, but the `admin` credential's effective authority is unconfirmed; use a separate identity.
 - **Direct login / credential:** REST metrics access uses fixed username `admin` and a password; operator login and recovery details are pending assessment.
-- **Future collector storage:** Pending security-model decision; no protected SolarAssistant credential is installed or approved for consumption.
+- **Future collector storage:** A separate administrator-controlled directory readable only by the isolated SolarAssistant identity; exact implementation is deferred.
 - **Transport:** Documented metrics endpoint uses unencrypted HTTP.
 - **Lockout / password recovery / physical recovery / factory reset:** Pending assessment.
 - **Configuration backup:** Pending assessment.
-- **Collector credential replacement:** Pending security-model and authentication-failure decisions.
+- **Collector credential replacement:** Operator correction followed by one manual verification before automation resumes; exact commands are deferred.
 - **Collector failure:** Stops SolarAssistant telemetry; it must not alter the device or trusted JK BMS measurements.
 - **Device-account failure:** Direct access and manufacturer-supported recovery must remain independent of the collector; details pending.
 - **Status:** Partially known.
@@ -26,7 +26,7 @@ security model, not the model for every credential.
 
 - **Purpose:** Future complementary convenience, status, alerts, and automation consumer; not authoritative evidence storage.
 - **Network location:** Not documented in the repository.
-- **Access type:** Potentially limited or administrative control depending on future integrations; classification pending.
+- **Access type:** Shared telemetry identity only for a verified restricted telemetry user or token; administrative tokens require isolation and are excluded from routine collectors.
 - **Direct login / credential / collector storage / transport / lockout / recovery:** Pending assessment.
 - **Physical recovery:** Pending assessment; Home Assistant is documented as a VM in the local Proxmox environment.
 - **Factory reset implications / configuration backup:** Home Assistant was restored from a backup, but current backup and reset procedures require assessment.
@@ -39,12 +39,12 @@ security model, not the model for every credential.
 
 - **Purpose:** Existing inverter telemetry collection, reporting, SQLite history, and EG4-only portal input.
 - **Network location:** Vendor-service access is documented; no local EG4 device API location is established here.
-- **Access type:** Existing collector telemetry role; broader account authority requires assessment.
+- **Access type:** Separate collector identity unless a technically enforced read-only credential is identified.
 - **Direct login / credential:** Existing unattended credential file is documented outside the repository; credential type and recovery details are not recorded here.
 - **Collector storage:** Existing `/etc/solar-digital-twin/eg4.env`; this predates and does not decide the future general model.
 - **Transport / lockout / password recovery / physical recovery / factory reset:** Pending assessment.
 - **Configuration backup:** Raw evidence, SQLite history, and reports are separate from account recovery; vendor/device configuration backup is pending.
-- **Collector credential replacement:** Pending documented procedure.
+- **Collector credential replacement:** Operator correction and one manual verification before automation resumes; device-specific procedure pending.
 - **Collector failure:** Stops fresh EG4 acquisition; preserved evidence and history remain available.
 - **Device-account failure:** Vendor or manufacturer-supported recovery is required; specifics pending.
 - **Status:** Partially known.
@@ -53,7 +53,7 @@ security model, not the model for every credential.
 
 - **Purpose:** Read-only electrical and AC-couple forensic evidence.
 - **Network location:** Forensic logger at `192.168.3.13`.
-- **Access type:** Current SSE collection is read-only telemetry; OTA and management authority are separate and require classification.
+- **Access type:** Current unauthenticated SSE interface is technically read-only telemetry and may use the shared telemetry identity; OTA and management authority remain separate.
 - **Direct login / credential:** Current public SSE endpoint requires no credential; ESPHome Wi-Fi secrets are kept in an ignored firmware secrets file.
 - **Future collector storage:** No collector credential is currently required for SSE.
 - **Transport:** Current SSE endpoint uses unencrypted HTTP.
@@ -70,12 +70,12 @@ security model, not the model for every credential.
 - **Network location:** `192.168.3.11` is documented for its LAN NTP service.
 - **Access type:** Administrative host with access to approved telemetry functions; exact future authority grows per approved integration.
 - **Direct login / credential / transport:** Local VM terminal and SSH are documented workflows; authentication details are intentionally not stored here.
-- **Credential storage:** Final service-account and credential-directory design is pending.
+- **Credential storage:** Administrator-controlled directories organized by runtime identity; `solardt` administration is never part of a collector identity.
 - **Lockout / password recovery:** VM and Ubuntu recovery procedures pending documentation.
 - **Physical recovery:** Through the local Proxmox environment; exact steps pending.
 - **Factory reset implications:** Rebuild from known-good source and off-VM backups rather than treating reset as collector recovery.
 - **Configuration backup:** Repository and project backups exist; restoration testing and credential separation require further definition.
-- **Collector credential replacement:** Pending project-wide decision.
+- **Collector credential replacement:** Secure operator replacement followed by one manual verification; exact implementation is deferred.
 - **Collector failure:** Individual telemetry stops safely; direct device access must remain available.
 - **Host-account failure:** May affect all hosted collectors and requires host recovery.
 - **Status:** Partially known.
@@ -97,7 +97,7 @@ security model, not the model for every credential.
 
 - **Purpose:** Planned VPN, VLAN, firewall, outbound-policy, and network-containment boundary.
 - **Network location:** Pending design.
-- **Access type:** Network-wide control.
+- **Access type:** Network-wide control requiring a separate identity and stronger isolation.
 - **Direct login / credential / storage / transport / lockout / recovery:** Pending assessment before implementation.
 - **Physical recovery / factory reset / configuration backup:** Must be documented and tested before reliance; pending.
 - **Collector credential replacement:** Not a normal telemetry collector credential.

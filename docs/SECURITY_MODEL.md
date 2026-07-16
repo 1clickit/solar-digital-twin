@@ -9,9 +9,10 @@ home automation, not banking, military, or large-enterprise identity systems.
 
 The SolarAssistant-specific custom root-bootstrap experiment was reviewed and
 superseded before installation. No SolarAssistant password was installed and no
-authenticated SolarAssistant inventory request occurred. No replacement
-credential implementation is approved. Security-model decisions must be
-completed with Chris before further credentialed collector work.
+authenticated SolarAssistant inventory request occurred. The project-wide
+operating model below is approved. Exact credential paths, metadata, and
+installation commands remain deferred until a bounded implementation is
+approved.
 
 ## Trusted-Host Boundary
 
@@ -65,16 +66,58 @@ protocols must not grant unrestricted access to the rest of the LAN.
 
 - Secrets remain outside source code, Git, chat, normal reports, and command arguments.
 - Conventional protected credential files and normal Linux permissions are the default direction.
-- Collectors run unprivileged and receive only credentials needed for their approved role.
+- Collectors run unprivileged and receive only credentials needed for their approved function.
 - A custom root-owned credential bootstrap will not be created for every device.
 - Stronger isolation may be considered for unusually powerful credentials, such as future firewall administration.
-- The final credential-directory and service-account design remains under discussion.
-- No replacement credential implementation is approved yet.
+- Credential directories and files are administrator controlled; collector identities may read approved credentials but may not create, replace, modify, or delete them.
+- Credentials remain outside the project tree, logs, reports, shell history, and ordinary project backups.
+- Recovery normally uses secure re-entry, replacement, or rotation.
+- Exact paths, ownership, groups, permissions, and commands remain deferred until implementation approval.
 
 The existing operational EG4 workflow predates this decision and remains
 documented separately. It does not establish the future project-wide credential
-architecture. No SolarAssistant credential installer or authenticated
-credential consumer is currently approved.
+architecture. No SolarAssistant credential installer or persistent credential
+consumer is currently implemented or approved.
+
+## Approved Runtime Isolation Decisions
+
+### Decision 1 — Runtime Service Identities
+
+Classify a collector by the maximum effective authority available to its runtime
+identity, not only by what its current code intends to do. Effective authority
+includes credentials, unauthenticated interfaces, network access, and protected
+resources available to that identity.
+
+Collectors technically restricted to read-only telemetry may share one
+ordinary unprivileged telemetry identity. Control-capable, administrative,
+network-wide, unusually sensitive, authority-unknown, or mixed-authority access
+requires a separate Linux identity and separately protected credentials until
+reliable evidence proves technical read-only restriction.
+
+Preliminary classifications are:
+
+- ESP32 SSE telemetry: shared telemetry identity.
+- SolarAssistant: separate identity until the `admin` credential's effective authority is confirmed.
+- EG4 vendor access: separate identity unless a technically enforced read-only credential is identified.
+- Home Assistant: shared only with a verified restricted telemetry user or token; administrative tokens are excluded.
+- Future OPNsense: separate identity because it has network-wide sensitivity.
+- `solardt` administration: never part of a collector identity.
+
+### Decision 2 — Credential Organization
+
+Credentials are organized by runtime service identity. A shared telemetry
+identity may have one protected directory containing multiple credentials only
+when every credential is technically restricted to read-only telemetry. Each
+isolated collector identity receives its own protected directory. No common
+group or parent-directory permission may grant every collector access to every
+credential.
+
+### Decision 3 — Unknown Authority
+
+Unknown or mixed authority requires a separate unprivileged service identity
+and credential directory until reliable evidence confirms technical read-only
+restriction. Uncertainty does not prohibit useful telemetry collection, but
+read-only collector behavior alone does not prove read-only credential authority.
 
 ## Collector Authority
 
@@ -87,13 +130,13 @@ telemetry safely rather than alter the device.
 
 ## Authentication-Failure Principle
 
-Temporary network failures and authentication failures must be distinguished.
-Temporary connection failures may use controlled backoff. Authentication
-failures must not cause unlimited rapid retries. Exact retry count, timeout,
-disable-state behavior, and credential-replacement workflow remain decisions
-for the next discussion. Chris must retain an opportunity to recover or change
-the device password and provide the replacement credential. Collectors never
-change device passwords automatically.
+Temporary network failures and authentication failures are separate states.
+Temporary connection failures and timeouts may use limited retries with
+controlled backoff. HTTP `401` or `403` stops automated authentication attempts
+and requires operator correction; rejected credentials are not repeatedly
+retried. After correction or replacement, one manual verification is allowed
+before automation resumes. Authentication failure never triggers password or
+account-recovery changes. Collectors never change device passwords automatically.
 
 ## Device Independence and Recovery
 
@@ -102,7 +145,9 @@ credential file, service, or report must not lock Chris out of the device.
 Password recovery uses the device or manufacturer-supported process. After
 recovery or rotation, the collector credential is replaced and tested. Factory
 reset is a final option, not normal collector recovery. Device-specific paths
-will be documented as each device is assessed.
+will be documented as each device is assessed. Unknown lockout, password-
+recovery, and vendor behavior remain pending assessments rather than blockers
+to appropriately isolated telemetry work.
 
 ## Backups and Recovery
 
@@ -112,23 +157,18 @@ not belong in Git or normal project backups. Credential recovery and system
 recovery are separate procedures. Prefer re-entering or rotating a device
 credential instead of recovering it from project files.
 
-## Decisions Reserved for Chris
+## Failure and Recovery Boundaries
 
-The next discussion must decide:
+Collector failure is repaired or redeployed from known-good source without
+changing credentials unless compromise is suspected. Device-account failure is
+handled through independent device administration or recovery. VM loss requires
+rebuild or restoration from documented source and protected backups, followed
+by secure credential re-entry. Confirmed `solardt` compromise requires network
+isolation, rebuild, verification, and rotation of every potentially exposed
+credential.
 
-1. One shared ordinary Linux service identity versus separate collector accounts.
-2. One protected credential parent directory with separate files.
-3. Which collectors justify separate Linux identities.
-4. Classification of each device as read-only, limited control, administrative, or network-wide control.
-5. Exact handling of HTTP `401` and `403`.
-6. Immediate stop, limited retries, or timeout followed by operator-directed authentication retry.
-7. How corrected credentials re-enable collectors.
-8. How credential backups are handled outside Git.
-9. Responsibilities of collectors, `solardt`, Home Assistant, OPNsense, and devices.
-10. Which credentials justify stronger isolation.
-11. Containment of open Wi-Fi, weak authentication, and unencrypted protocols.
-12. How outbound internet access is limited and audited without preventing normal updates.
-
-These choices are deliberately unresolved. Do not implement credential code,
-install credentials, enter passwords, or perform new authenticated collector
-work until Chris approves them.
+Devices with open Wi-Fi, weak authentication, unencrypted protocols, or poorly
+controlled management interfaces are contained primarily through future
+OPNsense segmentation and narrowly permitted traffic. The accepted risk level
+remains practical home-office and home-automation security, not banking or
+large-enterprise security.

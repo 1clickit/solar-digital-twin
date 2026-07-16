@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Security model discussion and approval
+Standalone SolarAssistant collector hardening
 
 Next Task:
-Review and approve the project-wide security, credential, authentication-failure, network-containment, and recovery model before further credentialed collector work.
+Make SolarAssistant HTTP authentication failures stop automated retries and guarantee response closure, with focused offline tests and unchanged raw evidence.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -84,9 +84,16 @@ main
   the primary network-containment boundary
 - No SolarAssistant credential was installed and no authenticated redacted
   inventory-helper request occurred
-- No SolarAssistant credential installer or new authenticated credential
-  consumer is currently approved; credentialed collector implementation is
-  paused pending discussion and approval
+- Project-wide runtime identity, credential isolation, unknown-authority,
+  authentication-failure, network-containment, and recovery decisions are approved
+- ESP32 SSE may use a shared telemetry identity; SolarAssistant and EG4 remain
+  separately isolated until their credentials are proven technically read-only
+- HTTP `401` or `403` stops automated authentication attempts; operator
+  correction and one manual verification are required before automation resumes
+- Credential paths, metadata, installation commands, and device-specific
+  recovery details remain deferred; no SolarAssistant credential is installed
+- Practical offline SolarAssistant collector hardening may resume without
+  implementing credentials or performing authenticated live work
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified

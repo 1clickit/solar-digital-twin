@@ -2,40 +2,40 @@
 
 ## Objective
 
-Review and approve the Solar Digital Twin security, credential,
-authentication-failure, and recovery model using a Home Assistant-style
-operational approach before implementing additional credentialed collectors.
+Make SolarAssistant HTTP authentication failures stop automated retries and
+guarantee response closure, with focused offline tests and unchanged raw evidence.
 
 ## Context
 
-The SolarAssistant-specific custom root-bootstrap experiment was reviewed and
-superseded before installation. No SolarAssistant credential was installed and
-no authenticated redacted inventory request occurred. The project has adopted
-a practical Home Assistant-style security direction, but important operating
-choices remain deliberately unresolved.
+The project-wide Home Assistant-style security model is approved. SolarAssistant
+uses a separate runtime identity until the `admin` credential's effective
+authority is confirmed. No SolarAssistant credential is installed, and exact
+credential implementation remains deferred. The existing standalone collector
+and raw NDJSON behavior were manually verified previously.
 
 ## Scope
 
-- Confirm the trusted-host boundary and accepted home-office risk level.
-- Decide shared versus separate Linux service accounts and credential-directory design.
-- Classify device access as read-only, limited control, administrative, or network-wide control.
-- Decide authentication retry, timeout, stop/disable, lockout-avoidance, and re-enable behavior.
-- Define device-level password recovery and collector credential replacement.
-- Confirm backup and recovery principles without placing plaintext credentials in Git or normal backups.
-- Define controlled outbound internet access and prohibit unsolicited inbound WAN access.
-- Assign OPNsense VLAN and firewall responsibilities, including containment of weak or open device interfaces.
+- Harden only the existing standalone SolarAssistant collector's HTTP failure handling.
+- Preserve its current raw NDJSON filename, record format, allowlist, receipt timestamps, and flushing.
+- Treat HTTP `401` and `403` as authentication failures that stop automated attempts and require operator correction.
+- Keep temporary network failures distinct and preserve limited controlled backoff.
+- Close every HTTP response on success and failure paths.
+- Add focused tests requiring no device, credential, network, or existing evidence.
+- Keep credential storage, live authentication, portal, SQLite, and systemd integration deferred.
 
 ## Boundaries
 
-- This milestone is discussion and decision, not implementation.
-- Do not add credential code, install credentials, enter passwords, or perform
-  live authenticated collector work until Chris approves the decisions.
-- Preserve existing collectors and evidence; do not alter device configuration.
-- Treat SolarAssistant as one device within the project-wide model.
+- Keep the work bounded, standalone, and reviewable.
+- Do not implement credential storage, install credentials, enter passwords,
+  contact SolarAssistant, or perform authenticated collector work.
+- Preserve current polling, backoff, duration, and interruption behavior unless
+  the bounded change explicitly requires and tests an adjustment.
+- HTTP `401` or `403` must stop automated authentication attempts; temporary
+  network failures remain distinct and may use limited controlled backoff.
+- Do not alter device configuration or expand the approved security model.
 
 ## Success
 
-Chris approves a documented project-wide security and recovery model that is
-specific enough to authorize a later bounded credential implementation work
-unit without guessing about identities, storage, retries, lockout, recovery,
-network exposure, or accepted risk.
+Authentication rejection stops without retrying, temporary failures retain
+bounded backoff, every response closes, raw evidence remains intact, and no
+credential, live-device, or deferred integration boundary is crossed.

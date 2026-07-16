@@ -78,10 +78,10 @@ docs/SOLARASSISTANT_TELEMETRY_PLAN.md
     Read-only SolarAssistant REST collection and timestamp design.
 
 docs/SECURITY_MODEL.md
-    Project-wide Home Assistant-style security, trust, credential, network, and recovery direction.
+    Approved Home Assistant-style trust, runtime isolation, credential, authentication, network, and recovery model.
 
 docs/DEVICE_ACCESS_RECOVERY.md
-    Device and service access, authority, credential, failure, and recovery inventory.
+    Device access, effective-authority classification, credential, failure, and recovery inventory.
 
 src/solar_digital_twin/collectors/solarassistant.py
     Standalone read-only SolarAssistant battery evidence collector.
