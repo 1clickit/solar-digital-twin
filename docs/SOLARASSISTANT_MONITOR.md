@@ -14,10 +14,16 @@ detached tmux session `solarassistant-monitor` at
 No systemd service is included. Integration into the primary project portal
 remains deferred.
 
-The monitor currently displays an `Unknown` status badge despite fresh data.
-This is a minor deferred correction and is not a capture blocker. Its PID was
-observed as 92674, but PIDs are transient observations and not stable runtime
-configuration.
+The running monitor may continue to display an `Unknown` status badge despite
+fresh data. This is not a capture blocker. Commit `a227b68` reproduced the
+defect offline: bare JavaScript `status` resolved to the browser-provided
+`window.status` value instead of the intended badge element. The correction
+explicitly binds that element and uses it for normal rendering and fetch-error
+fallback. A regression test explicitly rejects bare `status.textContent`.
+Focused monitor tests passed (27), and the full suite passed (87). Backend
+status semantics and read-only monitor behavior were unchanged. The commit is
+pushed but has not been deployed to the active monitor. Its PID was observed as
+92674, but PIDs are transient observations and not stable runtime configuration.
 
 ## Data flow and in-memory operation
 
@@ -145,9 +151,19 @@ the planned network boundary.
 The active collector and monitor must not be stopped, restarted, signaled,
 redeployed, or modified without Chris's explicit approval. Safe development may
 continue only when it cannot alter the installed collector or retained-output
-behavior. The badge issue must first be reproduced and corrected offline while
-preserving read-only monitor operation; deployment is prohibited during the
-active capture and requires explicit later approval.
+behavior. The badge issue was reproduced and corrected offline while
+preserving read-only monitor operation. That repository work is complete, but
+deployment remains prohibited during the active capture and requires explicit
+later approval.
+
+After the configured 86,400-second capture should have completed, the next
+stage requires separately approved minimal read-only verification that the
+collector stopped automatically, evidence remains present, the monitor is
+reachable or its resulting state is understood, and no premature termination
+is indicated. Results must be reviewed before deployment is authorized. Only
+after separate approval may the installed monitor code be updated and only the
+monitor restarted, followed by real-browser badge verification while preserving
+all captured evidence. Capture completion has not yet been verified.
 
 The committed launcher is `scripts/run_solarassistant_monitor.sh`. Its
 non-privileged `--check` validates local inputs without root, `/var/lib`, a

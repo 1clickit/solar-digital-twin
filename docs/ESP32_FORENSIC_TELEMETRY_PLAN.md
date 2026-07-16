@@ -25,6 +25,36 @@ A separate sibling `esp32_sse_*_retained.ndjson` file contains unchanged copies 
 
 Raw evidence is primary. If retained output cannot be opened or later fails during retained processing, writing, or flushing, the collector reports the first failure once, disables retained output for that run, and continues raw collection.
 
+## Planned Controlled 12-Hour Capture
+
+The next bounded operational intention is a fixed 12-hour ESP32 forensic
+capture. Its exact launch method and command require a separate reviewed work
+unit and explicit approval. The run must stop automatically.
+
+Purposes:
+
+- verify the offline-tested retained-output behavior against the live ESP32;
+- preserve complete raw ESP32 SSE evidence and the separate retained stream;
+- capture high-resolution AC-couple power, active-microinverter count, voltage,
+  frequency, ramp-rate, status, and forensic-event observations;
+- obtain useful overlap with the active SolarAssistant capture and normal EG4
+  collection workflow;
+- where timing permits, include daytime solar operation, sunset, production
+  shutdown, and evening load or battery transitions; and
+- support later timestamp alignment and cross-source forensic analysis.
+
+The capture changes no ESP32 firmware or configuration. It authorizes no change
+to the EG4 collector, cadence, portal, SQLite, equipment settings, SolarAssistant
+collector, or SolarAssistant retained-output behavior. The existing
+SolarAssistant capture must not be stopped, restarted, or altered. Raw evidence
+remains authoritative, and retained output is derived.
+
+This first run is evidence collection and live-retention verification, not
+final causal analysis. Cloud cover and normal solar variability remain possible
+explanations for power changes. Success requires automatic completion plus
+intact, reviewable raw and retained evidence with useful timing coverage; it
+does not require an AC-couple fault to occur.
+
 ## Smallest Safe Implementation Step
 The standalone read-only collector reconnects with bounded backoff, filters approved entity IDs, timestamps each update, and appends raw and separately retained newline-delimited JSON under ignored `evidence/`.
 

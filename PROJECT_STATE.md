@@ -4,7 +4,7 @@ Current Milestone:
 SolarAssistant controlled 24-hour capture active with read-only live monitor
 
 Next Task:
-Investigate and test an offline-only correction for the live monitor's fresh-data `Unknown` status badge; do not deploy it during the active capture.
+Prepare, preflight, and—only after explicit approval—launch a fixed 12-hour ESP32 forensic capture without altering the active SolarAssistant or EG4 workflows.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -192,8 +192,17 @@ main
 - The active collector must not be stopped, restarted, redeployed, or modified
   without Chris's explicit approval. Safe development may continue only when it
   cannot alter the installed collector or retained-output behavior
-- The monitor currently shows an `Unknown` badge despite fresh data. This is a
-  minor deferred correction and is not a capture blocker
+- The running monitor may continue to show an `Unknown` badge despite fresh
+  data. This remains non-blocking because the correction is committed and
+  pushed but has not been deployed to the active monitor
+- Commit `a227b68` reproduced the badge defect offline: bare JavaScript
+  `status` resolved to the browser-provided `window.status` value instead of
+  the intended badge element
+- The correction explicitly binds the intended status element and uses it for
+  normal rendering and fetch-error fallback. Its regression test prevents
+  reintroduction of bare `status.textContent`
+- Focused monitor tests passed (27), and the full suite passed (87). Backend
+  status semantics and read-only monitor behavior were unchanged
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified
@@ -207,6 +216,19 @@ main
 - Existing ESP32 raw NDJSON filename and record stream remain intact as complete approved raw evidence.
 - Separate selectively retained ESP32 NDJSON output implemented with the documented 0.04 Hz frequency deadband and 30-second heartbeat.
 - ESP32 collector-level offline tests and repository health checks passed; the retained stream has not yet been verified against the live device.
+- The approved immediate intention is a fixed 12-hour ESP32 forensic capture to
+  verify retained output against the live device while preserving complete raw
+  SSE evidence and a separate derived retained stream
+- The run is intended to capture high-resolution AC-couple power,
+  active-microinverter count, voltage, frequency, ramp rates, status, and
+  forensic events with useful SolarAssistant and normal EG4 overlap; exact
+  launch method and command require separate review and explicit approval
+- The ESP32 run must stop automatically and makes no firmware, configuration,
+  EG4 workflow, equipment-setting, SolarAssistant collector, or retained-output
+  change. Capture success does not require an AC-couple fault
+- SolarAssistant post-capture verification and controlled monitor-update
+  planning follow the ESP32 capture task; capture completion remains unverified,
+  and any runtime verification or monitor deployment requires separate approval
 - Commit `5fef46b` pushed to `origin/main`; `main` was clean and synchronized afterward.
 
 ## Current Reporting Implementation

@@ -317,23 +317,28 @@ This indicates correlation, not proven causation.
 
 Use this category when data is missing, timestamps are misaligned, sample gaps are too large, or more than one explanation remains plausible.
 
-## Planned Full-Sun Diagnostic Collection
+## Possible Later Synchronized Strong-Sun Diagnostic Window
 
-A full-sun diagnostic period may reduce cloud-cover uncertainty.
+A later, separately approved synchronized diagnostic window may reduce
+cloud-cover uncertainty only if the initial 12-hour ESP32 capture and existing
+evidence justify it. Do not schedule or launch this window now.
 
-Normal mode should keep the existing refresh and reporting schedule unchanged.
+Suggested design:
 
-A future diagnostic mode may:
-
-- temporarily collect EG4 data every five minutes
-- run only during a limited strong-sun window
+- run for approximately six hours during strong-sun conditions;
+- collect ESP32 SSE at its existing approximately one-second cadence;
+- use SolarAssistant at its established 10-second polling target;
+- begin temporary EG4 diagnostic collection at a five-minute cadence;
 - remain read-only and non-mutating
 - leave EG4 settings unchanged
 - label diagnostic runs clearly
-- store diagnostic evidence separately where practical
-- preserve normal collection behavior outside the diagnostic window
+- keep evidence distinct where practical; and
+- preserve normal EG4 collection and reporting behavior outside the window.
 
-A one-minute interval should be considered only after five-minute testing shows the endpoint tolerates it and the risk is approved.
+A one-minute EG4 interval is not authorized. It may be considered only after
+five-minute testing is reviewed and separately explicitly approved. Any timing
+relationship is correlation evidence and must not be claimed to prove
+causation.
 
 EG4 cloud and portal endpoints must not be hammered.
 
@@ -369,9 +374,6 @@ Before implementing this design:
 
 ## Documentation Follow-Up
 
-After this design note is reviewed:
-
-- add it to `PROJECT_INDEX.md`
-- add concise investigation items to `BACKLOG.md`
-- leave `NEXT_TASK.md` unchanged
-- leave repository health-check work paused until this documentation is safely committed
+This design note is indexed. Immediate work is governed by `NEXT_TASK.md`; the
+possible synchronized diagnostic window remains deferred until evidence and
+separate approval justify promotion.

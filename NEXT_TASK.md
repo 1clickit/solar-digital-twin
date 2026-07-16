@@ -2,49 +2,65 @@
 
 ## Objective
 
-Perform an offline-only investigation and tested correction of the
-SolarAssistant live monitor's fresh-data `Unknown` status badge.
+Prepare, preflight, and—only after explicit approval—launch the fixed 12-hour
+ESP32 forensic capture without altering the active SolarAssistant or EG4
+workflows.
 
 ## Context
 
-The dedicated runtime is installed under `/opt/solar-digital-twin`; its
-administrator-controlled credential remains protected outside Git. A capture
-begun at approximately `2026-07-16 02:00 America/Chicago` is running as
-`solardt-sa` in root-owned detached tmux session `solarassistant-24h`, with a
-configured duration of 86,400 seconds and automatic completion expected. The
-read-only monitor runs as `solardt-sa` in root-owned detached tmux session
-`solarassistant-monitor` at `http://192.168.3.11:8792`; its health endpoint
-returned `{"status":"ok"}`.
+The standalone ESP32 SSE collector preserves complete raw evidence and writes a
+separate retained stream. Its retained-output behavior passed offline tests but
+has not yet been verified against the live ESP32. A controlled 12-hour run is
+intended to provide that live verification and collect high-resolution evidence
+with useful overlap across the active SolarAssistant capture and normal EG4
+workflow. Raw evidence remains authoritative; retained output is derived.
 
-Fresh capture data is visible, but the status badge displays `Unknown`. This is
-a minor deferred correction, not a capture blocker. Collector PID 92638 and
-monitor PID 92674 were observed historically; these transient PIDs are not
-stable runtime configuration.
+The SolarAssistant badge correction in pushed commit `a227b68` remains
+undeployed. The configured SolarAssistant capture has not yet been verified
+complete and must not be stopped, restarted, or altered by this work.
 
 ## Scope
 
-1. Reproduce the fresh-data `Unknown` badge using repository-local fixtures or
-   tests without reading or changing live evidence.
-2. Identify and document the cause before changing behavior.
-3. Implement the smallest offline correction and add focused tests that cover
-   fresh, stale, and relevant process/countdown states.
-4. Preserve the monitor's read-only evidence operation and collector isolation.
+1. Review current documentation and repository state without accessing live
+   evidence or changing any runtime.
+2. Under separately reviewed authorization, perform a non-invasive preflight of
+   the existing ESP32 collector, intended output paths, available storage, time
+   synchronization, and fixed-duration automatic-stop behavior.
+3. Prepare and review the exact proposed launch method and command. Do not
+   launch during command review.
+4. Obtain separate explicit approval before launching the fixed 12-hour run.
+5. After launch, perform only minimal approved health confirmation without
+   attaching invasively or disturbing the ESP32 or SolarAssistant collectors.
+6. Allow automatic completion, then separately review evidence metadata,
+   integrity, raw/retained presence, coverage, and retained-output behavior.
 
-## Boundaries
+## Capture boundaries
 
-- Do not stop, restart, signal, attach to, inspect interactively, redeploy, or
-  modify the active collector or monitor without Chris's explicit approval.
-- Do not deploy the correction during the active capture.
-- Do not alter `/opt/solar-digital-twin`, the installed collector, credentials,
-  retained-output behavior, evidence, tmux sessions, or runtime state.
-- Safe development may continue only when it cannot alter the installed
-  collector or retained-output behavior.
-- Preserve monitor read-only operation: no device requests, credential access,
-  or evidence writes.
-- Require Chris's explicit approval before any later deployment.
+- Fixed duration: 12 hours; the run must stop automatically.
+- Preserve complete raw ESP32 SSE evidence and the separate retained stream.
+- Capture AC-couple power, active-microinverter count, voltage, frequency,
+  ramp-rate, status, and forensic-event observations.
+- No ESP32 firmware or configuration change is planned.
+- Do not change EG4 collection, cadence, portal, SQLite, or equipment settings.
+- Do not change the SolarAssistant collector or retained-output behavior, and
+  do not stop, restart, or alter its existing capture.
+- This is evidence collection and live-retention verification, not final causal
+  analysis. Cloud cover and normal solar variability remain possible causes of
+  power changes, and success does not require an AC-couple fault.
+
+## Following task
+
+After the configured SolarAssistant capture should have completed, perform the
+separately approved minimal read-only completion verification documented in
+`docs/SOLARASSISTANT_MONITOR.md`. Review those results before separately
+authorizing any installed-monitor update. Only then may the installed monitor
+be updated, only the monitor restarted, and the corrected badge verified in a
+real browser while preserving all evidence. Do not assume capture completion.
 
 ## Success
 
-The badge cause is reproduced and explained offline, the smallest correction is
-covered by focused tests, and read-only monitor behavior and collector
-isolation remain intact. No deployment or live-runtime action occurs.
+The exact 12-hour launch is reviewed and explicitly approved, the collector
+starts without altering SolarAssistant or EG4 workflows, minimal health is
+confirmed non-invasively, the run stops automatically, and later metadata and
+integrity review can assess raw and retained evidence. No fault occurrence is
+required.
