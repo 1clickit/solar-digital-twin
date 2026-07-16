@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-SolarAssistant controlled 24-hour capture active with read-only live monitor
+Controlled SolarAssistant and ESP32 captures awaiting completion verification
 
 Next Task:
-Prepare, preflight, and—only after explicit approval—launch a fixed 12-hour ESP32 forensic capture without altering the active SolarAssistant or EG4 workflows.
+After the configured ESP32 and SolarAssistant capture periods should have completed, perform separately approved minimal read-only completion and evidence-integrity verification.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -216,19 +216,30 @@ main
 - Existing ESP32 raw NDJSON filename and record stream remain intact as complete approved raw evidence.
 - Separate selectively retained ESP32 NDJSON output implemented with the documented 0.04 Hz frequency deadband and 30-second heartbeat.
 - ESP32 collector-level offline tests and repository health checks passed; the retained stream has not yet been verified against the live device.
-- The approved immediate intention is a fixed 12-hour ESP32 forensic capture to
-  verify retained output against the live device while preserving complete raw
-  SSE evidence and a separate derived retained stream
-- The run is intended to capture high-resolution AC-couple power,
-  active-microinverter count, voltage, frequency, ramp rates, status, and
-  forensic events with useful SolarAssistant and normal EG4 overlap; exact
-  launch method and command require separate review and explicit approval
-- The ESP32 run must stop automatically and makes no firmware, configuration,
-  EG4 workflow, equipment-setting, SolarAssistant collector, or retained-output
-  change. Capture success does not require an AC-couple fault
-- SolarAssistant post-capture verification and controlled monitor-update
-  planning follow the ESP32 capture task; capture completion remains unverified,
-  and any runtime verification or monitor deployment requires separate approval
+- The fixed 12-hour ESP32 forensic capture launched successfully at
+  `2026-07-16 13:05:13 America/Chicago` as unprivileged user `chris` in detached
+  tmux session `esp32-forensic-12h`
+- It is configured for 43,200 seconds and should stop automatically at
+  approximately `2026-07-17 01:05 America/Chicago`, allowing up to about 30
+  seconds for a pending network read
+- Collector PID 107886 was a transient historical observation, not stable
+  runtime configuration
+- Active raw evidence is
+  `/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z.ndjson`;
+  its derived retained sibling is
+  `/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z_retained.ndjson`
+- Initial health confirmed exactly one collector, current timestamps, both files
+  growing, no immediate reconnect or error loop, and a clean repository tree.
+  Over 10 seconds, raw grew from 498 to 598 lines and retained from 470 to 566
+  lines
+- The initially high retained-to-raw ratio is an early observation only and is
+  not a final retention assessment
+- Until completion verification, do not stop, restart, signal, attach to,
+  redeploy, or modify the ESP32 collector; change its collector or retention
+  behavior; or alter or truncate either active evidence file
+- Do not modify the active SolarAssistant collector. EG4 workflows remain
+  unchanged. Ordinary repository development may continue only when it cannot
+  affect either active process or its evidence outputs
 - Commit `5fef46b` pushed to `origin/main`; `main` was clean and synchronized afterward.
 
 ## Current Reporting Implementation

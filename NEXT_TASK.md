@@ -2,65 +2,73 @@
 
 ## Objective
 
-Prepare, preflight, and—only after explicit approval—launch the fixed 12-hour
-ESP32 forensic capture without altering the active SolarAssistant or EG4
-workflows.
+After the configured ESP32 and SolarAssistant capture periods should have
+completed, perform separately approved minimal read-only completion and
+evidence-integrity verification.
 
 ## Context
 
-The standalone ESP32 SSE collector preserves complete raw evidence and writes a
-separate retained stream. Its retained-output behavior passed offline tests but
-has not yet been verified against the live ESP32. A controlled 12-hour run is
-intended to provide that live verification and collect high-resolution evidence
-with useful overlap across the active SolarAssistant capture and normal EG4
-workflow. Raw evidence remains authoritative; retained output is derived.
+The fixed ESP32 capture launched at `2026-07-16 13:05:13 America/Chicago` as
+unprivileged user `chris` in detached tmux session `esp32-forensic-12h`. It is
+configured for 43,200 seconds and should stop automatically at approximately
+`2026-07-17 01:05 America/Chicago`, allowing up to about 30 seconds for a
+pending network read. PID 107886 was a transient historical observation only.
 
-The SolarAssistant badge correction in pushed commit `a227b68` remains
-undeployed. The configured SolarAssistant capture has not yet been verified
-complete and must not be stopped, restarted, or altered by this work.
+Its active raw file is
+`/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z.ndjson`.
+Its separate derived retained file is
+`/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z_retained.ndjson`.
+Initial health confirmed one collector, current timestamps, both files growing,
+no immediate reconnect or error loop, and a clean repository tree. During 10
+seconds, raw grew from 498 to 598 lines and retained from 470 to 566 lines. The
+early high retained-to-raw ratio is not a final retention assessment.
+
+The configured SolarAssistant capture period should also be allowed to finish
+without interference. Completion of either capture has not yet been verified.
 
 ## Scope
 
-1. Review current documentation and repository state without accessing live
-   evidence or changing any runtime.
-2. Under separately reviewed authorization, perform a non-invasive preflight of
-   the existing ESP32 collector, intended output paths, available storage, time
-   synchronization, and fixed-duration automatic-stop behavior.
-3. Prepare and review the exact proposed launch method and command. Do not
-   launch during command review.
-4. Obtain separate explicit approval before launching the fixed 12-hour run.
-5. After launch, perform only minimal approved health confirmation without
-   attaching invasively or disturbing the ESP32 or SolarAssistant collectors.
-6. Allow automatic completion, then separately review evidence metadata,
-   integrity, raw/retained presence, coverage, and retained-output behavior.
+1. With separate explicit approval and without signaling either collector,
+   confirm each expected automatic completion state.
+2. Confirm the ESP32 raw and retained files remain present and nonempty.
+3. Record final file sizes, line counts, first and last receipt timestamps, and
+   a compact reconnect/error summary without printing full evidence records.
+4. Confirm SolarAssistant evidence remains present and its collector completion
+   state is understood.
+5. Determine whether either capture appears to have terminated prematurely.
+6. Preserve all evidence unchanged.
+7. Do not begin detailed correlation, retention tuning, monitor deployment, or
+   collector restart during this verification work unit.
+8. Require a separate reviewed analysis plan after evidence integrity is
+   confirmed.
 
-## Capture boundaries
+## Following analysis task
 
-- Fixed duration: 12 hours; the run must stop automatically.
-- Preserve complete raw ESP32 SSE evidence and the separate retained stream.
-- Capture AC-couple power, active-microinverter count, voltage, frequency,
-  ramp-rate, status, and forensic-event observations.
-- No ESP32 firmware or configuration change is planned.
-- Do not change EG4 collection, cadence, portal, SQLite, or equipment settings.
-- Do not change the SolarAssistant collector or retained-output behavior, and
-  do not stop, restart, or alter its existing capture.
-- This is evidence collection and live-retention verification, not final causal
-  analysis. Cloud cover and normal solar variability remain possible causes of
-  power changes, and success does not require an AC-couple fault.
+After completion and evidence integrity are confirmed, perform the separately
+reviewed ESP32 retention assessment defined in
+`docs/ESP32_FORENSIC_TELEMETRY_PLAN.md`. That later analysis will calculate
+full-capture line and byte retention ratios, explain retained volume, and
+recommend whether tuning is justified. Do not begin that assessment, detailed
+correlation, or retention tuning during completion verification. Any retention
+code or policy change requires still-later separate approval.
 
-## Following task
+## Active-capture boundaries
 
-After the configured SolarAssistant capture should have completed, perform the
-separately approved minimal read-only completion verification documented in
-`docs/SOLARASSISTANT_MONITOR.md`. Review those results before separately
-authorizing any installed-monitor update. Only then may the installed monitor
-be updated, only the monitor restarted, and the corrected badge verified in a
-real browser while preserving all evidence. Do not assume capture completion.
+- Until completion verification, do not stop, restart, signal, attach to,
+  redeploy, or modify the ESP32 collector.
+- Do not modify ESP32 collector or retention behavior, or alter or truncate
+  either active ESP32 evidence file.
+- Do not modify the active SolarAssistant collector or its retained-output
+  behavior. EG4 workflows remain unchanged.
+- Ordinary repository development may continue only when it cannot affect
+  these active processes or evidence outputs.
+- Repository, commit, or push authorization does not authorize runtime or
+  evidence access; completion verification requires separate explicit approval.
 
 ## Success
 
-The exact 12-hour launch is reviewed and explicitly approved, the collector
-starts without altering SolarAssistant or EG4 workflows, minimal health is
-confirmed non-invasively, the run stops automatically, and later metadata and
-integrity review can assess raw and retained evidence. No fault occurrence is
-required.
+Both collectors' completion states are understood without signaling them,
+evidence presence and integrity metadata are recorded without exposing full
+records, premature termination is assessed, and all evidence remains unchanged.
+Any detailed analysis or runtime change remains separately reviewed and
+approved.
