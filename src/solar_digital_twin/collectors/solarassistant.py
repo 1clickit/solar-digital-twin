@@ -17,6 +17,10 @@ METRICS_URL = "http://192.168.3.12/api/v1/metrics"
 USERNAME = "admin"
 MAX_BACKOFF_SECONDS = 30.0
 
+
+class AuthenticationRejected(Exception):
+    """SolarAssistant rejected the supplied credential."""
+
 COMBINED_TOPICS = {
     "total/battery_state_of_charge",
     "total/battery_voltage",
@@ -124,43 +128,47 @@ def collect(
                     auth=(USERNAME, password),
                     timeout=(3, 10),
                 )
-                response.raise_for_status()
+                try:
+                    if response.status_code in (401, 403):
+                        raise AuthenticationRejected
 
-                rows = response.json()
-                if not isinstance(rows, list):
-                    raise ValueError("Metrics response is not a list")
+                    response.raise_for_status()
 
-                received_at_utc = receipt_timestamp()
-                backoff = 1.0
+                    rows = response.json()
+                    if not isinstance(rows, list):
+                        raise ValueError("Metrics response is not a list")
 
-                for row in rows:
-                    if not isinstance(row, dict):
-                        continue
+                    received_at_utc = receipt_timestamp()
+                    backoff = 1.0
 
-                    topic = row.get("topic")
-                    if not isinstance(topic, str) or not approved_topic(topic):
-                        continue
+                    for row in rows:
+                        if not isinstance(row, dict):
+                            continue
 
-                    record = {
-                        "received_at_utc": received_at_utc,
-                        "source_url": METRICS_URL,
-                        "topic": topic,
-                        "device": row.get("device"),
-                        "number": row.get("number"),
-                        "group": row.get("group"),
-                        "name": row.get("name"),
-                        "value": row.get("value"),
-                        "unit": row.get("unit"),
-                    }
+                        topic = row.get("topic")
+                        if not isinstance(topic, str) or not approved_topic(topic):
+                            continue
 
-                    evidence.write(
-                        json.dumps(record, separators=(",", ":"), ensure_ascii=False)
-                        + "\n"
-                    )
-                    evidence.flush()
-                    written += 1
+                        record = {
+                            "received_at_utc": received_at_utc,
+                            "source_url": METRICS_URL,
+                            "topic": topic,
+                            "device": row.get("device"),
+                            "number": row.get("number"),
+                            "group": row.get("group"),
+                            "name": row.get("name"),
+                            "value": row.get("value"),
+                            "unit": row.get("unit"),
+                        }
 
-                response.close()
+                        evidence.write(
+                            json.dumps(record, separators=(",", ":"), ensure_ascii=False)
+                            + "\n"
+                        )
+                        evidence.flush()
+                        written += 1
+                finally:
+                    response.close()
 
                 remaining = (
                     None
@@ -202,6 +210,12 @@ def main() -> None:
         )
     except KeyboardInterrupt:
         print("\nStopped cleanly by user.")
+    except AuthenticationRejected:
+        print(
+            "SolarAssistant authentication failed; correct the credential "
+            "before running the collector again."
+        )
+        raise SystemExit(1) from None
     else:
         print(
             f"Stopped cleanly after writing {written} "
