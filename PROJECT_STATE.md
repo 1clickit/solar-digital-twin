@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-SolarAssistant secure runtime installed and manually verified
+SolarAssistant controlled 24-hour capture active with read-only live monitor
 
 Next Task:
-Begin a controlled longer SolarAssistant raw and retained evidence capture at the normal 10-second polling interval, initially targeting approximately 24 hours, without yet enabling a persistent systemd service.
+Investigate and test an offline-only correction for the live monitor's fresh-data `Unknown` status badge; do not deploy it during the active capture.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -134,9 +134,8 @@ main
 - The dedicated SolarAssistant runtime, credential, and manual authenticated
   verification are complete under the approved separate-identity and
   credential-isolation model
-- The next task is an initially approximately 24-hour raw and retained evidence
-  capture at the normal 10-second polling interval; persistent service
-  operation remains a separate later stage
+- The controlled 24-hour raw and retained capture is now active; persistent
+  service operation remains a separate later stage
 - Commit `39548b1` completed the repository-side dedicated SolarAssistant
   runtime preparation using the fixed `solardt-sa:solardt-sa` non-login system
   identity, administrator-owned `/opt/solar-digital-twin` runtime, protected
@@ -177,8 +176,24 @@ main
   SOC, 77% Battery 2 SOC, and 53.3/53.4/53.2 V combined/Battery 1/Battery 2;
   combined current and power were zero during this short window. These values
   are not a long-term operating characterization
-- No systemd service was created or enabled, and no persistent or long-running
-  collector was started
+- No systemd service was created or enabled during the short verification
+- Verified current state on 2026-07-16: the dedicated runtime is installed
+  under `/opt/solar-digital-twin`, and the administrator-controlled credential
+  remains protected outside Git
+- A 24-hour capture is active as `solardt-sa` in the root-owned detached tmux
+  session `solarassistant-24h`; it began at approximately `2026-07-16 02:00
+  America/Chicago`, was configured for 86,400 seconds, and should stop
+  automatically
+- The read-only live monitor is active as `solardt-sa` in the root-owned
+  detached tmux session `solarassistant-monitor` at
+  `http://192.168.3.11:8792`; its health endpoint returned `{"status":"ok"}`
+- Collector PID 92638 and monitor PID 92674 were historical observations only;
+  PIDs are transient and are not stable runtime configuration
+- The active collector must not be stopped, restarted, redeployed, or modified
+  without Chris's explicit approval. Safe development may continue only when it
+  cannot alter the installed collector or retained-output behavior
+- The monitor currently shows an `Unknown` badge despite fresh data. This is a
+  minor deferred correction and is not a capture blocker
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified

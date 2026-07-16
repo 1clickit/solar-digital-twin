@@ -13,7 +13,10 @@ Commit `39548b1` completed the repository-side dedicated runtime support. The
 runtime and credential were subsequently installed under the approved practical
 Home Assistant-style trusted-host model, runtime metadata and access boundaries
 passed committed verification, and one authenticated manual run succeeded as
-`solardt-sa`. No persistent service or long-running capture was started.
+`solardt-sa`. No persistent service was created. A controlled 24-hour capture
+is now active as `solardt-sa` in root-owned detached tmux session
+`solarassistant-24h`, configured for 86,400 seconds from approximately
+`2026-07-16 02:00 America/Chicago`.
 
 ## Purpose
 
@@ -107,7 +110,9 @@ The separate repository-side live-capture monitor documented in
 `docs/SOLARASSISTANT_MONITOR.md` reads authoritative raw evidence without making
 device requests or changing collector behavior. It maintains derived display
 state in memory, may count the retained sibling, and never reads the credential
-or writes evidence. It is offline-tested but not installed or running.
+or writes evidence. It is installed and active as `solardt-sa` in root-owned
+detached tmux session `solarassistant-monitor`; its fresh-data `Unknown` badge
+is a minor deferred, non-blocking correction.
 
 ## Retained-Output Status
 
@@ -177,13 +182,13 @@ and 53.3 V, 53.4 V, and 53.2 V for combined, Battery 1, and Battery 2. Combined
 current and power were zero. These are short point-in-time observations, not a
 long-term operating characterization.
 
-The next task is a controlled longer capture at the normal 10-second interval,
-initially targeting approximately 24 hours. It will preserve complete raw and
-separate retained evidence and seek natural daylight charging, overnight
-discharge, idle or near-zero current and power, ordinary load transitions,
-temperature evolution, and voltage and cell behavior across a wider SOC range.
-Missing conditions must be documented rather than created by manipulating
-equipment. Numeric deadbands, SQLite, portal integration, systemd, and
+The controlled 24-hour capture is active. During it, the installed collector
+must not be stopped, restarted, redeployed, or modified without Chris's explicit
+approval. Safe development may continue only when it cannot alter the installed
+collector or retained-output behavior. The next bounded work is an offline-only
+reproduction and tested correction of the monitor badge; it must preserve
+read-only operation and must not be deployed during the capture without later
+explicit approval. Numeric deadbands, SQLite, portal integration, systemd, and
 persistent service operation remain deferred.
 
 The collector supports `--password-file` and `--output-dir` for that runtime.
@@ -280,5 +285,6 @@ The completed short run demonstrated:
 - evidence ignored by Git
 - clean termination without evidence corruption
 
-It also confirmed creation of both raw and separate retained NDJSON files. This
-verification did not start persistent or long-running collection.
+It also confirmed creation of both raw and separate retained NDJSON files. That
+short verification did not itself start persistent or long-running collection;
+the separately authorized 24-hour capture described above is now active.

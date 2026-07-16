@@ -97,13 +97,13 @@ complete. That 25-second run created 126 raw records and a separate retained
 file and confirmed the expected combined and per-battery topics, but remains a
 point-in-time verification rather than evidence for numeric thresholds.
 
-The next capture should initially target approximately 24 hours at the normal
-10-second polling interval while preserving complete raw and separate retained
-evidence. It should seek the missing daylight charging, overnight discharge,
-idle or near-zero, ordinary transition, thermal, voltage, cell, and wider-SOC
-conditions only where they occur naturally; equipment must not be manipulated
-solely to manufacture assessment coverage. Inspect evidence integrity and
-storage growth afterward, then reassess before proposing any deadband.
+A capture configured for 86,400 seconds began at approximately `2026-07-16
+02:00 America/Chicago` as `solardt-sa` in root-owned detached tmux session
+`solarassistant-24h`. It preserves complete raw and separate retained evidence.
+The active collector must not be stopped, restarted, redeployed, or modified
+without Chris's explicit approval. Evidence integrity, storage growth, and
+operating coverage remain post-capture review work before any new deadband
+proposal.
 
 ## 13. Explicit exclusions
 

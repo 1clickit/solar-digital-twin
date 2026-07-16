@@ -19,7 +19,10 @@ Assistant-style trusted-host security model.
 A one-time authenticated collector verification also completed successfully as
 `solardt-sa` using the protected password file, dedicated runtime Python
 environment, and dedicated `/var/lib` evidence output. No systemd service was
-created or enabled, and no persistent collector was started.
+created or enabled. Subsequently, a controlled 24-hour collector was started as
+`solardt-sa` in the root-owned detached tmux session `solarassistant-24h` at
+approximately `2026-07-16 02:00 America/Chicago`. It was configured for 86,400
+seconds and should stop automatically.
 
 ## Purpose and boundary
 
@@ -160,13 +163,23 @@ observations were 78% combined SOC, 79% Battery 1 SOC, 77% Battery 2 SOC,
 53.3 V combined voltage, 53.4 V Battery 1 voltage, and 53.2 V Battery 2 voltage.
 Combined current and power were zero during the short window.
 
-## Deferred stages
+## Active capture boundary and deferred stages
+
+The installed collector must not be stopped, restarted, redeployed, or modified
+without Chris's explicit approval. Safe repository development may continue
+only when it cannot alter the installed collector or retained-output behavior.
+Collector PID 92638 was a transient historical observation, not stable runtime
+configuration.
 
 Persistent systemd collection, numeric deadbands, SQLite normalization, and
 portal integration remain deferred. The next bounded stage is a controlled
 longer raw and retained capture at the normal 10-second interval, initially
 targeting approximately 24 hours without enabling a persistent service.
 
-The separate LAN-only live-capture monitor is implemented and offline-tested
-but is not installed or running. Its later foreground `tmux` launch is distinct
-from collector operation and includes no systemd service.
+The separate LAN-only live-capture monitor is installed and running as
+`solardt-sa` in root-owned detached tmux session `solarassistant-monitor` at
+`http://192.168.3.11:8792`; `GET /health` returned `{"status":"ok"}`. Its
+observed PID 92674 is transient, not configuration. The fresh-data `Unknown`
+badge is a minor deferred correction and does not block capture. Any correction
+must be reproduced and tested offline, preserve read-only operation, and must
+not be deployed during the active capture without explicit approval.

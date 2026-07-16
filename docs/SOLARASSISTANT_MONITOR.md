@@ -7,11 +7,17 @@ dashboard for observing a controlled evidence capture. It is the separate
 standard-library module
 `solar_digital_twin.reporting.solarassistant_monitor`; it does not change or
 run inside the collector. Repository implementation and offline testing are
-complete, but the monitor has not been installed, deployed, or started.
+complete. The monitor is installed and running as `solardt-sa` in root-owned
+detached tmux session `solarassistant-monitor` at
+`http://192.168.3.11:8792`; its health endpoint returned `{"status":"ok"}`.
 
-No systemd service is included. A later approved runtime work unit may deploy
-the committed runtime and start the monitor manually in detached `tmux`.
-Integration into the primary project portal remains deferred.
+No systemd service is included. Integration into the primary project portal
+remains deferred.
+
+The monitor currently displays an `Unknown` status badge despite fresh data.
+This is a minor deferred correction and is not a capture blocker. Its PID was
+observed as 92674, but PIDs are transient observations and not stable runtime
+configuration.
 
 ## Data flow and in-memory operation
 
@@ -134,7 +140,14 @@ LAN page can see the displayed battery telemetry. The in-memory token limits
 cross-site and accidental abort requests; future OPNsense containment remains
 the planned network boundary.
 
-## Later start and stop workflow
+## Active-capture boundary and later workflow
+
+The active collector and monitor must not be stopped, restarted, signaled,
+redeployed, or modified without Chris's explicit approval. Safe development may
+continue only when it cannot alter the installed collector or retained-output
+behavior. The badge issue must first be reproduced and corrected offline while
+preserving read-only monitor operation; deployment is prohibited during the
+active capture and requires explicit later approval.
 
 The committed launcher is `scripts/run_solarassistant_monitor.sh`. Its
 non-privileged `--check` validates local inputs without root, `/var/lib`, a
@@ -144,8 +157,8 @@ port, duration, and freshness options, rejects credential-like arguments,
 prints the browser URL, and does not use `sudo`, install packages, daemonize, or
 create a service.
 
-A later separately approved operator action will deploy the committed runtime
-and start the launcher in detached `tmux` with the LAN bind. Stopping that
+The approved operator action deployed the committed runtime and started the
+launcher in detached `tmux` with the LAN bind. In general, stopping that
 monitor process, such as with Ctrl+C in its foreground terminal, stops only the
 web monitor and leaves the collector running. The dashboard's confirmed Abort
 Capture action instead sends one validated `SIGTERM` to the current collector
