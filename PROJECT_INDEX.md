@@ -84,7 +84,10 @@ docs/DEVICE_ACCESS_RECOVERY.md
     Device access, effective-authority classification, credential, failure, and recovery inventory.
 
 src/solar_digital_twin/collectors/solarassistant.py
-    Standalone read-only SolarAssistant raw evidence collector with hardened HTTP failure handling.
+    Standalone read-only SolarAssistant raw and separately retained evidence collector.
+
+src/solar_digital_twin/collectors/solarassistant_retention.py
+    SolarAssistant topic classification and per-metric exact-change/heartbeat policy.
 
 src/solar_digital_twin/collectors/retention.py
     Shared source-independent change and heartbeat retention mechanics.

@@ -2,7 +2,10 @@
 
 ## Status
 
-Implemented and manually verified on 2026-07-14. Collector: `src/solar_digital_twin/collectors/solarassistant.py`.
+The raw collector was manually verified on 2026-07-14. The first separate
+retained-output slice was implemented in commit `4e069bb` and verified offline;
+it has not been live-device verified. Collector:
+`src/solar_digital_twin/collectors/solarassistant.py`.
 
 ## Purpose
 
@@ -71,7 +74,7 @@ Raw evidence files are authoritative source material and must be preserved.
 
 - **API polling interval:** how often the collector requests the complete REST response.
 - **Raw evidence cadence:** every approved metric from every successful poll is written and flushed to raw NDJSON.
-- **Retained-history cadence:** how often a topic is eligible for a future retained-output record.
+- **Retained-history cadence:** when an implemented topic policy writes to the separate derived retained stream.
 - **Heartbeat cadence:** the maximum planned interval between retained records when an observed value remains stable.
 
 The current collector defaults to one-second polling. That remains available for
@@ -80,14 +83,16 @@ interval is 10 seconds. The existing raw collector and its one-second default
 were manually verified.
 
 Topic-specific retained-history and heartbeat schedules are documented in
-`docs/EG4_FORENSIC_CORRELATION.md`; they remain planned and are not implemented
-for SolarAssistant. Changing retention does not change API traffic or raw
-evidence cadence. No persistent SolarAssistant systemd service exists yet.
+`docs/EG4_FORENSIC_CORRELATION.md`. The exact-change subset below is implemented;
+meaningful-change families remain planned. Changing retention does not change
+API traffic or raw evidence cadence. No persistent SolarAssistant systemd
+service exists yet.
 
-## Approved Retained-Output Direction
+## Retained-Output Status
 
-The next stage adds a separate derived NDJSON output while preserving every
-approved observation in the existing raw NDJSON. The collector continues to
+The collector writes a separate derived sibling NDJSON output while preserving
+every approved observation in the existing raw NDJSON. Raw records are written
+and flushed before retained processing. The collector continues to
 poll and locally filter the complete response at its configured interval.
 Retention changes only storage cadence and never reduces API traffic.
 
@@ -96,22 +101,32 @@ monotonic-heartbeat mechanics fit. Keep SolarAssistant topic-family policy
 separate so later collectors can reuse mechanics without inheriting battery-
 specific rules.
 
-Approved starting policies are:
+Implemented and offline-tested in commit `4e069bb`:
+
+- Battery 1, Battery 2, and combined SOC: exact change plus 300-second heartbeat
+- approved health, capacity, charge-capacity, and cycle topics: exact change plus 86,400-second heartbeat
+- independent state per stable metric identity using monotonic heartbeat time
+- retained records preserve raw fields and add `retention_reason`
+
+The retained-output tests passed (9), existing SolarAssistant tests passed (6),
+shared retention tests passed (14), and the full suite passed (52). Repository
+diff and health checks passed. Live-device verification remains deferred.
+
+Still raw-only pending numeric deadband approval:
 
 - battery voltage, current, and power: meaningful change plus 60-second heartbeat
-- Battery 1, Battery 2, and combined SOC: SOC change plus 5-minute heartbeat
 - cell voltage and imbalance: meaningful change plus 5-minute heartbeat
 - battery temperatures: meaningful change plus 5-minute heartbeat
-- health, capacity, and cycle count: change plus daily heartbeat
 
 No numeric deadband is approved yet for a family described as retaining on
-meaningful change. The implementation must not invent one. Threshold selection
-remains an explicit implementation question; exact-change behavior may be used
-only where the approved policy says change rather than meaningful change.
+meaningful change. These observations remain complete in raw evidence and are
+intentionally excluded from retained output; this is an incomplete source-
+specific policy, not a collector defect. Offline evidence characterization must
+distinguish resolution from meaningful variation and leave candidate values
+pending project-owner approval.
 
-The retained stage requires deterministic offline tests and does not authorize
-credential installation, device access, live verification, SQLite, portal,
-systemd, or persistent-service work.
+Deadband assessment does not authorize implementation, credential installation,
+device access, live verification, SQLite, portal, systemd, or persistent-service work.
 
 ## Approved Topic Scope
 

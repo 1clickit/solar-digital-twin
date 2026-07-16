@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-SolarAssistant retained-output stage
+SolarAssistant retained-output deadband assessment
 
 Next Task:
-Implement a separate policy-driven SolarAssistant retained NDJSON stream while preserving complete raw evidence and unchanged API polling.
+Characterize existing SolarAssistant raw evidence offline and propose defensible deadbands for the six remaining meaningful-change topic families.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -101,8 +101,24 @@ main
   paths; raw NDJSON behavior remains unchanged
 - SolarAssistant focused offline tests passed (6), the full suite passed (43),
   and the repository health check passed for commit `c7370ca`
-- The current implementation milestone is a separate SolarAssistant retained
-  NDJSON stream; SQLite, portal, systemd, credentials, and live verification remain deferred
+- The first separate SolarAssistant retained-output implementation is complete;
+  SQLite, portal, systemd, credentials, and live verification remain deferred
+- Commit `4e069bb` implemented a separate derived SolarAssistant retained NDJSON
+  stream while preserving complete raw evidence and unchanged polling traffic
+- Raw records are written and flushed before retained processing; retained
+  records preserve observation fields and add `retention_reason`
+- Combined, Battery 1, and Battery 2 SOC retain exact changes plus a 300-second
+  monotonic heartbeat
+- Approved state-of-health, capacity, charge-capacity, and cycle topics retain
+  exact changes plus an 86,400-second monotonic heartbeat
+- Retention state is independent per stable metric identity; authentication,
+  backoff, duration, response closure, interruption, filtering, and credential safety remain unchanged
+- Retained-output tests passed (9), existing SolarAssistant tests passed (6),
+  shared retention tests passed (14), the full suite passed (52), and repository checks passed
+- Voltage, current, power, cell voltage, cell imbalance, and temperature remain
+  complete in raw evidence but intentionally absent from retained output pending approved deadbands
+- The current milestone is offline evidence characterization only; no deadband
+  implementation, credential work, live access, or deferred integration is authorized
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified
