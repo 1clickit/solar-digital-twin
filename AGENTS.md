@@ -70,6 +70,27 @@ code, full diffs, stack traces, or architecture decisions.
   temporary repository snapshots unless project documentation explicitly says
   to do so.
 
+## Live and Installed Runtime Restrictions
+
+Before every bounded work unit, read the current operational restrictions in
+`PROJECT_STATE.md` and `NEXT_TASK.md`. Restrictions recorded there for an
+active collector, capture, monitor, installed runtime, credential boundary,
+evidence store, or other protected live state remain in force throughout the
+work unit; they do not need to be copied verbatim into every Codex request.
+
+Repository-edit authorization does not authorize live-runtime actions. Commit
+or push approval does not authorize deployment, installation, service control,
+credential access, evidence access, or runtime modification. Codex must not
+invasively inspect, attach to, signal, stop, restart, redeploy, or modify a
+protected live process or runtime state without explicit approval for that
+exact action.
+
+Task-specific restrictions or exceptions must still be stated explicitly in
+the current work request. Temporary operational details such as PIDs, capture
+start times, and session names belong in `PROJECT_STATE.md`, `NEXT_TASK.md`, or
+relevant runtime documentation, not as permanent facts here. Commit approval
+and push approval remain separate unless Chris explicitly approves both.
+
 ## Credential-Blocked Work
 
 When authorized work requires a credential that is not available through an
