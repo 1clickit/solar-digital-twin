@@ -219,6 +219,25 @@ class CountdownTests(StateFixture):
         self.assertEqual(result["capture_status"], "Stopped")
         self.assertTrue(result["countdown"]["stopped_early"])
 
+    def test_waiting_running_stopping_and_complete_status(self):
+        self.assertEqual(self.state.status_dict()["capture_status"], "Unknown")
+        self.add(BASE_TIME.isoformat(), "total/battery_voltage", 52)
+        self.state.flush_pending(force=True)
+        self.assertEqual(self.state.status_dict()["capture_status"], "Running")
+        self.state.stopping = True
+        self.assertEqual(self.state.status_dict()["capture_status"], "Stopping")
+        self.fake.now = BASE_TIME + timedelta(days=1)
+        self.assertEqual(self.state.status_dict()["capture_status"], "Complete")
+
+
+class DashboardTests(unittest.TestCase):
+    def test_status_badge_uses_explicit_element_binding(self):
+        dashboard = monitor.render_dashboard()
+        self.assertIn("const statusElement=document.getElementById('status')", dashboard)
+        self.assertIn("statusElement.textContent=d.capture_status", dashboard)
+        self.assertIn("statusElement.textContent='Unknown'", dashboard)
+        self.assertNotIn("status.textContent", dashboard)
+
 
 class AbortSafetyTests(StateFixture):
     def matching_identity(self, pid=321, start="900"):
