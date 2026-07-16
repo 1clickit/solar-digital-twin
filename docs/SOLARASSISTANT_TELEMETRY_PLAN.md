@@ -103,6 +103,12 @@ meaningful-change families remain planned. Changing retention does not change
 API traffic or raw evidence cadence. No persistent SolarAssistant systemd
 service exists yet.
 
+The separate repository-side live-capture monitor documented in
+`docs/SOLARASSISTANT_MONITOR.md` reads authoritative raw evidence without making
+device requests or changing collector behavior. It maintains derived display
+state in memory, may count the retained sibling, and never reads the credential
+or writes evidence. It is offline-tested but not installed or running.
+
 ## Retained-Output Status
 
 The collector writes a separate derived sibling NDJSON output while preserving

@@ -80,6 +80,9 @@ docs/SOLARASSISTANT_TELEMETRY_PLAN.md
 docs/SOLARASSISTANT_RUNTIME.md
     Installed and manually verified dedicated runtime, credential boundary, operating paths, and recovery workflow.
 
+docs/SOLARASSISTANT_MONITOR.md
+    Offline-tested LAN-only live-capture monitor, dashboard, report, and narrowly validated abort design.
+
 docs/SOLARASSISTANT_DEADBAND_ASSESSMENT.md
     Completed offline raw-evidence characterization; evidence was insufficient and no SolarAssistant deadbands are approved.
 
@@ -97,6 +100,12 @@ scripts/install_solarassistant_runtime.sh
 
 scripts/install_solarassistant_credential.sh
     Reviewed controlling-terminal credential installer used for the completed secure installation.
+
+scripts/run_solarassistant_monitor.sh
+    Foreground-only SolarAssistant monitor launcher with a safe non-privileged check mode.
+
+src/solar_digital_twin/reporting/solarassistant_monitor.py
+    Read-only in-memory SolarAssistant evidence monitor and explicit local HTTP endpoints.
 
 src/solar_digital_twin/collectors/solarassistant_retention.py
     SolarAssistant topic classification and per-metric exact-change/heartbeat policy.

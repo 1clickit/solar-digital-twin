@@ -24,8 +24,13 @@ check_source() {
     for path in \
         requirements.txt \
         pyproject.toml \
-        src/solar_digital_twin/collectors/solarassistant.py; do
-        git -C "$REPO_ROOT" ls-files --error-unmatch "$path" >/dev/null
+        src/solar_digital_twin/collectors/solarassistant.py \
+        src/solar_digital_twin/reporting/solarassistant_monitor.py \
+        scripts/run_solarassistant_monitor.sh; do
+        if ! git -C "$REPO_ROOT" ls-files --error-unmatch "$path" >/dev/null 2>&1; then
+            [[ -f $REPO_ROOT/$path ]] || return 1
+            echo "CHECK: pending source file exists but must be committed before installation: $path"
+        fi
     done
     if git -C "$REPO_ROOT" status --porcelain | grep -q .; then
         echo "CHECK: working tree has changes; real installation would refuse"
@@ -36,7 +41,7 @@ check_source() {
         echo "ERROR: a credential-like file is tracked" >&2
         return 1
     fi
-    echo "CHECK: deployment source is tracked Git content only"
+    echo "CHECK: real deployment uses tracked Git content only"
     echo "CHECK: no users, paths, packages, credentials, services, or network were changed"
 }
 
@@ -74,6 +79,9 @@ verify_metadata() {
     runuser -u "$SERVICE_USER" -- \
         "$RUNTIME_ROOT/.venv/bin/python" -m \
         solar_digital_twin.collectors.solarassistant --help >/dev/null
+    runuser -u "$SERVICE_USER" -- \
+        "$RUNTIME_ROOT/.venv/bin/python" -m \
+        solar_digital_twin.reporting.solarassistant_monitor --help >/dev/null
     echo "VERIFY: SolarAssistant runtime metadata and access boundaries passed"
 }
 

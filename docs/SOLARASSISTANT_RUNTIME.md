@@ -78,6 +78,13 @@ The script installs no credential, contacts no device, starts no collector, and
 creates no systemd service. Package installation and all privileged actions
 remain separately approved future operations.
 
+Runtime source validation also includes the separate SolarAssistant
+live-capture monitor module and foreground launcher documented in
+`docs/SOLARASSISTANT_MONITOR.md`. Installed metadata verification confirms that
+the monitor module can display `--help`; it does not start the monitor, bind a
+port, read evidence or credentials, contact a device, or alter collector
+operation. Deployment remains a later separately approved runtime action.
+
 The reviewed installation sequence starts with the non-privileged command
 `./scripts/install_solarassistant_runtime.sh --check`. Only with separate
 approval, the administrator then runs the same script with no argument and later
@@ -159,3 +166,7 @@ Persistent systemd collection, numeric deadbands, SQLite normalization, and
 portal integration remain deferred. The next bounded stage is a controlled
 longer raw and retained capture at the normal 10-second interval, initially
 targeting approximately 24 hours without enabling a persistent service.
+
+The separate LAN-only live-capture monitor is implemented and offline-tested
+but is not installed or running. Its later foreground `tmux` launch is distinct
+from collector operation and includes no systemd service.
