@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-SolarAssistant secure runtime preparation
+SolarAssistant dedicated runtime installation
 
 Next Task:
-Prepare and implement the minimum dedicated SolarAssistant Linux runtime identity and protected credential-delivery boundary required for controlled live evidence collection under the approved security model.
+Perform the reviewed installation of the dedicated `solardt-sa` runtime identity, administrator-owned runtime, and writable evidence boundary, then verify metadata and permissions without installing a SolarAssistant credential or contacting the device.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -90,8 +90,9 @@ main
   separately isolated until their credentials are proven technically read-only
 - HTTP `401` or `403` stops automated authentication attempts; operator
   correction and one manual verification are required before automation resumes
-- Credential paths, metadata, installation commands, and device-specific
-  recovery details remain deferred; no SolarAssistant credential is installed
+- SolarAssistant runtime paths, metadata, and reviewed installation commands are
+  now defined; device-specific recovery details remain pending and no
+  SolarAssistant credential is installed
 - Practical offline SolarAssistant collector hardening may resume without
   implementing credentials or performing authenticated live work
 - Commit `c7370ca` completed SolarAssistant authentication hardening: HTTP
@@ -133,8 +134,28 @@ main
 - The current milestone is dedicated SolarAssistant runtime preparation under
   the approved separate-identity and credential-isolation model
 - A later 24-hour raw and retained evidence capture at the normal 10-second
-  polling interval remains deferred until the runtime boundary is implemented
-  and reviewed; persistent service operation remains a separate later stage
+  polling interval remains deferred until the runtime is installed and verified,
+  the credential is separately installed, and manual verification succeeds;
+  persistent service operation remains a separate later stage
+- Commit `39548b1` completed the repository-side dedicated SolarAssistant
+  runtime preparation using the fixed `solardt-sa:solardt-sa` non-login system
+  identity, administrator-owned `/opt/solar-digital-twin` runtime, protected
+  `/etc/solar-digital-twin/solarassistant/password`, and writable
+  `/var/lib/solar-digital-twin/solarassistant/evidence` design
+- The collector now supports `--password-file` before the existing environment
+  and private prompt sources, plus `--output-dir`; invalid local credential
+  files and output-directory preparation fail before device polling
+- The committed runtime installer provides non-privileged `--check`, later
+  privileged installation, and metadata-only `--verify`; the separate
+  credential installer provides hidden confirmed entry and atomic replacement
+- Focused collector and retention tests passed (37), the full suite passed (60),
+  both scripts passed `bash -n` and non-privileged checks, password-like
+  arguments were rejected, and repository checks passed
+- No password was installed, entered, read, or exposed; no device was contacted;
+  and no account, package, `/etc`, `/opt`, `/var/lib`, or service change occurred
+- The current milestone is installation and metadata verification of the
+  committed runtime boundary only; credential installation and all live work
+  remain separate later approvals
 - Explicit battery-topic allowlist manually verified
 - UTC-stamped ignored NDJSON evidence manually verified
 - Combined, Battery 1, and Battery 2 telemetry verified

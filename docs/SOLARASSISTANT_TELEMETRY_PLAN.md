@@ -9,6 +9,10 @@ offline raw-evidence deadband assessment, but the evidence was insufficient for
 numeric thresholds. Collector:
 `src/solar_digital_twin/collectors/solarassistant.py`.
 
+Commit `39548b1` completed the repository-side dedicated runtime support and
+passed 37 focused collector/retention tests and the full 60-test suite. The
+runtime has not been installed and no credential or live request was used.
+
 ## Purpose
 
 Define the smallest safe standalone collector for trusted JK BMS telemetry
@@ -147,27 +151,31 @@ or near-zero current and power, sign or load transitions, several hours of
 temperature evolution, wider voltage movement, or cell behavior near full
 charge. Combined and individual batteries may require different thresholds.
 
-The next stage is a reviewed dedicated unprivileged SolarAssistant runtime and
-protected credential-delivery boundary. The existing interactive `getpass`
-capability may support a controlled manual verification, but it does not replace
-the separate runtime identity required while `admin` authority remains unknown.
+The repository-side dedicated runtime and protected credential-delivery design
+is complete. The next stage is reviewed installation and metadata verification
+of that boundary without a password or device contact. The existing interactive
+`getpass` capability may support a later controlled manual verification, but it
+does not replace the separate runtime identity required while `admin` authority
+remains unknown.
 
-Only after that boundary is implemented and reviewed may a separate task begin
-an initial capture aiming for at least 24 continuous hours at the normal
-10-second polling interval. It should preserve complete raw and separate
-retained evidence and observe natural daylight charging, overnight discharge,
-idle behavior, load or charger transitions, temperature evolution, and near-full
-behavior where they occur. Missing conditions must be documented rather than
-created by manipulating equipment. Credential installation, the live capture,
-SQLite, portal, systemd, persistent service operation, and deadband
-implementation remain separately deferred.
+Only after that runtime is installed and verified, the credential is separately
+installed, and one controlled manual authenticated verification succeeds may a
+separate task begin an initial capture aiming for at least 24 continuous hours
+at the normal 10-second polling interval. It should preserve complete raw and
+separate retained evidence and observe natural daylight charging, overnight
+discharge, idle behavior, load or charger transitions, temperature evolution,
+and near-full behavior where they occur. Missing conditions must be documented
+rather than created by manipulating equipment. Credential installation, the
+live capture, SQLite, portal, systemd, persistent service operation, and
+deadband implementation remain separately deferred.
 
 The collector supports `--password-file` and `--output-dir` for that runtime.
 Password-file loading precedes the existing environment and interactive prompt
 sources. Missing, unreadable, empty, or whitespace-only files stop locally
 without a request and produce only a credential-free error. Runtime preparation
 and credential installation scripts have safe non-privileged checks; their real
-installation paths remain unexecuted and require separate approval.
+installation paths remain unexecuted. Runtime installation is the next bounded
+stage; credential installation remains a later separate approval.
 
 ## Approved Topic Scope
 

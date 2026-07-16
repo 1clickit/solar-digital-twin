@@ -1,5 +1,18 @@
 # SolarAssistant Dedicated Runtime
 
+## Implementation status
+
+Commit `39548b1` completed the repository-side collector interface, runtime
+installer, credential installer, tests, and documentation. The focused
+collector and retention tests passed (37), the full suite passed (60), both
+scripts passed `bash -n` and their non-privileged `--check` modes, password-like
+arguments were rejected, and repository checks passed.
+
+No privileged installer mode has run. No password has been installed, entered,
+read, or exposed; no device was contacted; and no account, package, `/etc`,
+`/opt`, `/var/lib`, collection, or service change occurred. The current stage is
+reviewed runtime installation and metadata verification only.
+
 ## Purpose and boundary
 
 SolarAssistant uses a dedicated unprivileged Linux identity while the effective
@@ -57,7 +70,7 @@ The script installs no credential, contacts no device, starts no collector, and
 creates no systemd service. Package installation and all privileged actions
 remain separately approved future operations.
 
-The future reviewed sequence starts with the non-privileged command
+The reviewed installation sequence starts with the non-privileged command
 `./scripts/install_solarassistant_runtime.sh --check`. Only with separate
 approval, the administrator then runs the same script with no argument and later
 with `--verify` under `sudo`. These are future operator actions, not authorization
@@ -116,7 +129,9 @@ Device-account recovery remains independent of the collector.
 
 ## Deferred stages
 
-No real account, path, credential, runtime, or service is installed by adding
-these repository files. Persistent systemd collection and the planned 24-hour
-10-second-cadence evidence capture remain deferred. Each requires separate
-review and approval after runtime installation and manual verification.
+No real account, path, credential, runtime, or service was installed by commit
+`39548b1`. The next bounded stage installs and verifies only the account,
+runtime, credential-directory boundary, state, and evidence paths. Credential
+installation, manual authenticated verification, persistent systemd collection,
+and the planned 24-hour 10-second-cadence evidence capture remain separate later
+approvals.

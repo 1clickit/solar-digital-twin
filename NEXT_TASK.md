@@ -2,39 +2,38 @@
 
 ## Objective
 
-Prepare and implement the minimum dedicated SolarAssistant Linux runtime
-identity and protected credential-delivery boundary required for controlled live
-evidence collection under the approved security model.
+Perform the reviewed installation of the dedicated `solardt-sa` runtime
+identity, administrator-owned runtime, and writable evidence boundary, then
+verify the resulting metadata and permissions without installing a
+SolarAssistant credential or contacting the device.
 
 ## Context
 
-The offline deadband assessment in commit `dc1adc9` found the existing evidence
-insufficient for defensible numeric thresholds. A longer capture is needed, but
-SolarAssistant must first run under a separate unprivileged identity because the
-`admin` credential's effective authority remains unknown.
+Commit `39548b1` completed the repository-side collector support, runtime and
+credential installer scripts, offline tests, and operating documentation. The
+scripts have not been run in privileged mode. No account, system path,
+credential, service, or live collection has been created.
 
 ## Scope
 
-- Select and document one dedicated unprivileged SolarAssistant collector identity.
-- Select exact administrator-controlled credential, evidence, and necessary runtime paths.
-- Permit the identity to read only its required credential, write only approved SolarAssistant outputs and runtime files, execute the required collector runtime, and make the approved outbound SolarAssistant connection.
-- Prevent the identity from modifying credential files, reading other collectors' credentials, administering `solardt`, using `sudo`, or changing device configuration.
-- Use a practical Home Assistant-style filesystem model with staged validation, safe failure behavior, recovery awareness, and repeatable installation steps.
-- Keep credential entry out of arguments, shell history, chat, logs, and repository files; exclude plaintext credentials from ordinary project backups.
-- Document credential replacement and one manual verification before re-enabling collection after HTTP `401` or `403`.
-- Establish a reviewed path for a later 24-hour capture at the approved normal 10-second polling interval.
-- Keep the design modular enough for future collectors without creating speculative device abstractions.
+1. Confirm the repository is clean and synchronized at the approved commit.
+2. Run `scripts/install_solarassistant_runtime.sh --check` without privilege and review its fixed identity, paths, and planned actions.
+3. Run the committed runtime installer in its administrator installation mode.
+4. Permit only the installer to create or verify `solardt-sa`, create the approved directories, deploy tracked content into `/opt/solar-digital-twin`, build the administrator-owned virtual environment, install pinned requirements and the local package, and apply documented metadata.
+5. Run the committed metadata-only `--verify` mode.
+6. Confirm the account is non-login, the runtime is not writable by `solardt-sa`, the evidence directory is writable by it, the credential directory has approved metadata, the collector import or executable path works, and the repository remains clean.
 
 ## Boundaries
 
-- Stop for review before installing a real credential, contacting SolarAssistant with newly installed credentials, starting the long capture, or enabling a persistent service.
-- Do not weaken the separate-identity requirement or expose the credential to Chris's normal administrative identity during unattended operation, except for secure administrator installation or replacement.
-- Do not add SQLite, portal, final deadband implementation, or unrelated integration work.
-- Keep runtime-boundary installation and the later evidence capture as separate reviewable stages.
+- `sudo` is authorized only for the reviewed committed runtime installer and its documented verification mode during that separately approved work unit.
+- Stop before installing or entering the SolarAssistant password.
+- Stop before device contact, authentication, collector execution against the device, evidence capture, or systemd work.
+- Do not improvise unrelated privileged commands. If the installer reports a defect, stop and return to repository-side correction instead of bypassing it manually.
+- Credential installation, manual authenticated verification, the longer capture, deadband work, persistent service operation, SQLite, and portal integration remain separate later stages.
 
 ## Success
 
-A focused, reviewable implementation defines and validates the dedicated
-SolarAssistant identity, paths, permissions, credential replacement boundary,
-and safe installation workflow without installing a real credential, contacting
-the device, starting the long capture, or enabling persistent collection.
+The dedicated account, administrator-owned runtime, credential-directory
+boundary, and writable evidence directory are installed and pass the committed
+metadata-only verification without creating a password file, contacting
+SolarAssistant, starting collection, or enabling a service.
