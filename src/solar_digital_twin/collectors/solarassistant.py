@@ -20,10 +20,15 @@ from solar_digital_twin.collectors.solarassistant_retention import (
 METRICS_URL = "http://192.168.3.12/api/v1/metrics"
 USERNAME = "admin"
 MAX_BACKOFF_SECONDS = 30.0
+DEFAULT_OUTPUT_DIR = Path("evidence/solarassistant")
 
 
 class AuthenticationRejected(Exception):
     """SolarAssistant rejected the supplied credential."""
+
+
+class CredentialLoadError(Exception):
+    """The local SolarAssistant credential could not be loaded safely."""
 
 COMBINED_TOPICS = {
     "total/battery_state_of_charge",
@@ -77,9 +82,9 @@ def receipt_timestamp() -> str:
     )
 
 
-def new_output_path() -> Path:
+def new_output_path(output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%SZ")
-    return Path("evidence/solarassistant") / f"solarassistant_{stamp}.ndjson"
+    return output_dir / f"solarassistant_{stamp}.ndjson"
 
 
 def retained_output_path(raw_output: Path) -> Path:
@@ -100,10 +105,40 @@ def parse_args() -> argparse.Namespace:
         default=1.0,
         help="Seconds between successful polls; minimum 1 second.",
     )
+    parser.add_argument(
+        "--password-file",
+        type=Path,
+        help="Read the password from this protected file.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=DEFAULT_OUTPUT_DIR,
+        help="Directory for raw and retained NDJSON evidence.",
+    )
     return parser.parse_args()
 
 
-def get_password() -> str:
+def _strip_trailing_line_ending(value: str) -> str:
+    if value.endswith("\r\n"):
+        return value[:-2]
+    if value.endswith(("\n", "\r")):
+        return value[:-1]
+    return value
+
+
+def get_password(password_file: Path | None = None) -> str:
+    if password_file is not None:
+        try:
+            password = _strip_trailing_line_ending(
+                password_file.read_bytes().decode("utf-8")
+            )
+        except (OSError, UnicodeError) as exc:
+            raise CredentialLoadError from exc
+        if not password or not password.strip():
+            raise CredentialLoadError
+        return password
+
     password = os.environ.get("SOLARASSISTANT_PASSWORD")
     if password:
         return password
@@ -114,11 +149,12 @@ def collect(
     duration: float,
     interval: float,
     password: str,
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
 ) -> tuple[Path, int]:
     if interval < 1.0:
         raise ValueError("--interval must be at least 1 second")
 
-    output = new_output_path()
+    output = new_output_path(output_dir)
     retained_output = retained_output_path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
 
@@ -233,11 +269,12 @@ def main() -> None:
     args = parse_args()
 
     try:
-        password = get_password()
+        password = get_password(args.password_file)
         output, written = collect(
             duration=args.duration,
             interval=args.interval,
             password=password,
+            output_dir=args.output_dir,
         )
     except KeyboardInterrupt:
         print("\nStopped cleanly by user.")
@@ -245,6 +282,18 @@ def main() -> None:
         print(
             "SolarAssistant authentication failed; correct the credential "
             "before running the collector again."
+        )
+        raise SystemExit(1) from None
+    except CredentialLoadError:
+        print(
+            "SolarAssistant credential file could not be read or is empty; "
+            "correct it before running the collector again."
+        )
+        raise SystemExit(1) from None
+    except OSError:
+        print(
+            "SolarAssistant evidence directory or output file could not be "
+            "prepared; correct the local path before running again."
         )
         raise SystemExit(1) from None
     else:

@@ -33,16 +33,17 @@ in command output.
 
 The SolarAssistant-specific custom credential-bootstrap direction was reviewed
 and superseded before installation. No SolarAssistant credential was installed,
-and no authenticated redacted inventory-helper request occurred. There is no
-approved SolarAssistant credential installer, protected persistent credential
-layout, or authenticated inventory consumer now.
+and no authenticated redacted inventory-helper request occurred.
 
-Future credential handling follows the approved Home Assistant-style model in
-`docs/SECURITY_MODEL.md`. SolarAssistant uses a separate runtime identity until
-the `admin` credential's effective authority is confirmed. Exact credential
-paths, metadata, and installation commands remain deferred. The previously
-manually verified collector behavior does not approve a persistent credential
-mechanism, but credential-authority assessment does not block offline work.
+Credential handling follows the approved Home Assistant-style model in
+`docs/SECURITY_MODEL.md` and the repository-side runtime design in
+`docs/SOLARASSISTANT_RUNTIME.md`. SolarAssistant uses the dedicated
+`solardt-sa` identity until the `admin` credential's effective authority is
+confirmed. The protected password path is
+`/etc/solar-digital-twin/solarassistant/password`; the collector can read but
+cannot modify it. Repository scripts now define later runtime preparation and
+credential installation, but neither has been run and no credential is
+installed.
 
 ## Timestamp and Evidence Policy
 
@@ -71,6 +72,11 @@ Each record will preserve:
 Generated evidence remains ignored by Git.
 
 Raw evidence files are authoritative source material and must be preserved.
+
+Development continues to default to `evidence/solarassistant`. The approved
+dedicated runtime will explicitly select
+`/var/lib/solar-digital-twin/solarassistant/evidence` without changing raw or
+retained filenames, records, cadence, or policy.
 
 ## Cadence Definitions and Status
 
@@ -155,6 +161,13 @@ behavior where they occur. Missing conditions must be documented rather than
 created by manipulating equipment. Credential installation, the live capture,
 SQLite, portal, systemd, persistent service operation, and deadband
 implementation remain separately deferred.
+
+The collector supports `--password-file` and `--output-dir` for that runtime.
+Password-file loading precedes the existing environment and interactive prompt
+sources. Missing, unreadable, empty, or whitespace-only files stop locally
+without a request and produce only a credential-free error. Runtime preparation
+and credential installation scripts have safe non-privileged checks; their real
+installation paths remain unexecuted and require separate approval.
 
 ## Approved Topic Scope
 

@@ -1,8 +1,10 @@
 import io
 import json
+import os
 import tempfile
 import unittest
-from contextlib import redirect_stdout
+from argparse import Namespace
+from contextlib import nullcontext, redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
@@ -175,6 +177,165 @@ class SolarAssistantCollectorTests(unittest.TestCase):
         self.assertIn("authentication failed", message)
         self.assertIn("correct the credential", message)
         self.assertNotIn("synthetic-secret", message)
+
+    def test_password_file_precedes_environment_and_prompt(self):
+        with tempfile.TemporaryDirectory() as directory:
+            password_file = Path(directory) / "password"
+            password_file.write_bytes(b"file-value\r\n")
+            with (
+                patch.dict(os.environ, {"SOLARASSISTANT_PASSWORD": "environment-value"}),
+                patch.object(solarassistant.getpass, "getpass") as prompt,
+            ):
+                self.assertEqual(
+                    solarassistant.get_password(password_file),
+                    "file-value",
+                )
+        prompt.assert_not_called()
+
+    def test_password_file_strips_only_one_trailing_line_ending(self):
+        with tempfile.TemporaryDirectory() as directory:
+            password_file = Path(directory) / "password"
+            password_file.write_bytes(b"value-with-space \n")
+            self.assertEqual(
+                solarassistant.get_password(password_file),
+                "value-with-space ",
+            )
+
+    def test_environment_and_prompt_password_sources_remain_available(self):
+        with (
+            patch.dict(os.environ, {"SOLARASSISTANT_PASSWORD": "environment-value"}),
+            patch.object(solarassistant.getpass, "getpass") as prompt,
+        ):
+            self.assertEqual(solarassistant.get_password(), "environment-value")
+            prompt.assert_not_called()
+
+        with (
+            patch.dict(os.environ, {}, clear=True),
+            patch.object(
+                solarassistant.getpass,
+                "getpass",
+                return_value="prompt-value",
+            ) as prompt,
+        ):
+            self.assertEqual(solarassistant.get_password(), "prompt-value")
+            prompt.assert_called_once()
+
+    def test_invalid_password_files_stop_before_collection_without_secret_output(self):
+        cases = ("missing", "empty", "whitespace", "unreadable")
+        for case in cases:
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as directory:
+                password_file = Path(directory) / "password"
+                if case == "empty":
+                    password_file.write_text("", encoding="utf-8")
+                elif case == "whitespace":
+                    password_file.write_text("  \t\n", encoding="utf-8")
+
+                args = Namespace(
+                    duration=0,
+                    interval=1.0,
+                    password_file=password_file,
+                    output_dir=Path(directory) / "evidence",
+                )
+                output = io.StringIO()
+                read_patch = (
+                    patch.object(Path, "read_bytes", side_effect=PermissionError)
+                    if case == "unreadable"
+                    else nullcontext()
+                )
+                with (
+                    patch.object(solarassistant, "parse_args", return_value=args),
+                    patch.object(solarassistant, "collect") as collect,
+                    read_patch,
+                    redirect_stdout(output),
+                ):
+                    with self.assertRaisesRegex(SystemExit, "1"):
+                        solarassistant.main()
+
+                collect.assert_not_called()
+                self.assertIn("credential file could not be read", output.getvalue())
+                self.assertNotIn("environment-value", output.getvalue())
+
+    def test_selected_output_directory_preserves_file_relationship(self):
+        response = FakeResponse(rows=[])
+        session = FakeSession([response])
+        clock = FakeClock()
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory) / "external-evidence"
+            with (
+                patch.object(solarassistant.requests, "Session", return_value=session),
+                patch.object(solarassistant.time, "monotonic", side_effect=clock.monotonic),
+                patch.object(solarassistant.time, "sleep", side_effect=clock.sleep),
+            ):
+                raw, _ = solarassistant.collect(
+                    1.0,
+                    1.0,
+                    "synthetic-secret",
+                    output_dir=output_dir,
+                )
+
+            retained = solarassistant.retained_output_path(raw)
+            self.assertEqual(raw.parent, output_dir)
+            self.assertTrue(raw.exists())
+            self.assertTrue(retained.exists())
+            self.assertEqual(
+                retained.name,
+                f"{raw.stem}_retained{raw.suffix}",
+            )
+            self.assertTrue(response.closed)
+
+    def test_output_directory_failure_stops_before_session_or_request(self):
+        output_dir = Path("/synthetic/unavailable")
+        with (
+            patch.object(Path, "mkdir", side_effect=PermissionError),
+            patch.object(solarassistant.requests, "Session") as session,
+        ):
+            with self.assertRaises(PermissionError):
+                solarassistant.collect(
+                    1.0,
+                    1.0,
+                    "synthetic-secret",
+                    output_dir=output_dir,
+                )
+        session.assert_not_called()
+
+    def test_default_output_directory_remains_compatible(self):
+        path = solarassistant.new_output_path()
+        self.assertEqual(path.parent, Path("evidence/solarassistant"))
+        self.assertRegex(
+            path.name,
+            r"^solarassistant_\d{8}_\d{6}Z\.ndjson$",
+        )
+
+    def test_cli_passes_password_file_and_output_directory(self):
+        args = Namespace(
+            duration=12.0,
+            interval=10.0,
+            password_file=Path("/synthetic/password"),
+            output_dir=Path("/synthetic/evidence"),
+        )
+        with (
+            patch.object(solarassistant, "parse_args", return_value=args),
+            patch.object(
+                solarassistant,
+                "get_password",
+                return_value="synthetic-secret",
+            ) as get_password,
+            patch.object(
+                solarassistant,
+                "collect",
+                return_value=(Path("/synthetic/evidence/raw.ndjson"), 0),
+            ) as collect,
+            redirect_stdout(io.StringIO()),
+        ):
+            solarassistant.main()
+
+        get_password.assert_called_once_with(args.password_file)
+        collect.assert_called_once_with(
+            duration=12.0,
+            interval=10.0,
+            password="synthetic-secret",
+            output_dir=args.output_dir,
+        )
 
 
 if __name__ == "__main__":

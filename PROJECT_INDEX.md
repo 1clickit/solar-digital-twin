@@ -77,6 +77,9 @@ docs/TELEMETRY_SOURCE_ROLES.md
 docs/SOLARASSISTANT_TELEMETRY_PLAN.md
     Read-only SolarAssistant collection, evidence, cadence, and retained-output policy.
 
+docs/SOLARASSISTANT_RUNTIME.md
+    Dedicated SolarAssistant runtime identity, credential boundary, installation, verification, and recovery plan.
+
 docs/SOLARASSISTANT_DEADBAND_ASSESSMENT.md
     Completed offline raw-evidence characterization; evidence was insufficient and no SolarAssistant deadbands are approved.
 
@@ -88,6 +91,12 @@ docs/DEVICE_ACCESS_RECOVERY.md
 
 src/solar_digital_twin/collectors/solarassistant.py
     Standalone read-only SolarAssistant raw and separately retained evidence collector.
+
+scripts/install_solarassistant_runtime.sh
+    Repeatable administrator runtime preparation with safe non-privileged checking.
+
+scripts/install_solarassistant_credential.sh
+    Separate controlling-terminal credential installation with safe non-secret checking.
 
 src/solar_digital_twin/collectors/solarassistant_retention.py
     SolarAssistant topic classification and per-metric exact-change/heartbeat policy.
