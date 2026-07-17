@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Completed July 16-17 capture integrity and ESP32 retention assessment; three-source correlation planning is next
+Confirmed complete EG4 overlap coverage and documented the bounded three-source correlation plan
 
 Next Task:
-Establish matching EG4 evidence availability and prepare the bounded offline EG4/SolarAssistant/ESP32 correlation-analysis plan.
+Implement and synthetically test the offline three-source correlation analyzer; require separate approval for protected input resolution and real execution.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -273,7 +273,19 @@ main
 - The complete ESP32 window overlaps SolarAssistant, both use compatible
   `solardt` UTC receipt timestamps, and no clock reversal or timezone conflict
   was found. Later offline correlation is supportable, but matching EG4 evidence
-  availability must be established before three-source analysis
+  availability has now been established as Complete
+- EG4 overlap contains 177 unique day-series samples from `2026-07-16 13:08:14`
+  through `2026-07-17 01:04:08` Central and 47 runtime snapshots. Median
+  cadences are 241 and 903 seconds; the largest gaps are 724 and 960 seconds,
+  with no gap over 20 minutes and no malformed overlap JSON
+- EG4 day times are cloud-returned Central source timestamps; runtime
+  `server_time` is UTC, `device_time` is Central, and `captured_at` is Central
+  collector provenance. A three-point check aligned ESP32 UTC receipts to
+  nearest EG4 day samples within 36-66 seconds
+- The bounded correlation plan is authoritative in
+  `docs/EG4_FORENSIC_CORRELATION.md`. The exact protected SolarAssistant raw
+  filename still requires separately approved metadata-only resolution; it was
+  not guessed and permissions were not weakened
 - Commit `5fef46b` pushed to `origin/main`; `main` was clean and synchronized afterward.
 
 ## Current Reporting Implementation

@@ -2,9 +2,9 @@
 
 ## Status
 
-This document records planned investigation and reporting features.
-
-These features are not the current implementation task. They must not replace the active task in `NEXT_TASK.md` until deliberately promoted through the normal project workflow.
+This document records the approved bounded investigation and reporting plan.
+Synthetic analyzer implementation is the current task in `NEXT_TASK.md`; real
+evidence analysis remains separately approved.
 
 The proposed work must remain:
 
@@ -14,6 +14,63 @@ The proposed work must remain:
 - evidence-based
 - explicit about uncertainty
 - separate from normal portal and collector behavior until tested
+
+## July 16-17 EG4 Evidence Availability
+
+Read-only inventory confirms **Complete** EG4 coverage for the full ESP32
+window, with cadence and provenance qualifications. The normalized SQLite
+database `eg4_digital_twin.sqlite` is the practical deduplicated query source;
+the authoritative cloud-response JSON remains under `evidence/<run_id>/` and
+is linked through `sync_runs` and `evidence_files`.
+
+The overlap is `2026-07-16T18:05:14.599Z` through
+`2026-07-17T06:05:14.373Z`, or `2026-07-16 13:05:14.599` through
+`2026-07-17 01:05:14.373` in `America/Chicago` (CDT).
+
+| EG4 source | Overlap records | First | Last | Cadence and gaps |
+|---|---:|---|---|---|
+| `day_multiline_samples` | 177 | `2026-07-16 13:08:14` | `2026-07-17 01:04:08` | 241 s median; 724 s largest gap; no gap over 20 min |
+| `runtime_snapshots` | 47 | server `2026-07-16T18:14:15Z` | server `2026-07-17T05:56:05Z` | 903 s median capture cadence; 960 s largest gap |
+| `energy_snapshots` | 47 | server `2026-07-16T18:14:15Z` | server `2026-07-17T05:56:05Z` | same scheduled runs as runtime |
+| `set_records` | 0 | none | none | configuration audit records, not an alarm stream |
+
+The 47 collection runs span `evidence/20260716_131601/` through
+`evidence/20260717_005713/`. Each run has runtime, energy, day-multiline,
+month-column, and set-record JSON: 235 files total, all present and parseable.
+The 47 day files contain 3,554 overlap entries including repeated cloud
+snapshots; SQLite deduplicates them into 177 unique source-time samples.
+Generated CSV files in `reports/` are derived exports, not source evidence.
+The corresponding local collector capture range is `2026-07-16T13:16:01`
+through `2026-07-17T00:57:13`, consistent with the nominal 15-minute timer.
+
+Day-multiline rows provide AC-couple, consumption, grid, battery-discharge,
+solar-PV power, and EG4-estimated SOC. Runtime JSON provides aggregate
+AC-couple and load context, EG4 SOC, battery and grid/EPS electrical values,
+status, warning/fault codes, and grid/EPS frequency. All 177 day rows and all 47
+runtime rows have the relevant normalized fields and valid stored raw JSON.
+There is no separate matching alarm/event stream; warning and fault fields are
+point-in-time runtime context.
+
+### Timestamp semantics and qualifications
+
+- Day `sample_time` is a cloud-returned, naive Central source timestamp. Convert
+  it from `America/Chicago` to UTC; it is not collector receipt time.
+- Runtime `server_time` is a cloud/server UTC source timestamp. `device_time`
+  is corresponding device-local Central time. `captured_at` is a naive Central
+  collector-run timestamp and is provenance, not measurement time.
+- Runtime `captured_at` followed `server_time` by 2-119 seconds (72-second
+  median), demonstrating variable portal/collection latency.
+- Day records are about four minutes apart but include one 724-second gap from
+  `2026-07-16 23:51:47` to `2026-07-17 00:03:51` Central.
+- EG4 is much coarser than one-second ESP32 and approximately 10.5-second
+  SolarAssistant data. It cannot establish the exact second of a step or
+  exclude a brief disturbance between samples.
+
+A bounded compatibility check used the first, middle, and last ESP32 receipt
+records. After UTC-to-Central conversion, nearest EG4 day samples were 62, 36,
+and 66 seconds away. Nearest runtime `server_time` values were 302, 85, and 414
+seconds away. This confirms timezone alignment and expected cadence, not system
+behavior.
 
 ## Investigation Background
 
@@ -223,8 +280,8 @@ sources use `solardt` UTC receipt timestamps, and the completion review found no
 clock reversal or timezone conflict. SolarAssistant samples average about 10.5
 seconds apart while the ESP32 primary cadence is about one second. The evidence
 is suitable for a later bounded offline correlation analysis. The ESP32
-retention assessment is complete. Matching EG4 evidence availability must still
-be established before a three-source correlation is authorized.
+retention assessment is complete, and matching EG4 evidence availability is
+classified Complete with the cadence and provenance qualifications above.
 
 ### EG4 Data
 
@@ -260,32 +317,88 @@ Discussed ESP32 event names include:
 
 The deployed ESPHome configuration must be reviewed before future correlation code depends on these sensors or event names.
 
-## Planned Time Synchronization
+## Timestamp synchronization basis
 
-Accurate event correlation requires the solardt VM and ESP32 logger to use closely aligned timestamps.
+`solardt` and the ESP32 already use the verified LAN NTP arrangement documented
+in `PROJECT_STATE.md`. SolarAssistant and ESP32 preserve canonical `solardt` UTC
+receipt timestamps. EG4 requires the explicit conversions above. Correlation
+must use UTC internally and may render Central time only for operator reports.
 
-Target concept:
+## Bounded Offline Correlation-Analysis Plan
 
-- configure solardt as a LAN NTP server
-- point the ESP32 SNTP client to solardt as its preferred server
-- retain public NTP servers as fallbacks
-- use `America/Chicago` consistently
-- verify actual clock alignment before relying on correlation results
+### Selected sources
 
-The VM address has previously been observed as `192.168.3.11`, but it must be confirmed before being placed into deployed configuration.
+- EG4: query `day_multiline_samples` and `runtime_snapshots` read-only from
+  `eg4_digital_twin.sqlite`, with reported rows traceable to stored `raw_json`
+  and the 47 immutable JSON evidence runs. Use day samples for aggregate
+  AC-couple, grid, load, and EG4 SOC; use runtime for status, warning/fault,
+  voltage, and grid/EPS-frequency context.
+- SolarAssistant: use the authoritative non-retained raw NDJSON in
+  `/var/lib/solar-digital-twin/solarassistant/evidence` whose verified receipt
+  window is `2026-07-16T07:00:43.194Z` through
+  `2026-07-17T07:00:41.713Z`. Its exact protected filename must be resolved by
+  a separately approved metadata-only preflight before analysis; do not guess
+  it or weaken directory permissions. Raw is required because several battery
+  families are intentionally absent from retained output.
+- ESP32: use authoritative raw
+  `evidence/esp32/esp32_sse_20260716_180514Z.ndjson`. Raw retains complete
+  one-second frequency and all approved events; retained output is used only
+  for the later policy-replay comparison.
 
-Possible ESPHome configuration, for design reference only:
+EG4 is aggregate inverter/context evidence. SolarAssistant/JK BMS is trusted
+battery SOC and battery telemetry. ESP32 is high-resolution frequency, state,
+estimated power, active-microinverter, ramp-rate, and forensic-event evidence.
+EG4 SOC remains a separately labeled estimate and must not replace, correct, or
+be merged with trusted JK SOC.
 
-    time:
-      - platform: sntp
-        id: esptime
-        timezone: America/Chicago
-        servers:
-          - 192.168.3.11
-          - 0.pool.ntp.org
-          - 1.pool.ntp.org
+### Common timeline and alignment
 
-Do not apply this configuration until solardt is confirmed to be serving NTP and the VM address is confirmed.
+1. Normalize every selected timestamp to aware UTC while preserving original
+   text, source, timestamp kind, and conversion rule.
+2. Use EG4 day `sample_time`, runtime `server_time`, SolarAssistant
+   `received_at_utc`, and ESP32 `received_at_utc`. Retain EG4 `captured_at` as
+   provenance and latency context only.
+3. Detect candidate event windows from consecutive EG4 day samples. Do not
+   interpolate a step between them or invent samples.
+4. Within each bounded window, retain native samples and use nearest-neighbor
+   lookup only for tabular context: normally plus or minus 7 minutes for EG4
+   day, 10 minutes for runtime, 15 seconds for SolarAssistant, and 2 seconds for
+   ESP32. A miss remains explicitly missing.
+5. Show source latency and cadence separately. Do not treat receipt timestamps
+   as device timestamps or infer sub-cadence precision.
+
+### Candidate event logic
+
+Keep thresholds configurable and evidence-reviewed. A candidate begins with a
+large absolute or percentage decrease in EG4 AC-couple power. Classify its
+shape using the non-zero post-drop level, consecutive lower-output samples,
+later rebound, time toward the prior level, and any gradual recovery ramp.
+Attach, without merging, nearby ESP32 active-microinverter, estimated-power,
+frequency/voltage/ramp, binary-state, and forensic-log observations plus
+SolarAssistant battery SOC, voltage, current, and power context.
+
+Cloud cover and ordinary solar variability remain competing explanations.
+Step-like reduction, a sustained non-zero plateau, repeatable drop size,
+active-microinverter transition, or supporting electrical event may raise
+confidence; smooth broad change or missing high-resolution evidence lowers it.
+Correlation never proves causation or identifies an individual microinverter.
+
+### Reproducible output and validation
+
+Produce one concise offline report with source file/database identities,
+analysis parameters, candidate windows, aligned native-sample timeline,
+before/during/after values, step magnitude and percentage, plateau duration,
+recovery timing/ramp, frequency and battery context, gaps, provenance,
+confidence, and alternative explanations. Generated output belongs in an
+ignored report or `/tmp`, not Git.
+
+Implement focused tests before real analysis for synthetic aligned sources,
+missing-source windows, deliberate timestamp offsets, abrupt steps, gradual
+cloud-like ramps, non-zero plateaus, simultaneous availability transitions,
+and no-event controls. Then use identified real event windows to replay current
+raw ESP32 evidence through the conservative candidate from
+`docs/ESP32_RETENTION_ASSESSMENT.md`; compare event/window preservation without
+changing evidence or production retention.
 
 ## Planned Report: AC-Couple Event Correlation Report
 
