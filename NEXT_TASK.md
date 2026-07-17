@@ -2,29 +2,21 @@
 
 ## Objective
 
-Perform one bounded, synthetic-only Battery cell voltage visual experiment in
-`prototypes/solar_portal_mockup.html` and its focused standard-library test.
+Perform focused browser review of the completed synthetic Battery cell voltage
+marker and avionics-style readout experiment.
 
 ## Scope
 
-1. Preserve the fixed colored operating scale and red low/high endpoint limits.
-2. Remove the ambiguous moving green progress ring.
-3. Add three short tick or bug markers near the shared voltage scale instead of
-   full-length center needles:
-   - average: white;
-   - highest: red;
-   - lowest: blue.
-4. Allow the markers to overlap when cells are closely balanced and separate
-   visibly as differential increases.
-5. Add a compact avionics-style digital readout below or within the lower
-   center of each dial containing Min, average, Max, and dynamically calculated
-   differential.
-6. Treat the digital values as authoritative and the marker positions as fast
-   approximate context. The differential is dynamic, not fixed at `13 mV`.
-7. Preserve the existing normal, under-voltage, over-voltage, and simultaneous-
-   fault structures and alarm-banner priority.
-8. Keep exact Min/Avg/Max readout placement open for focused browser review if
-   more than one layout remains viable.
+1. Confirm the short blue Min, white Avg, and red Max markers remain legible
+   while naturally overlapping for closely balanced cells.
+2. Confirm separation becomes useful as differential increases without adding
+   artificial offsets or full-length needles.
+3. Confirm the compact lower-center Min/Avg/Max and dynamic differential
+   readout remains readable at desktop and responsive widths.
+4. Confirm the red Max marker cannot be mistaken for the substantially larger
+   under-voltage, over-voltage, or simultaneous-fault banners.
+5. Preserve the fixed scale, red endpoints, caution regions, alarm priority,
+   and actual abnormal values.
 
 Do not connect the experiment to live data, evidence, collectors, APIs,
 credentials, or an installed portal. Do not implement production alarms or
@@ -49,7 +41,5 @@ the verification sequence and later ESP32 retention assessment in
 
 ## Success
 
-The synthetic dials replace the ambiguous moving ring with readable shared-
-scale markers and authoritative dynamic numeric values, focused tests and
-repository checks pass, no live behavior is introduced, and the result is left
-for browser review.
+Chris can decide whether the marker and readout presentation is accepted or
+needs one narrowly described visual adjustment without changing safety meaning.

@@ -166,13 +166,17 @@ The current prototype has two enlarged Battery 1 and Battery 2 dials with:
   the high limit near 2 o'clock;
 - short red threshold stops, yellow caution ends, and a dominant green normal
   region;
-- Avg, Max, Min, and dynamic-style differential text;
+- short blue Min, white Avg, and red Max scale-crossing markers that share one
+  fixed voltage-to-angle mapping and naturally overlap when values are close;
+- a compact lower-center Min/Avg/Max readout with a differential calculated
+  from the displayed synthetic maximum and minimum;
 - normal, under-voltage, over-voltage, and simultaneous-fault structures; and
 - actual alarm values in hidden synthetic alarm states.
 
-The moving inner green indicator has been judged visually ambiguous because it
-can resemble simultaneous occupancy of many voltages. Its replacement is the
-next focused visual experiment.
+The visually ambiguous moving inner green indicator has been removed. Exact
+digital values are authoritative; marker positions provide approximate context.
+Out-of-range positions clamp to the applicable endpoint while alarm banners
+retain and prioritize the actual abnormal values.
 
 ## Trends
 
@@ -198,8 +202,8 @@ identity, status, mode, alarm, counter, and diagnostic fields remain accessible.
 Grouping, search, filtering, and collapsed sections may improve usability but
 must not silently omit parameters from a true `Show all` view.
 
-The complete view excludes passwords, tokens, API keys, encryption keys, credentials, and other secret
-material are excluded. Writable controls and device actions must not be mixed
+The complete view excludes passwords, tokens, API keys, encryption keys,
+credentials, and other secret material. Writable controls and device actions must not be mixed
 into the read-only telemetry view. Large unparsed raw payloads are also excluded
 from ordinary telemetry views. Raw evidence remains
 available through controlled traceability rather than being confused with
@@ -229,6 +233,7 @@ contract.
 
 ## Remaining Visual Question
 
-The next experiment will test short Min/Avg/Max scale markers and a compact
-avionics-style numeric readout. Exact placement of the numeric readout remains a
-focused browser-review question rather than an accepted final layout.
+Browser review must confirm whether the compact lower-center readout remains
+clear at the existing four-card desktop size and responsive widths. Its exact
+spacing may still be adjusted without changing the accepted fixed-scale marker
+mapping or alarm priority.

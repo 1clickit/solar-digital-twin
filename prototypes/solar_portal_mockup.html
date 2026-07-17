@@ -180,32 +180,26 @@
     .cell-caution-low { stroke-dasharray: 10 90; stroke-dashoffset: -41.67; }
     .cell-caution-high { stroke-dasharray: 10 90; stroke-dashoffset: -106.67; }
     .cell-normal-range { stroke: var(--state-healthy); stroke-width: 3; stroke-dasharray: 55 45; stroke-dashoffset: -51.67; opacity: .78; }
-    .cell-average-arc { stroke: var(--state-healthy); stroke-width: 6; stroke-linecap: round; stroke-dasharray: var(--operating-position) calc(100 - var(--operating-position)); stroke-dashoffset: -41.67; }
     .cell-threshold { stroke-width: 2; opacity: .8; }
     .cell-cutoff-marker, .cell-upper-marker { stroke: var(--battery-discharging); stroke-width: 3; }
-    .cell-extreme-marker { stroke: #0e1726; stroke-width: 1.5; }
-    .cell-max-marker { fill: var(--state-warning); }
-    .cell-min-marker { fill: var(--text); }
-    .cell-dial[data-state="under-voltage"] .cell-min-marker,
-    .cell-dial[data-state="under-over-voltage"] .cell-min-marker { transform: rotate(150deg); transform-origin: 80px 80px; }
-    .cell-dial[data-state="over-voltage"] .cell-max-marker,
-    .cell-dial[data-state="under-over-voltage"] .cell-max-marker { transform: rotate(60deg); transform-origin: 80px 80px; }
-    .cell-dial[data-state="under-voltage"] .cell-average-arc,
-    .cell-dial[data-state="over-voltage"] .cell-average-arc,
-    .cell-dial[data-state="under-over-voltage"] .cell-average-arc { stroke: var(--state-healthy); }
-    .cell-dial[data-state="normal"] .cell-average-arc { stroke: var(--state-healthy); }
-    .cell-values { z-index: 1; display: grid; gap: .08rem; line-height: 1.15; }
-    .cell-value { font-size: .66rem; color: var(--muted); }
-    .cell-value--average { font-size: .72rem; color: var(--text); font-weight: 800; }
-    .cell-value.out-of-range { color: var(--battery-discharging); font-weight: 750; }
-    .cell-differential { color: var(--muted); font-size: .68rem; }
-    .cell-differential[data-alert="true"] { color: var(--battery-discharging); font-weight: 750; }
+    .cell-value-marker { stroke-width: 4; stroke-linecap: square; }
+    .cell-min-marker { stroke: var(--grid-export); }
+    .cell-max-marker { stroke: var(--battery-discharging); }
+    .cell-average-marker { stroke: var(--text); stroke-width: 3; filter: drop-shadow(0 0 1px #07101d); }
+    .cell-limit-label { position: absolute; z-index: 1; color: var(--muted); font-size: .55rem; font-variant-numeric: tabular-nums; }
+    .cell-limit-label--low { right: .48rem; bottom: 1.72rem; }
+    .cell-limit-label--high { right: .48rem; top: 1.72rem; }
+    .cell-readout { z-index: 1; width: 78%; margin-top: 1.15rem; padding: .28rem .3rem; border: 1px solid #34465f; border-radius: .35rem; background: #0a1423e8; font-variant-numeric: tabular-nums; }
+    .cell-readout-values { display: grid; grid-template-columns: repeat(3, 1fr); gap: .18rem; color: var(--muted); font-size: .58rem; line-height: 1.15; }
+    .cell-readout-values span { white-space: nowrap; }
+    .cell-readout-values .cell-readout-average { color: var(--text); font-weight: 800; }
+    .cell-readout-diff { margin-top: .2rem; color: var(--text); font-size: .62rem; font-weight: 750; letter-spacing: .03em; }
     .cell-scale-note { margin-top: .45rem; text-align: center; color: var(--muted); font-size: .64rem; }
     .cell-alarm-stack { z-index: 2; display: none; width: 112%; gap: .22rem; }
     .cell-alarm-banner { padding: .3rem .18rem; border: 1px solid var(--battery-discharging); background: #3a151b; color: var(--battery-discharging); font-size: .72rem; font-weight: 900; line-height: 1.05; text-align: center; white-space: nowrap; }
-    .cell-dial[data-state="under-voltage"] .cell-values,
-    .cell-dial[data-state="over-voltage"] .cell-values,
-    .cell-dial[data-state="under-over-voltage"] .cell-values { display: none; }
+    .cell-dial[data-state="under-voltage"] .cell-readout,
+    .cell-dial[data-state="over-voltage"] .cell-readout,
+    .cell-dial[data-state="under-over-voltage"] .cell-readout { display: none; }
     .cell-dial[data-state="under-voltage"] .cell-alarm-stack,
     .cell-dial[data-state="over-voltage"] .cell-alarm-stack,
     .cell-dial[data-state="under-over-voltage"] .cell-alarm-stack { display: grid; }
@@ -397,40 +391,40 @@
         <div class="panel-head"><h3>Battery cell voltage</h3><span class="tag warning">Synthetic</span></div>
         <div class="cell-pair">
           <div class="cell-battery"><strong>Battery 1</strong>
-            <div class="cell-dial" data-state="normal" data-low-limit="2.50" data-high-limit="3.65" data-low-position="5-o'clock" data-high-position="2-o'clock" data-direction="clockwise-long-arc" data-clamp-policy="endpoint-only; preserve numeric value" style="--operating-position:60.39" aria-label="Battery 1 open cell-voltage operating range from 2.50 volts at 5 o'clock clockwise to 3.65 volts at 2 o'clock; average 3.426 volts, maximum 3.433 volts, minimum 3.420 volts">
+            <div class="cell-dial" data-state="normal" data-low-limit="2.50" data-high-limit="3.65" data-minimum="3.420" data-average="3.426" data-maximum="3.433" data-low-position="5-o'clock" data-high-position="2-o'clock" data-direction="clockwise-long-arc" data-clamp-policy="endpoint-only; preserve numeric value" aria-label="Battery 1 open cell-voltage operating range from 2.50 volts at 5 o'clock clockwise to 3.65 volts at 2 o'clock; average 3.426 volts, maximum 3.433 volts, minimum 3.420 volts">
               <svg class="cell-scale" viewBox="0 0 160 160" role="img" aria-label="Fixed linear cell-voltage scale, not state of charge">
                 <circle class="cell-scale-track" pathLength="100" cx="80" cy="80" r="55"/>
                 <circle class="cell-caution-low" pathLength="100" cx="80" cy="80" r="55"/>
                 <circle class="cell-normal-range" pathLength="100" cx="80" cy="80" r="55"/>
                 <circle class="cell-caution-high" pathLength="100" cx="80" cy="80" r="55"/>
-                <circle class="cell-average-arc" pathLength="100" cx="80" cy="80" r="47"/>
                 <line class="cell-threshold cell-cutoff-marker" x1="129" y1="80" x2="140" y2="80" transform="rotate(150 80 80)"/>
                 <line class="cell-threshold cell-upper-marker" x1="129" y1="80" x2="140" y2="80" transform="rotate(60 80 80)"/>
-                <circle class="cell-extreme-marker cell-max-marker" cx="124" cy="80" r="3" transform="rotate(369.1 80 80)"/>
-                <circle class="cell-extreme-marker cell-min-marker" cx="124" cy="80" r="3" transform="rotate(366.0 80 80)"/>
+                <line class="cell-value-marker cell-min-marker" data-marker="minimum" x1="121" y1="80" x2="130" y2="80"/>
+                <line class="cell-value-marker cell-max-marker" data-marker="maximum" x1="121" y1="80" x2="130" y2="80"/>
+                <line class="cell-value-marker cell-average-marker" data-marker="average" x1="120" y1="80" x2="132" y2="80"/>
               </svg>
-              <div class="cell-values"><div class="cell-value cell-value--average">3.426 V Avg</div><div class="cell-value">3.433 V Max</div><div class="cell-value">3.420 V Min</div></div>
+              <span class="cell-limit-label cell-limit-label--low">2.50</span><span class="cell-limit-label cell-limit-label--high">3.65</span>
+              <div class="cell-readout"><div class="cell-readout-values"><span>MIN <b data-readout="minimum">3.420</b></span><span class="cell-readout-average">AVG <b data-readout="average">3.426</b></span><span>MAX <b data-readout="maximum">3.433</b></span></div><div class="cell-readout-diff">DIFF <span data-readout="differential">—</span> mV</div></div>
               <div class="cell-alarm-stack" aria-live="polite"><div class="cell-alarm-banner alarm-under">UNDER VOLTAGE <span id="b1-under-voltage" data-live-value="minimum">2.43 V</span></div><div class="cell-alarm-banner alarm-over">OVER VOLTAGE <span id="b1-over-voltage" data-live-value="maximum">3.71 V</span></div></div>
             </div>
-            <div class="cell-differential">13 mV Differential</div>
           </div>
           <div class="cell-battery"><strong>Battery 2</strong>
-            <div class="cell-dial" data-state="normal" data-low-limit="2.50" data-high-limit="3.65" data-low-position="5-o'clock" data-high-position="2-o'clock" data-direction="clockwise-long-arc" data-clamp-policy="endpoint-only; preserve numeric value" style="--operating-position:60.20" aria-label="Battery 2 open cell-voltage operating range from 2.50 volts at 5 o'clock clockwise to 3.65 volts at 2 o'clock; average 3.423 volts, maximum 3.430 volts, minimum 3.417 volts">
+            <div class="cell-dial" data-state="normal" data-low-limit="2.50" data-high-limit="3.65" data-minimum="3.417" data-average="3.423" data-maximum="3.430" data-low-position="5-o'clock" data-high-position="2-o'clock" data-direction="clockwise-long-arc" data-clamp-policy="endpoint-only; preserve numeric value" aria-label="Battery 2 open cell-voltage operating range from 2.50 volts at 5 o'clock clockwise to 3.65 volts at 2 o'clock; average 3.423 volts, maximum 3.430 volts, minimum 3.417 volts">
               <svg class="cell-scale" viewBox="0 0 160 160" role="img" aria-label="Fixed linear cell-voltage scale, not state of charge">
                 <circle class="cell-scale-track" pathLength="100" cx="80" cy="80" r="55"/>
                 <circle class="cell-caution-low" pathLength="100" cx="80" cy="80" r="55"/>
                 <circle class="cell-normal-range" pathLength="100" cx="80" cy="80" r="55"/>
                 <circle class="cell-caution-high" pathLength="100" cx="80" cy="80" r="55"/>
-                <circle class="cell-average-arc" pathLength="100" cx="80" cy="80" r="47"/>
                 <line class="cell-threshold cell-cutoff-marker" x1="129" y1="80" x2="140" y2="80" transform="rotate(150 80 80)"/>
                 <line class="cell-threshold cell-upper-marker" x1="129" y1="80" x2="140" y2="80" transform="rotate(60 80 80)"/>
-                <circle class="cell-extreme-marker cell-max-marker" cx="124" cy="80" r="3" transform="rotate(368.3 80 80)"/>
-                <circle class="cell-extreme-marker cell-min-marker" cx="124" cy="80" r="3" transform="rotate(365.3 80 80)"/>
+                <line class="cell-value-marker cell-min-marker" data-marker="minimum" x1="121" y1="80" x2="130" y2="80"/>
+                <line class="cell-value-marker cell-max-marker" data-marker="maximum" x1="121" y1="80" x2="130" y2="80"/>
+                <line class="cell-value-marker cell-average-marker" data-marker="average" x1="120" y1="80" x2="132" y2="80"/>
               </svg>
-              <div class="cell-values"><div class="cell-value cell-value--average">3.423 V Avg</div><div class="cell-value">3.430 V Max</div><div class="cell-value">3.417 V Min</div></div>
+              <span class="cell-limit-label cell-limit-label--low">2.50</span><span class="cell-limit-label cell-limit-label--high">3.65</span>
+              <div class="cell-readout"><div class="cell-readout-values"><span>MIN <b data-readout="minimum">3.417</b></span><span class="cell-readout-average">AVG <b data-readout="average">3.423</b></span><span>MAX <b data-readout="maximum">3.430</b></span></div><div class="cell-readout-diff">DIFF <span data-readout="differential">—</span> mV</div></div>
               <div class="cell-alarm-stack" aria-live="polite"><div class="cell-alarm-banner alarm-under">UNDER VOLTAGE <span id="b2-under-voltage" data-live-value="minimum">2.43 V</span></div><div class="cell-alarm-banner alarm-over">OVER VOLTAGE <span id="b2-over-voltage" data-live-value="maximum">3.71 V</span></div></div>
             </div>
-            <div class="cell-differential">13 mV Differential</div>
           </div>
         </div>
         <div class="cell-scale-note">Low limit 2.50 V · High limit 3.65 V</div>
@@ -565,6 +559,36 @@
   </main>
   <script>
     (() => {
+      const CELL_START_ANGLE = 150;
+      const CELL_ARC_DEGREES = 270;
+      const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
+      const cellVoltageAngle = (value, low, high) =>
+        CELL_START_ANGLE + ((clamp(value, low, high) - low) / (high - low)) * CELL_ARC_DEGREES;
+      const renderCellDial = (dial) => {
+        const low = Number(dial.dataset.lowLimit);
+        const high = Number(dial.dataset.highLimit);
+        const values = {
+          minimum: Number(dial.dataset.minimum),
+          average: Number(dial.dataset.average),
+          maximum: Number(dial.dataset.maximum),
+        };
+        Object.entries(values).forEach(([name, value]) => {
+          dial.querySelector(`[data-marker="${name}"]`).setAttribute(
+            'transform', `rotate(${cellVoltageAngle(value, low, high).toFixed(2)} 80 80)`
+          );
+          dial.querySelector(`[data-readout="${name}"]`).textContent = value.toFixed(3);
+        });
+        dial.querySelector('[data-readout="differential"]').textContent =
+          String(Math.round((values.maximum - values.minimum) * 1000));
+
+        const under = values.minimum < low;
+        const over = values.maximum > high;
+        dial.dataset.state = under && over ? 'under-over-voltage' : under ? 'under-voltage' : over ? 'over-voltage' : 'normal';
+        if (under) dial.querySelector('[data-live-value="minimum"]').textContent = `${values.minimum.toFixed(2)} V`;
+        if (over) dial.querySelector('[data-live-value="maximum"]').textContent = `${values.maximum.toFixed(2)} V`;
+      };
+      document.querySelectorAll('.cell-dial').forEach(renderCellDial);
+
       const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
       const selectTab = (tab, moveFocus = true) => {
         tabs.forEach((item) => {

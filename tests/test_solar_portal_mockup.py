@@ -147,13 +147,14 @@ class SolarPortalMockupTests(unittest.TestCase):
         self.assertNotIn("Synthetic calculated load", self.html)
 
     def test_battery_current_comparison_replaces_combined_bank_card(self):
+        current_card = self.html.split('data-ring="battery-current-comparison"', 1)[1].split("</article>", 1)[0]
         self.assertEqual(1, self.html.count('data-ring="battery-current-comparison"'))
         self.assertIn("B1 25.8 A", self.html)
         self.assertIn("B2 25.3 A", self.html)
         self.assertNotIn("2.8 kW DC", self.html)
         self.assertIn("54.8 V", self.html)
         self.assertNotIn("Net charging", self.html)
-        self.assertNotIn("270", self.html)
+        self.assertNotIn("270", current_card)
         self.assertNotIn("° zero", self.html)
         self.assertNotIn("<h3>Battery bank power</h3>", self.html)
         self.assertNotIn('data-ring="battery-bipolar"', self.html)
@@ -210,7 +211,7 @@ class SolarPortalMockupTests(unittest.TestCase):
         self.assertNotIn("Average", voltage_card)
         self.assertNotIn("ΔV", voltage_card)
         cell_card = self.html.split("<h3>Battery cell voltage</h3>", 1)[1].split("</article>", 1)[0]
-        for value in ("Battery 1", "3.426 V Avg", "3.433 V Max", "3.420 V Min", "Battery 2", "3.423 V Avg", "3.430 V Max", "3.417 V Min"):
+        for value in ("Battery 1", "MIN <b data-readout=\"minimum\">3.420", "AVG <b data-readout=\"average\">3.426", "MAX <b data-readout=\"maximum\">3.433", "Battery 2", "MIN <b data-readout=\"minimum\">3.417", "AVG <b data-readout=\"average\">3.423", "MAX <b data-readout=\"maximum\">3.430"):
             self.assertIn(value, cell_card)
 
     def test_cell_voltage_fixed_scale_values_and_states(self):
@@ -226,16 +227,15 @@ class SolarPortalMockupTests(unittest.TestCase):
         battery_1 = cell_card.split("<strong>Battery 1</strong>", 1)[1].split("<strong>Battery 2</strong>", 1)[0]
         battery_2 = cell_card.split("<strong>Battery 2</strong>", 1)[1]
         for battery, values in (
-            (battery_1, ("3.426 V Avg", "3.433 V Max", "3.420 V Min")),
-            (battery_2, ("3.423 V Avg", "3.430 V Max", "3.417 V Min")),
+            (battery_1, ("MIN <b", "AVG <b", "MAX <b")),
+            (battery_2, ("MIN <b", "AVG <b", "MAX <b")),
         ):
             positions = [battery.index(value) for value in values]
             self.assertEqual(sorted(positions), positions)
-            self.assertIn("13 mV Differential", battery)
-        self.assertEqual(2, cell_card.count("13 mV Differential"))
+            self.assertIn('DIFF <span data-readout="differential">—</span> mV', battery)
+        self.assertNotIn("13 mV Differential", cell_card)
         for state in ("normal", "under-voltage", "over-voltage", "under-over-voltage"):
-            self.assertIn(f'data-state="{state}"]', self.html)
-        self.assertIn("cell-value.out-of-range", self.html)
+            self.assertIn(f"'{state}'", self.html)
         self.assertEqual(2, cell_card.count('data-clamp-policy="endpoint-only; preserve numeric value"'))
         self.assertIn("alarm banners retain exact live values", cell_card)
         self.assertNotIn("data-imbalance-threshold", self.html)
@@ -243,8 +243,8 @@ class SolarPortalMockupTests(unittest.TestCase):
     def test_cell_voltage_size_typography_and_alarm_banners(self):
         cell_card = self.html.split("<h3>Battery cell voltage</h3>", 1)[1].split("</article>", 1)[0]
         self.assertRegex(self.html, r"\.cell-dial\s*\{[^}]*10\.5rem")
-        self.assertRegex(self.html, r"\.cell-value\s*\{[^}]*font-size:\s*\.66rem")
-        self.assertRegex(self.html, r"\.cell-value--average\s*\{[^}]*font-size:\s*\.72rem[^}]*color:\s*var\(--text\)[^}]*font-weight:\s*800")
+        self.assertRegex(self.html, r"\.cell-readout-values\s*\{[^}]*font-size:\s*\.58rem")
+        self.assertRegex(self.html, r"\.cell-readout-values \.cell-readout-average\s*\{[^}]*color:\s*var\(--text\)[^}]*font-weight:\s*800")
         self.assertIn("cell-normal-range", cell_card)
         self.assertIn("cell-caution-low", cell_card)
         self.assertIn("cell-caution-high", cell_card)
@@ -254,7 +254,7 @@ class SolarPortalMockupTests(unittest.TestCase):
         self.assertIn("OVER VOLTAGE <span id=\"b1-over-voltage\" data-live-value=\"maximum\">3.71 V", cell_card)
         self.assertIn("UNDER VOLTAGE <span id=\"b2-under-voltage\" data-live-value=\"minimum\">2.43 V", cell_card)
         self.assertIn("OVER VOLTAGE <span id=\"b2-over-voltage\" data-live-value=\"maximum\">3.71 V", cell_card)
-        self.assertRegex(self.html, r'data-state="under-voltage"[^}]*\.cell-values|data-state="under-voltage"\] \.cell-values')
+        self.assertRegex(self.html, r'data-state="under-voltage"[^}]*\.cell-readout|data-state="under-voltage"\] \.cell-readout')
         self.assertIn('data-state="under-over-voltage"] .cell-alarm-stack', self.html)
         self.assertEqual(2, cell_card.count('aria-live="polite"'))
 
@@ -267,10 +267,58 @@ class SolarPortalMockupTests(unittest.TestCase):
         self.assertRegex(self.html, r"\.cell-caution-low\s*\{[^}]*stroke-dasharray:\s*10 90")
         self.assertRegex(self.html, r"\.cell-caution-high\s*\{[^}]*stroke-dasharray:\s*10 90")
         self.assertRegex(self.html, r"\.cell-normal-range\s*\{[^}]*stroke:\s*var\(--state-healthy\)[^}]*stroke-dasharray:\s*55 45")
-        self.assertIn('data-state="under-voltage"] .cell-min-marker', self.html)
-        self.assertIn('data-state="over-voltage"] .cell-max-marker', self.html)
+        self.assertIn("const clamp =", self.html)
+        self.assertIn("cellVoltageAngle(value, low, high)", self.html)
         self.assertIn("Low limit 2.50 V · High limit 3.65 V", cell_card)
         self.assertNotIn("2.00–3.80 V", cell_card)
+
+    def test_cell_voltage_markers_share_scale_and_overlap_naturally(self):
+        cell_card = self.html.split("<h3>Battery cell voltage</h3>", 1)[1].split("</article>", 1)[0]
+        self.assertNotIn("cell-average-arc", self.html)
+        for marker in ("minimum", "average", "maximum"):
+            self.assertEqual(2, cell_card.count(f'data-marker="{marker}"'))
+        self.assertIn("const CELL_START_ANGLE = 150", self.html)
+        self.assertIn("const CELL_ARC_DEGREES = 270", self.html)
+        self.assertEqual(1, self.html.count("const cellVoltageAngle"))
+        self.assertNotIn("angular-offset", self.html)
+        self.assertRegex(self.html, r"\.cell-min-marker\s*\{[^}]*var\(--grid-export\)")
+        self.assertRegex(self.html, r"\.cell-average-marker\s*\{[^}]*var\(--text\)")
+        self.assertRegex(self.html, r"\.cell-max-marker\s*\{[^}]*var\(--battery-discharging\)")
+        self.assertRegex(self.html, r"\.cell-alarm-banner\s*\{[^}]*font-size:\s*\.72rem[^}]*font-weight:\s*900")
+
+        def angle(value):
+            return 150 + ((value - 2.50) / (3.65 - 2.50)) * 270
+
+        close_spread = angle(3.433) - angle(3.420)
+        wider_spread = angle(3.55) - angle(3.20)
+        self.assertLess(close_spread, 4)
+        self.assertGreater(wider_spread, close_spread)
+
+    def test_cell_voltage_readout_and_differential_are_calculated(self):
+        cell_card = self.html.split("<h3>Battery cell voltage</h3>", 1)[1].split("</article>", 1)[0]
+        self.assertIn("Math.round((values.maximum - values.minimum) * 1000)", self.html)
+        self.assertNotIn(">13</span> mV", cell_card)
+        samples = re.findall(
+            r'data-minimum="([0-9.]+)" data-average="([0-9.]+)" data-maximum="([0-9.]+)"',
+            cell_card,
+        )
+        self.assertEqual(2, len(samples))
+        for minimum, _average, maximum in samples:
+            self.assertEqual(13, round((float(maximum) - float(minimum)) * 1000))
+        changed_minimum = float(samples[0][0]) - 0.005
+        self.assertEqual(18, round((float(samples[0][2]) - changed_minimum) * 1000))
+
+    def test_cell_voltage_alarm_values_and_clamping_remain_independent(self):
+        cell_card = self.html.split("<h3>Battery cell voltage</h3>", 1)[1].split("</article>", 1)[0]
+        self.assertIn("clamp(value, low, high)", self.html)
+        self.assertIn("values.minimum < low", self.html)
+        self.assertIn("values.maximum > high", self.html)
+        self.assertIn("under && over ? 'under-over-voltage'", self.html)
+        for battery in ("b1", "b2"):
+            self.assertIn(f'id="{battery}-under-voltage" data-live-value="minimum">2.43 V', cell_card)
+            self.assertIn(f'id="{battery}-over-voltage" data-live-value="maximum">3.71 V', cell_card)
+        self.assertIn("values.minimum.toFixed(2)", self.html)
+        self.assertIn("values.maximum.toFixed(2)", self.html)
 
     def test_homepage_dial_provenance_footers_are_removed(self):
         overview = self.html.split('id="panel-overview"', 1)[1].split('id="panel-trends"', 1)[0]

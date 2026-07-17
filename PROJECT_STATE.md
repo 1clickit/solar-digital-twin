@@ -4,7 +4,7 @@ Current Milestone:
 Validated synthetic Solar Digital Twin portal prototype and documented design direction; controlled captures still await separately approved completion verification
 
 Next Task:
-Prototype the next synthetic Battery cell voltage marker and avionics-style readout experiment without connecting to live data or runtime state.
+Perform focused browser review of the completed synthetic Battery cell voltage markers and avionics-style readout.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -223,9 +223,9 @@ main
   red endpoint stops, yellow caution ends, a dominant green normal region,
   Avg/Max/Min and differential values, and four independent normal/alarm state
   structures
-- The moving inner green cell-voltage indicator was judged visually ambiguous.
-  The immediate offline design task is to replace it with short white Avg, red
-  Max, and blue Min scale markers plus an authoritative dynamic digital readout
+- The visually ambiguous moving inner green cell-voltage indicator has been
+  replaced in the synthetic prototype with short white Avg, red Max, and blue
+  Min scale markers plus an authoritative dynamic digital readout
 - `docs/PORTAL_UI_DESIGN.md` is the authoritative portal design record;
   `docs/chat_ideas/README.md` is a non-authoritative holding area for deferred,
   open, and superseded design ideas
