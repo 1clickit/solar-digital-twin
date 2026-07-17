@@ -4,8 +4,10 @@
 The raw standalone collector was implemented and manually verified on
 2026-07-13. The separate retained-output stage is covered by offline tests. The
 fixed 12-hour live-verification capture completed successfully on 2026-07-17
-and passed evidence-integrity review as described below. Retention-policy
-interpretation remains pending the separately reviewed assessment. The collector is
+and passed evidence-integrity review as described below. The subsequent
+full-capture retention assessment found no implementation defect and recommends
+leaving policy unchanged pending event-window validation. See
+`docs/ESP32_RETENTION_ASSESSMENT.md`. The collector is
 `src/solar_digital_twin/collectors/esp32_sse.py`.
 
 ## Collection Decision
@@ -88,10 +90,9 @@ did not require an AC-couple fault. That success criterion was met. Preserve
 both files unchanged. Collector or retention changes remain separately
 reviewed and approved.
 
-## Following Post-Capture ESP32 Retention Assessment
+## Completed Post-Capture ESP32 Retention Assessment
 
-Completion and evidence integrity are confirmed. The immediate separately
-reviewed ESP32 retention assessment must:
+Completion and evidence integrity are confirmed. The completed assessment:
 
 1. calculate the full-capture retained-to-raw line ratio;
 2. calculate the full-capture retained-to-raw byte ratio;
@@ -107,8 +108,10 @@ reviewed ESP32 retention assessment must:
 8. preserve the complete raw stream as authoritative evidence regardless of
    later retention recommendations.
 
-This assessment is analysis, not authorization to change collection or
-retention behavior.
+The measured ratios were 91.382% by record and 95.770% by byte. Current behavior
+matches the documented frequency-only selective policy; all non-frequency
+entities pass through. No retention change is approved. Candidate policy replay
+against known forensic windows remains required before implementation.
 
 ## Smallest Safe Implementation Step
 The standalone read-only collector reconnects with bounded backoff, filters approved entity IDs, timestamps each update, and appends raw and separately retained newline-delimited JSON under ignored `evidence/`.

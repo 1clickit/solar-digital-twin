@@ -77,6 +77,9 @@ docs/EG4_FORENSIC_CORRELATION.md
 docs/ESP32_FORENSIC_TELEMETRY_PLAN.md
     Read-only ESPHome SSE collection and timestamp design.
 
+docs/ESP32_RETENTION_ASSESSMENT.md
+    Reproducible full-capture ESP32 retention measurements, candidate comparison, and policy recommendation.
+
 docs/TELEMETRY_SOURCE_ROLES.md
     Agreed authority, comparison, forensic, and display roles for telemetry sources.
 
@@ -121,6 +124,9 @@ src/solar_digital_twin/collectors/retention.py
 
 src/solar_digital_twin/collectors/esp32_sse.py
     Standalone read-only ESPHome SSE evidence collector.
+
+scripts/analyze_esp32_retention.py
+    Streaming offline raw/retained ESP32 retention assessment utility.
 
 docs/AI_ENGINEERING_FRAMEWORK_MVP.md
     Reusable AI engineering framework MVP boundary design.

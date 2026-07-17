@@ -170,7 +170,10 @@ and retained files parsed without malformed or truncated records, used
 canonical UTC receipt timestamps, contained all 17 approved public entity IDs
 and no unapproved IDs, and preserved every retained record unchanged and in raw
 order. The high retained/raw ratios (approximately 91.38% by line and 95.77% by
-byte) remain subject to the separately planned retention assessment.
+byte) were explained by the completed assessment in
+`docs/ESP32_RETENTION_ASSESSMENT.md`: only frequency is selectively retained,
+while every non-frequency entity intentionally passes through. No policy change
+is approved pending event-window validation.
 
 Still planned:
 
@@ -219,9 +222,9 @@ The complete ESP32 capture window overlaps the SolarAssistant capture. Both
 sources use `solardt` UTC receipt timestamps, and the completion review found no
 clock reversal or timezone conflict. SolarAssistant samples average about 10.5
 seconds apart while the ESP32 primary cadence is about one second. The evidence
-is suitable for a later bounded offline correlation analysis after the ESP32
-retention assessment. Matching EG4 evidence availability must still be
-established before a three-source correlation is authorized.
+is suitable for a later bounded offline correlation analysis. The ESP32
+retention assessment is complete. Matching EG4 evidence availability must still
+be established before a three-source correlation is authorized.
 
 ### EG4 Data
 

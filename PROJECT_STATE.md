@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Completed and integrity-reviewed July 16-17 SolarAssistant and ESP32 long-duration captures; ESP32 retention assessment is next
+Completed July 16-17 capture integrity and ESP32 retention assessment; three-source correlation planning is next
 
 Next Task:
-Perform the separately reviewed, offline full-capture ESP32 retention assessment without changing evidence or retention behavior.
+Establish matching EG4 evidence availability and prepare the bounded offline EG4/SolarAssistant/ESP32 correlation-analysis plan.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -263,7 +263,13 @@ main
   17 approved public entity IDs and no unapproved IDs were present
 - The ESP32 capture passed. Its retained/raw ratios were approximately 91.38%
   by line and 95.77% by byte; interpretation and any tuning recommendation are
-  deferred to the next retention assessment, with raw evidence authoritative
+  now recorded in `docs/ESP32_RETENTION_ASSESSMENT.md`, with raw evidence authoritative
+- The streaming assessment reproduced 394,327 retained records and 149,568,755
+  bytes exactly. Frequency retained 13.81%; every non-frequency entity retained
+  100% by documented pass-through design. No implementation defect was found
+- A conservative offline candidate estimated 61,724 records and 36,174,692
+  bytes, but no policy change is approved until known forensic event windows
+  validate that candidate. Current production behavior remains unchanged
 - The complete ESP32 window overlaps SolarAssistant, both use compatible
   `solardt` UTC receipt timestamps, and no clock reversal or timezone conflict
   was found. Later offline correlation is supportable, but matching EG4 evidence
