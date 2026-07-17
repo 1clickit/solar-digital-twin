@@ -175,6 +175,12 @@ portal integration remain deferred. The completed 24-hour result and its
 permissions-related qualifications are recorded in
 `docs/SOLARASSISTANT_TELEMETRY_PLAN.md`.
 
+The future forensic-analysis access boundary is documented in
+`docs/EG4_FORENSIC_CORRELATION.md`. Repository adapters do not infer, list, or
+open this protected evidence directory. Any metadata inventory, source hash,
+controlled read-only copy, analysis read, or temporary-copy removal requires
+its own explicitly reviewed approval and must not weaken these permissions.
+
 The separate LAN-only live-capture monitor is installed and running as
 `solardt-sa` in root-owned detached tmux session `solarassistant-monitor` at
 `http://192.168.3.11:8792`; `GET /health` returned `{"status":"ok"}`. Its

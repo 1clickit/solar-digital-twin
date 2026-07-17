@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Implemented and synthetically validated the bounded offline three-source correlation analyzer
+Implemented and synthetically validated offline three-source correlation input adapters
 
 Next Task:
-Review and prepare explicit bounded real-input adapters and protected-input access; require separate approval before implementation or real execution.
+Review adapters and prepare a separately approved metadata-only SolarAssistant evidence inventory; real access and execution remain later approvals.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -297,8 +297,19 @@ main
   availability and frequency context, multiple events, separate trusted and
   estimated SOC roles, input immutability, and reduced ESP32 context. No real
   evidence, operational database, or protected path was used
-- Real-input adapters, protected SolarAssistant filename resolution, and any
-  real-evidence execution remain separately approved future work
+- Pure read-only adapters now stream explicitly bounded EG4 day/runtime SQLite,
+  grouped SolarAssistant raw NDJSON polls, and ESP32 raw/retained NDJSON into
+  source-labeled correlation records. SQLite is opened with URI read-only mode
+  and query-only enforcement; malformed NDJSON diagnostics omit payload text
+- Synthetic end-to-end validation preserves trusted SolarAssistant SOC versus
+  estimated EG4 SOC, explicit timestamp semantics, availability, provenance,
+  missing context, and input immutability. No operational input was opened
+- The analyzer materializes its supplied records for deterministic ordering.
+  A real bounded-memory workflow must therefore detect candidate EG4 windows
+  first and supply only bounded high-rate source windows
+- The least-privilege protected SolarAssistant metadata, hash, controlled-copy,
+  analysis, report, and cleanup stages are documented in
+  `docs/EG4_FORENSIC_CORRELATION.md`; each stage requires separate approval
 - Commit `5fef46b` pushed to `origin/main`; `main` was clean and synchronized afterward.
 
 ## Current Reporting Implementation

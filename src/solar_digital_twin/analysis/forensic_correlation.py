@@ -61,6 +61,7 @@ class CorrelationConfig:
     zero_output_threshold_w: float = 25.0
     maximum_search_samples: int = 12
     maximum_eg4_gap_seconds: float = 600.0
+    eg4_runtime_tolerance_seconds: float = 600.0
     solarassistant_tolerance_seconds: float = 15.0
     esp32_tolerance_seconds: float = 2.0
     context_before_seconds: float = 30.0
@@ -230,10 +231,13 @@ def analyze_correlation(
     solarassistant_records: Iterable[TimedRecord],
     esp32_records: Iterable[TimedRecord],
     config: CorrelationConfig | None = None,
+    *,
+    eg4_context_records: Iterable[TimedRecord] = (),
 ) -> dict[str, Any]:
     """Analyze already parsed records without I/O, interpolation, or mutation."""
     cfg = config or CorrelationConfig()
     eg4 = ordered(eg4_records)
+    eg4_context = ordered(eg4_context_records)
     solar = ordered(solarassistant_records)
     esp32 = ordered(esp32_records)
     events: list[dict[str, Any]] = []
@@ -334,6 +338,9 @@ def analyze_correlation(
                 "solarassistant_context": solar_match,
                 "esp32_nearest": esp_match,
                 "aligned_context": {
+                    "eg4_runtime": _aligned_phases(
+                        eg4_context, phases, cfg.eg4_runtime_tolerance_seconds
+                    ),
                     "solarassistant": _aligned_phases(
                         solar, phases, cfg.solarassistant_tolerance_seconds
                     ),

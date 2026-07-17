@@ -2,13 +2,13 @@
 
 ## Objective
 
-Review and prepare the separately approved real-input phase for the bounded
-offline EG4/SolarAssistant/ESP32 correlation analyzer. Do not run it on real
-evidence during preparation.
+Review the synthetic input adapters and prepare an exact, separately approved
+metadata-only SolarAssistant evidence inventory. Do not inspect metadata or run
+the analyzer on real evidence without that approval.
 
 ## Context
 
-The pure parsed-stream analyzer and 17 synthetic scenario tests are complete.
+The pure parsed-stream analyzer and synthetic input adapters are complete.
 EG4 coverage is **Complete** for the full ESP32 overlap: 177 unique day-series
 samples and 47 runtime snapshots, with no gap over 20 minutes and no malformed
 overlap JSON. Timestamp semantics and the bounded analysis plan are recorded in
@@ -18,18 +18,16 @@ unit.
 
 ## Scope
 
-1. Review the implemented synthetic analyzer interface, thresholds, alignment
-   tolerances, source roles, and confidence limitations before real use.
-2. Define explicit bounded-memory adapters for the selected EG4 SQLite rows and
-   SolarAssistant/ESP32 NDJSON without opening operational inputs in this
-   preparation step.
-3. Resolve only the SolarAssistant raw filename and access method through a
-   separately approved metadata-only action without reading credentials or
-   changing permissions.
-4. Require separate approval before implementing or running adapters against
-   protected SolarAssistant evidence and the completed real datasets.
-5. Keep generated output in `/tmp` or ignored reports. Do not modify evidence,
-   production retention, collectors, databases, services, or runtime state.
+1. Review the implemented adapter schema, timestamp mappings, bounded-window
+   workflow, and analyzer thresholds before real use.
+2. Define the exact administrator-run metadata fields and named-file scope from
+   the procedure in `docs/EG4_FORENSIC_CORRELATION.md`.
+3. Require separate approval before obtaining protected filename, ownership,
+   permission, size, modification-time, capture-window, and completion metadata.
+4. Review those results before separately approving any source hash, controlled
+   read-only copy, analysis read, real execution, report, or cleanup action.
+5. Keep credentials, tokens, unrelated files, production runtime, evidence,
+   databases, and permissions unchanged.
 
 ## Following task
 
@@ -46,7 +44,7 @@ deploy the monitor during correlation implementation or analysis.
 
 ## Success
 
-The synthetic analyzer remains validated and offline-only; the reviewed next
-work request defines exact adapters, protected access, output destination, and
-real-run limits without weakening permissions. Real execution remains a
-separate explicit approval, and all evidence and runtime state remain unchanged.
+The reviewed work request is limited to exact metadata fields and one named
+protected capture. It contains no secret retrieval, recursive inspection,
+permission change, monitor restart, or real analysis. Every later access stage
+remains separately approved.

@@ -132,6 +132,10 @@ src/solar_digital_twin/analysis/forensic_correlation.py
     Pure offline three-source timestamp alignment and conservative synthetic
     AC-couple event analysis.
 
+src/solar_digital_twin/analysis/correlation_adapters.py
+    Explicit read-only, bounded-window EG4 SQLite and SolarAssistant/ESP32
+    NDJSON adapters for offline correlation.
+
 docs/AI_ENGINEERING_FRAMEWORK_MVP.md
     Reusable AI engineering framework MVP boundary design.
 

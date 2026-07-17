@@ -364,6 +364,84 @@ or NDJSON evidence, generated operational reports, or the protected
 SolarAssistant directory. Explicit input adapters and any real-data report run
 belong to a later separately approved work unit.
 
+### Implemented synthetic input adapters
+
+`src/solar_digital_twin/analysis/correlation_adapters.py` provides explicit,
+offline iterators for bounded EG4 day and runtime SQLite rows, grouped raw
+SolarAssistant polls, and raw or retained ESP32 NDJSON observations. Every
+interface requires a caller-supplied input path and aware UTC start/end bounds.
+There are no inferred operational paths, network calls, credential handling,
+output files, or import-time actions.
+
+SQLite uses URI `mode=ro`, `PRAGMA query_only`, fixed table/column selections,
+parameterized time bounds, schema checks, and batched `fetchmany` iteration.
+EG4 day source times are explicitly interpreted as `America/Chicago`; runtime
+`server_time` is canonical UTC. Only selected warning, fault, and operating-mode
+keys are extracted from runtime JSON, never the complete payload.
+
+NDJSON inputs are read one line at a time. SolarAssistant records from one poll
+are grouped only until the receipt timestamp changes, preserving metric names,
+units, combined/Battery 1/Battery 2 identity, and trusted combined SOC. ESP32
+records preserve entity identity, value, unit, availability, stream kind, and
+approved provenance. Malformed input raises a line-numbered diagnostic without
+including raw payload text. Canonical receipt timestamps must use UTC `Z`.
+
+Day records feed event detection directly. Runtime records use the analyzer's
+separate EG4 context input and its conservative ten-minute nearest-record
+tolerance. SolarAssistant and ESP32 continue to use 15-second and 2-second
+tolerances. Provenance survives into aligned report records, while missing and
+out-of-tolerance observations remain explicit.
+
+The adapters themselves are iterative and do not cache complete inputs. The
+analyzer sorts the records supplied for a run, so a future real workflow must
+first detect candidate EG4 windows and then supply only explicitly bounded
+SolarAssistant and ESP32 windows. It must not pass an entire high-rate capture
+to the analyzer and call that bounded-memory operation.
+
+Synthetic temporary SQLite and NDJSON tests validate read-only enforcement,
+schema failures, bounded queries, source scopes, canonical time handling,
+malformed input, availability, lazy iteration, input immutability, provenance,
+and end-to-end partial-collapse detection. No real evidence or operational
+database has been used. Real execution remains separately approved.
+
+### Future protected SolarAssistant access procedure
+
+The installed evidence directory intentionally prevents `chris` from listing
+or reading collector output. Elevated administrator assistance is therefore
+required, but only after Chris approves the exact metadata or copy action.
+
+Before a real run, obtain only the raw filename, retained filename if relevant,
+ownership, permissions, size, modification time, capture window, and completion
+confirmation. Prefer a narrowly scoped administrator-run metadata inventory.
+If analysis access is later approved, use a controlled read-only copy of only
+the named evidence file into a dedicated temporary analysis directory owned by
+the intended unprivileged analyst and protected from other users.
+
+The approved procedure must:
+
+1. identify exact source and destination files in advance, without recursive
+   listing, permission changes, or access to neighboring files;
+2. avoid the credential directory, monitor process state, environment, command
+   output containing tokens, and all unrelated runtime files;
+3. keep secrets out of arguments, output, shell history, reports, and Git;
+4. record source size and modification time, plus a source hash calculated by
+   the administrator without printing evidence content;
+5. calculate the copy hash as the unprivileged analyst and require matching
+   size and hash before analysis;
+6. keep the protected source immutable and open any approved analysis copy
+   read-only;
+7. place derived reports only in the separately approved temporary or ignored
+   destination; and
+8. after review and separate approval, remove temporary copies without touching
+   the protected source, then confirm the source metadata still matches.
+
+Separate approval is required for metadata inspection, source hashing, copy
+creation, reading the copy, running the real analyzer, producing a derived
+report, and deleting the temporary copy. No runnable elevated command is
+approved or recorded here. Restarting the monitor merely to rotate the unused
+abort token is unrelated to adapter validation, would alter runtime state, and
+remains a separate future approval before another abort-capable capture.
+
 ### Selected sources
 
 - EG4: query `day_multiline_samples` and `runtime_snapshots` read-only from
