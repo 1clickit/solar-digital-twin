@@ -97,13 +97,13 @@ complete. That 25-second run created 126 raw records and a separate retained
 file and confirmed the expected combined and per-battery topics, but remains a
 point-in-time verification rather than evidence for numeric thresholds.
 
-A capture configured for 86,400 seconds began at approximately `2026-07-16
-02:00 America/Chicago` as `solardt-sa` in root-owned detached tmux session
-`solarassistant-24h`. It preserves complete raw and separate retained evidence.
-The active collector must not be stopped, restarted, redeployed, or modified
-without Chris's explicit approval. Evidence integrity, storage growth, and
-operating coverage remain post-capture review work before any new deadband
-proposal.
+The later 86,400-second capture completed normally and passed its completion
+review with qualifications. It provides substantially broader raw coverage of
+the missing operating conditions than the short evidence assessed here. A new,
+separately reviewed deadband assessment may use that capture only after an
+approved evidence-access and analysis plan. The collector is no longer
+running, and no numeric deadband or retention change is approved by the capture
+result or this document.
 
 ## 13. Explicit exclusions
 

@@ -3,8 +3,8 @@
 ## Status
 
 The raw collector was manually verified on 2026-07-14. The first separate
-retained-output slice was implemented in commit `4e069bb` and verified offline;
-it has not been live-device verified. Commit `dc1adc9` completed the first
+retained-output slice was implemented in commit `4e069bb`, verified offline,
+and subsequently exercised by the completed 24-hour capture. Commit `dc1adc9` completed the first
 offline raw-evidence deadband assessment, but the evidence was insufficient for
 numeric thresholds. Collector:
 `src/solar_digital_twin/collectors/solarassistant.py`.
@@ -13,10 +13,30 @@ Commit `39548b1` completed the repository-side dedicated runtime support. The
 runtime and credential were subsequently installed under the approved practical
 Home Assistant-style trusted-host model, runtime metadata and access boundaries
 passed committed verification, and one authenticated manual run succeeded as
-`solardt-sa`. No persistent service was created. A controlled 24-hour capture
-is now active as `solardt-sa` in root-owned detached tmux session
-`solarassistant-24h`, configured for 86,400 seconds from approximately
-`2026-07-16 02:00 America/Chicago`.
+`solardt-sa`. No persistent service was created. The controlled 24-hour capture
+subsequently completed normally and passed evidence-quality review with the
+permissions-related qualifications below.
+
+## Completed 24-hour capture
+
+The capture ran from `2026-07-16T07:00:43.194Z` through
+`2026-07-17T07:00:41.713Z`, covering 86,398.519 of the requested 86,400
+seconds. The monitor reported `stopped_early: false`, 8,219 completed polls,
+42 records per poll, 345,198 raw records, 2,705 retained records, 80,199,183
+raw bytes, and zero invalid complete records. Average observed poll cadence was
+approximately 10.513 seconds, or 95.13% of an exact ten-second poll schedule.
+No monitor-observed receipt gap exceeded 30 seconds.
+
+Combined and per-battery SOC, voltage, current, power, cell-voltage, health,
+and temperature families were present. Full-duration coverage showed no
+evidence of premature HTTP `401` or `403` termination or a major outage. The
+result is **Passed with qualifications**.
+
+The protected runtime permissions correctly prevented unprivileged direct
+inspection of collector evidence and logs. Exact retained byte size, exact
+largest sub-30-second gap, trailing-line condition, and transient collector-log
+errors therefore were not independently confirmed. This is a permissions
+boundary, not a capture failure.
 
 ## Purpose
 
@@ -182,14 +202,10 @@ and 53.3 V, 53.4 V, and 53.2 V for combined, Battery 1, and Battery 2. Combined
 current and power were zero. These are short point-in-time observations, not a
 long-term operating characterization.
 
-The controlled 24-hour capture is active. During it, the installed collector
-must not be stopped, restarted, redeployed, or modified without Chris's explicit
-approval. Safe development may continue only when it cannot alter the installed
-collector or retained-output behavior. The next bounded work is an offline-only
-reproduction and tested correction of the monitor badge; it must preserve
-read-only operation and must not be deployed during the capture without later
-explicit approval. Numeric deadbands, SQLite, portal integration, systemd, and
-persistent service operation remain deferred.
+The controlled 24-hour capture and completion review are complete. The
+collector is no longer running. Numeric deadbands, SQLite, portal integration,
+systemd, persistent service operation, and any future capture remain separately
+reviewed and approved.
 
 The collector supports `--password-file` and `--output-dir` for that runtime.
 Password-file loading precedes the existing environment and interactive prompt
@@ -285,6 +301,6 @@ The completed short run demonstrated:
 - evidence ignored by Git
 - clean termination without evidence corruption
 
-It also confirmed creation of both raw and separate retained NDJSON files. That
-short verification did not itself start persistent or long-running collection;
-the separately authorized 24-hour capture described above is now active.
+It also confirmed creation of both raw and separate retained NDJSON files. The
+later separately authorized 24-hour capture and its completion review are
+documented above.

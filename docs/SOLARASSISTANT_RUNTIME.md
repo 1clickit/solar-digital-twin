@@ -21,8 +21,8 @@ A one-time authenticated collector verification also completed successfully as
 environment, and dedicated `/var/lib` evidence output. No systemd service was
 created or enabled. Subsequently, a controlled 24-hour collector was started as
 `solardt-sa` in the root-owned detached tmux session `solarassistant-24h` at
-approximately `2026-07-16 02:00 America/Chicago`. It was configured for 86,400
-seconds and should stop automatically.
+approximately `2026-07-16 02:00 America/Chicago`. It completed normally after
+86,398.519 seconds of evidence coverage against its configured 86,400 seconds.
 
 ## Purpose and boundary
 
@@ -163,23 +163,22 @@ observations were 78% combined SOC, 79% Battery 1 SOC, 77% Battery 2 SOC,
 53.3 V combined voltage, 53.4 V Battery 1 voltage, and 53.2 V Battery 2 voltage.
 Combined current and power were zero during the short window.
 
-## Active capture boundary and deferred stages
+## Completed capture and deferred stages
 
-The installed collector must not be stopped, restarted, redeployed, or modified
-without Chris's explicit approval. Safe repository development may continue
-only when it cannot alter the installed collector or retained-output behavior.
-Collector PID 92638 was a transient historical observation, not stable runtime
-configuration.
+The controlled collector is no longer running. Collector PID 92638 was a
+transient historical observation, not stable runtime configuration. Any future
+collector start, deployment, or installed-runtime change still requires
+Chris's explicit approval.
 
 Persistent systemd collection, numeric deadbands, SQLite normalization, and
-portal integration remain deferred. The next bounded stage is a controlled
-longer raw and retained capture at the normal 10-second interval, initially
-targeting approximately 24 hours without enabling a persistent service.
+portal integration remain deferred. The completed 24-hour result and its
+permissions-related qualifications are recorded in
+`docs/SOLARASSISTANT_TELEMETRY_PLAN.md`.
 
 The separate LAN-only live-capture monitor is installed and running as
 `solardt-sa` in root-owned detached tmux session `solarassistant-monitor` at
 `http://192.168.3.11:8792`; `GET /health` returned `{"status":"ok"}`. Its
 observed PID 92674 is transient, not configuration. The fresh-data `Unknown`
-badge is a minor deferred correction and does not block capture. Any correction
-must be reproduced and tested offline, preserve read-only operation, and must
-not be deployed during the active capture without explicit approval.
+badge correction is committed but has not been deployed. The monitor now
+reports the completed capture as stale, as expected. Any deployment or monitor
+restart still requires explicit approval.

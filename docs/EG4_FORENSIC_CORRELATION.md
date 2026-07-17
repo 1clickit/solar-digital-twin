@@ -165,7 +165,12 @@ Implemented and covered by offline collector-level tests:
 - a 30-second heartbeat uses monotonic elapsed time to retain stable frequency periodically
 - invalid frequency values remain raw-only and do not alter retention state
 
-The retained stage has not yet been verified against the live ESP32.
+The retained stage was verified by the completed 12-hour ESP32 capture. The raw
+and retained files parsed without malformed or truncated records, used
+canonical UTC receipt timestamps, contained all 17 approved public entity IDs
+and no unapproved IDs, and preserved every retained record unchanged and in raw
+order. The high retained/raw ratios (approximately 91.38% by line and 95.77% by
+byte) remain subject to the separately planned retention assessment.
 
 Still planned:
 
@@ -209,6 +214,14 @@ Planned significant-event handling may override normal suppression and preserve
 complete one-second pre-event, event, and post-event evidence.
 
 ## Evidence Roles
+
+The complete ESP32 capture window overlaps the SolarAssistant capture. Both
+sources use `solardt` UTC receipt timestamps, and the completion review found no
+clock reversal or timezone conflict. SolarAssistant samples average about 10.5
+seconds apart while the ESP32 primary cadence is about one second. The evidence
+is suitable for a later bounded offline correlation analysis after the ESP32
+retention assessment. Matching EG4 evidence availability must still be
+established before a three-source correlation is authorized.
 
 ### EG4 Data
 

@@ -2,44 +2,56 @@
 
 ## Objective
 
-Perform focused browser review of the completed synthetic Battery cell voltage
-marker and avionics-style readout experiment.
+Perform the separately reviewed, offline ESP32 full-capture retention
+assessment defined in `docs/ESP32_FORENSIC_TELEMETRY_PLAN.md`.
+
+## Context
+
+The fixed 12-hour ESP32 capture completed successfully with 43,199.774 seconds
+of coverage, 431,513 raw records, and 394,327 retained records. Integrity review
+found no malformed or truncated records, backward timestamps, unapproved entity
+IDs, unavailable records, or reconnect/error loop. The retained/raw ratios were
+approximately 91.38% by line count and 95.77% by bytes; those high ratios are
+observations, not conclusions about retention policy.
+
+The overlapping SolarAssistant 24-hour capture also completed normally and
+passed with documented permissions-related qualifications. Both sources use
+compatible `solardt` UTC receipt timestamps.
 
 ## Scope
 
-1. Confirm the short blue Min, white Avg, and red Max markers remain legible
-   while naturally overlapping for closely balanced cells.
-2. Confirm separation becomes useful as differential increases without adding
-   artificial offsets or full-length needles.
-3. Confirm the compact lower-center Min/Avg/Max and dynamic differential
-   readout remains readable at desktop and responsive widths.
-4. Confirm the red Max marker cannot be mistaken for the substantially larger
-   under-voltage, over-voltage, or simultaneous-fault banners.
-5. Preserve the fixed scale, red endpoints, caution regions, alarm priority,
-   and actual abnormal values.
+1. Independently confirm the full-capture retained-to-raw line and byte ratios.
+2. Attribute retained volume to fields, value changes, availability
+   transitions, heartbeats, status changes, and forensic events.
+3. Determine whether the current policy preserves meaningful information or
+   retains unnecessary volume.
+4. Produce a recommendation on whether retention tuning is justified.
+5. Preserve raw evidence as authoritative and leave both evidence files
+   unchanged.
+6. Do not change collector code, retention policy, thresholds, firmware,
+   runtime state, services, EG4 workflows, or SolarAssistant behavior.
+7. Require separate review and explicit approval before any retention-code or
+   policy change.
 
-Do not connect the experiment to live data, evidence, collectors, APIs,
-credentials, or an installed portal. Do not implement production alarms or
-event logging.
+## Following task
 
-## Operational boundaries
+After the retention assessment is reviewed, prepare a separately bounded
+offline EG4/SolarAssistant/ESP32 correlation-analysis plan. The complete ESP32
+window overlaps SolarAssistant and their UTC receipt timestamps are compatible,
+but matching EG4 evidence availability must be established before three-source
+correlation begins.
 
-The configured ESP32 and SolarAssistant capture periods should have completed,
-but completion and evidence integrity have not been verified. Until separately
-approved read-only verification occurs, do not signal, attach to, restart,
-redeploy, or modify either collector, its runtime, retention behavior, or
-evidence. EG4 workflows remain unchanged. Repository work is allowed only when
-it cannot affect protected runtime state or evidence outputs.
+## Monitor boundary
 
-## Following operational work
-
-Separately approved minimal read-only completion and evidence-integrity
-verification remains required before detailed correlation, retention analysis,
-monitor deployment, collector restart, or any evidence-dependent work. Preserve
-the verification sequence and later ESP32 retention assessment in
-`PROJECT_STATE.md` and `docs/ESP32_FORENSIC_TELEMETRY_PLAN.md`.
+The SolarAssistant monitor remains running and healthy but stale after capture
+completion. A read-only inspection inadvertently included its in-memory abort-
+control token field in command output; the token was not used, abort was
+disabled, and no credential was accessed. Before any future abort-capable
+capture, rotating that token requires a separately approved monitor restart.
+Do not restart or deploy the monitor during the retention assessment.
 
 ## Success
 
-Chris can decide whether the marker and readout presentation is accepted or
-needs one narrowly described visual adjustment without changing safety meaning.
+The high retained volume is explained quantitatively, the policy receives an
+evidence-based keep-or-tune recommendation, authoritative raw evidence remains
+unchanged, and any implementation remains separately approved.

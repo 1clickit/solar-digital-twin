@@ -2,10 +2,10 @@
 
 ## Status
 The raw standalone collector was implemented and manually verified on
-2026-07-13. The separate retained-output stage is covered by offline tests. A
-fixed 12-hour live-verification capture launched successfully on 2026-07-16 as
-described below; final retained-output behavior remains pending completion and
-evidence-integrity review. The collector is
+2026-07-13. The separate retained-output stage is covered by offline tests. The
+fixed 12-hour live-verification capture completed successfully on 2026-07-17
+and passed evidence-integrity review as described below. Retention-policy
+interpretation remains pending the separately reviewed assessment. The collector is
 `src/solar_digital_twin/collectors/esp32_sse.py`.
 
 ## Collection Decision
@@ -30,28 +30,38 @@ A separate sibling `esp32_sse_*_retained.ndjson` file contains unchanged copies 
 
 Raw evidence is primary. If retained output cannot be opened or later fails during retained processing, writing, or flushing, the collector reports the first failure once, disables retained output for that run, and continues raw collection.
 
-## Active Controlled 12-Hour Capture
+## Completed Controlled 12-Hour Capture
 
-The fixed capture launched successfully at `2026-07-16 13:05:13
-America/Chicago` as unprivileged user `chris` in detached tmux session
-`esp32-forensic-12h`. It is configured for 43,200 seconds and should stop
-automatically at approximately `2026-07-17 01:05 America/Chicago`, allowing up
-to about 30 seconds for a pending network read. PID 107886 was observed at
-launch but is transient and not stable runtime configuration.
+The fixed capture launched at `2026-07-16 13:05:13 America/Chicago` as
+unprivileged user `chris` in detached tmux session `esp32-forensic-12h`, ran for
+its requested 43,200 seconds, and stopped automatically. PID 107886 was a
+transient launch observation, not stable runtime configuration.
 
-Active files:
+Evidence files:
 
 - raw authoritative evidence:
   `/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z.ndjson`;
 - derived retained output:
   `/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z_retained.ndjson`.
 
-Initial health checks found exactly one collector process, current receipt
-timestamps, both files growing, no immediate reconnect or error loop, and a
-clean repository working tree. During a 10-second interval, raw grew from 498
-to 598 lines and retained grew from 470 to 566 lines. This initially high
-retained-to-raw ratio is an early observation only, not a final retention
-assessment.
+The reviewed window was `2026-07-16T18:05:14.599Z` through
+`2026-07-17T06:05:14.373Z`, or 43,199.774 seconds. Raw evidence contains
+431,513 records and 156,174,965 bytes; retained output contains 394,327 records
+and 149,568,755 bytes, for 305,743,720 combined bytes. Both files end with a
+newline. All records parsed, timestamps never moved backward, the largest raw
+gap was 1.102 seconds, and primary telemetry median cadence was approximately
+1.001 seconds.
+
+All 17 approved public entity IDs appeared and no unapproved ID appeared.
+Every timestamp used canonical UTC; no unavailable record or reconnect/error
+loop was found. Every retained record matched an unchanged raw record in the
+same order. Repeated millisecond receipt timestamps represented distinct
+events received within the same millisecond, not duplicate records. The result
+is **Passed**.
+
+The retained/raw ratios are approximately 91.38% by line count and 95.77% by
+bytes. These are inputs to the following assessment, not evidence that the
+policy should already change.
 
 Purposes:
 
@@ -59,41 +69,28 @@ Purposes:
 - preserve complete raw ESP32 SSE evidence and the separate retained stream;
 - capture high-resolution AC-couple power, active-microinverter count, voltage,
   frequency, ramp-rate, status, and forensic-event observations;
-- obtain useful overlap with the active SolarAssistant capture and normal EG4
+- obtain useful overlap with the concurrent SolarAssistant capture and normal EG4
   collection workflow;
 - where timing permits, include daytime solar operation, sunset, production
   shutdown, and evening load or battery transitions; and
 - support later timestamp alignment and cross-source forensic analysis.
 
-The capture changes no ESP32 firmware or configuration. It authorizes no change
+The capture changed no ESP32 firmware or configuration. It authorizes no change
 to the EG4 collector, cadence, portal, SQLite, equipment settings, SolarAssistant
-collector, or SolarAssistant retained-output behavior. The existing
-SolarAssistant capture must not be stopped, restarted, or altered. Raw evidence
-remains authoritative, and retained output is derived.
+collector, or SolarAssistant retained-output behavior. Raw evidence remains
+authoritative, and retained output is derived.
 
 This first run is evidence collection and live-retention verification, not
 final causal analysis. Cloud cover and normal solar variability remain possible
-explanations for power changes. Success requires automatic completion plus
+explanations for power changes. Success required automatic completion plus
 intact, reviewable raw and retained evidence with useful timing coverage; it
-does not require an AC-couple fault to occur.
-
-Until completion verification, do not stop, restart, signal, attach to,
-redeploy, or modify this collector; change collector or retention behavior; or
-alter or truncate either active evidence file. Do not modify the active
-SolarAssistant collector. EG4 workflows remain unchanged. Ordinary repository
-development may continue only when it cannot affect these active processes or
-evidence outputs.
-
-After the configured ESP32 and SolarAssistant capture periods should have
-completed, separately approved minimal read-only verification will confirm
-automatic completion, evidence presence, final metadata and integrity, and
-whether either capture appears prematurely terminated. Detailed correlation,
-retention tuning, monitor deployment, collector restart, and analysis remain
-outside that verification work unit and require a separate reviewed plan.
+did not require an AC-couple fault. That success criterion was met. Preserve
+both files unchanged. Collector or retention changes remain separately
+reviewed and approved.
 
 ## Following Post-Capture ESP32 Retention Assessment
 
-Only after completion and evidence integrity are confirmed, a separately
+Completion and evidence integrity are confirmed. The immediate separately
 reviewed ESP32 retention assessment must:
 
 1. calculate the full-capture retained-to-raw line ratio;

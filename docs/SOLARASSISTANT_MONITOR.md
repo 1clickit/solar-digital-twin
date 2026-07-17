@@ -14,15 +14,16 @@ detached tmux session `solarassistant-monitor` at
 No systemd service is included. Integration into the primary project portal
 remains deferred.
 
-The running monitor may continue to display an `Unknown` status badge despite
-fresh data. This is not a capture blocker. Commit `a227b68` reproduced the
+The running monitor reports the completed capture as `Complete` and its
+freshness as `Stale`, which is expected now that collection has ended. Commit
+`a227b68` reproduced the earlier fresh-data `Unknown` badge defect offline: bare JavaScript `status` resolved to the browser-provided
 defect offline: bare JavaScript `status` resolved to the browser-provided
 `window.status` value instead of the intended badge element. The correction
 explicitly binds that element and uses it for normal rendering and fetch-error
 fallback. A regression test explicitly rejects bare `status.textContent`.
 Focused monitor tests passed (27), and the full suite passed (87). Backend
 status semantics and read-only monitor behavior were unchanged. The commit is
-pushed but has not been deployed to the active monitor. Its PID was observed as
+pushed but has not been deployed to the running monitor. Its PID was observed as
 92674, but PIDs are transient observations and not stable runtime configuration.
 
 ## Data flow and in-memory operation
@@ -146,24 +147,20 @@ LAN page can see the displayed battery telemetry. The in-memory token limits
 cross-site and accidental abort requests; future OPNsense containment remains
 the planned network boundary.
 
-## Active-capture boundary and later workflow
+## Completed-capture boundary and later workflow
 
-The active collector and monitor must not be stopped, restarted, signaled,
-redeployed, or modified without Chris's explicit approval. Safe development may
-continue only when it cannot alter the installed collector or retained-output
-behavior. The badge issue was reproduced and corrected offline while
-preserving read-only monitor operation. That repository work is complete, but
-deployment remains prohibited during the active capture and requires explicit
-later approval.
+The 86,400-second collector completed normally and is no longer running. The
+monitor remains running and `/health` returned `{"status":"ok"}`. Any monitor
+deployment or restart still requires separate explicit approval; a later
+approved update must restart only the monitor and preserve all captured
+evidence.
 
-After the configured 86,400-second capture should have completed, the next
-stage requires separately approved minimal read-only verification that the
-collector stopped automatically, evidence remains present, the monitor is
-reachable or its resulting state is understood, and no premature termination
-is indicated. Results must be reviewed before deployment is authorized. Only
-after separate approval may the installed monitor code be updated and only the
-monitor restarted, followed by real-browser badge verification while preserving
-all captured evidence. Capture completion has not yet been verified.
+During the read-only completion inspection, an in-memory abort-control token
+field was inadvertently included in command output. The token was not used,
+the capture was already complete, Abort was disabled, and no credential was
+accessed. The value and the sensitive output must not be recorded. Before any
+future abort-capable capture, a separately approved monitor restart must rotate
+the token. No immediate restart is justified by the completed capture.
 
 The committed launcher is `scripts/run_solarassistant_monitor.sh`. Its
 non-privileged `--check` validates local inputs without root, `/var/lib`, a

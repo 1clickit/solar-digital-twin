@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Validated synthetic Solar Digital Twin portal prototype and documented design direction; controlled captures still await separately approved completion verification
+Completed and integrity-reviewed July 16-17 SolarAssistant and ESP32 long-duration captures; ESP32 retention assessment is next
 
 Next Task:
-Perform focused browser review of the completed synthetic Battery cell voltage markers and avionics-style readout.
+Perform the separately reviewed, offline full-capture ESP32 retention assessment without changing evidence or retention behavior.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -134,8 +134,8 @@ main
 - The dedicated SolarAssistant runtime, credential, and manual authenticated
   verification are complete under the approved separate-identity and
   credential-isolation model
-- The controlled 24-hour raw and retained capture is now active; persistent
-  service operation remains a separate later stage
+- The controlled 24-hour raw and retained capture completed normally;
+  persistent service operation remains a separate later stage
 - Commit `39548b1` completed the repository-side dedicated SolarAssistant
   runtime preparation using the fixed `solardt-sa:solardt-sa` non-login system
   identity, administrator-owned `/opt/solar-digital-twin` runtime, protected
@@ -180,23 +180,25 @@ main
 - Verified current state on 2026-07-16: the dedicated runtime is installed
   under `/opt/solar-digital-twin`, and the administrator-controlled credential
   remains protected outside Git
-- A 24-hour capture launched as `solardt-sa` in the root-owned detached tmux
-  session `solarassistant-24h` at approximately `2026-07-16 02:00
-  America/Chicago`, configured for 86,400 seconds and automatic stop. Its
-  completion state has not yet been verified
-- The read-only live monitor was last verified running as `solardt-sa` in the
+- The 24-hour SolarAssistant capture covered `2026-07-16T07:00:43.194Z`
+  through `2026-07-17T07:00:41.713Z` (86,398.519 seconds of the requested
+  86,400), completed 8,219 polls and 345,198 raw records, and stopped normally
+  with `stopped_early: false`. It passed with the permissions qualifications
+  recorded in `docs/SOLARASSISTANT_TELEMETRY_PLAN.md`
+- The read-only monitor remains running as `solardt-sa` in the
   root-owned detached tmux session `solarassistant-monitor` at
   `http://192.168.3.11:8792`; its health endpoint returned `{"status":"ok"}`.
-  Its current state also remains pending separately approved verification
+  It reports capture state `Complete` and expected post-capture freshness
+  `Stale`; the collector is no longer running
 - Collector PID 92638 and monitor PID 92674 were historical observations only;
   PIDs are transient and are not stable runtime configuration
-- Until completion verification, the collector must not be stopped, restarted,
-  redeployed, or modified
-  without Chris's explicit approval. Safe development may continue only when it
-  cannot alter the installed collector or retained-output behavior
-- The installed monitor may continue to show an `Unknown` badge despite fresh
-  data. This remains non-blocking because the correction is committed and
-  pushed but has not been deployed to the active monitor
+- The installed monitor badge correction remains committed and pushed but not
+  deployed. Any monitor update or restart requires separate explicit approval
+- During read-only completion inspection, an in-memory abort-control token field
+  was inadvertently included in command output. It was not used, the completed
+  capture had Abort disabled, and no credential was accessed. Before a future
+  abort-capable capture, a separately approved monitor restart must rotate it;
+  the token value and sensitive output are not repository material
 - Commit `a227b68` reproduced the badge defect offline: bare JavaScript
   `status` resolved to the browser-provided `window.status` value instead of
   the intended badge element
@@ -242,31 +244,30 @@ main
 - First bounded Codex coding workflow completed successfully.
 - Existing ESP32 raw NDJSON filename and record stream remain intact as complete approved raw evidence.
 - Separate selectively retained ESP32 NDJSON output implemented with the documented 0.04 Hz frequency deadband and 30-second heartbeat.
-- ESP32 collector-level offline tests and repository health checks passed; the retained stream has not yet been verified against the live device.
+- ESP32 collector-level offline tests and repository health checks passed; the retained stream was subsequently verified by the completed 12-hour capture.
 - The fixed 12-hour ESP32 forensic capture launched successfully at
   `2026-07-16 13:05:13 America/Chicago` as unprivileged user `chris` in detached
   tmux session `esp32-forensic-12h`
-- It is configured for 43,200 seconds and should stop automatically at
-  approximately `2026-07-17 01:05 America/Chicago`, allowing up to about 30
-  seconds for a pending network read
+- It was configured for 43,200 seconds and stopped automatically after
+  43,199.774 seconds of receipt-time coverage
 - Collector PID 107886 was a transient historical observation, not stable
   runtime configuration
 - The capture's raw evidence path is
   `/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z.ndjson`;
   its derived retained sibling is
   `/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z_retained.ndjson`
-- Initial health confirmed exactly one collector, current timestamps, both files
-  growing, no immediate reconnect or error loop, and a clean repository tree.
-  Over 10 seconds, raw grew from 498 to 598 lines and retained from 470 to 566
-  lines
-- The initially high retained-to-raw ratio is an early observation only and is
-  not a final retention assessment
-- Until completion verification, do not stop, restart, signal, attach to,
-  redeploy, or modify the ESP32 collector; change its collector or retention
-  behavior; or alter or truncate either active evidence file
-- Do not modify the protected SolarAssistant collector. EG4 workflows remain
-  unchanged. Ordinary repository development may continue only when it cannot
-  affect either active process or its evidence outputs
+- The completed ESP32 window was `2026-07-16T18:05:14.599Z` through
+  `2026-07-17T06:05:14.373Z`: 431,513 raw records and 394,327 retained records,
+  zero malformed or truncated records, no backward timestamps, a 1.102-second
+  largest raw gap, and approximately 1.001-second median primary cadence. All
+  17 approved public entity IDs and no unapproved IDs were present
+- The ESP32 capture passed. Its retained/raw ratios were approximately 91.38%
+  by line and 95.77% by byte; interpretation and any tuning recommendation are
+  deferred to the next retention assessment, with raw evidence authoritative
+- The complete ESP32 window overlaps SolarAssistant, both use compatible
+  `solardt` UTC receipt timestamps, and no clock reversal or timezone conflict
+  was found. Later offline correlation is supportable, but matching EG4 evidence
+  availability must be established before three-source analysis
 - Commit `5fef46b` pushed to `origin/main`; `main` was clean and synchronized afterward.
 
 ## Current Reporting Implementation
