@@ -56,7 +56,8 @@
       margin: 1rem 0 1.2rem; padding: .72rem 1rem; border: 1px solid var(--state-warning);
       border-radius: .7rem; background: #332b18; color: #ffe5a3; font-weight: 750; text-align: center;
     }
-    .tabs { display: flex; gap: .4rem; overflow-x: auto; padding: .2rem .1rem .65rem; }
+    .tabs { display: flex; flex-wrap: wrap; gap: .4rem; padding: .2rem .1rem .65rem; }
+    .tab-divider { align-self: stretch; margin: 0 .25rem; border-left: 1px solid var(--border); }
     .tab {
       flex: 0 0 auto; border: 1px solid var(--border); border-radius: 999px; padding: .58rem .9rem;
       background: var(--panel-bg); color: var(--muted); font: inherit; font-size: .82rem; font-weight: 720; cursor: pointer;
@@ -70,7 +71,8 @@
     .operations-grid {
       display: grid; grid-template-columns: repeat(4, minmax(13rem, 1fr)); gap: .85rem;
     }
-    .battery-grid { display: grid; grid-template-columns: repeat(2, minmax(16rem, 1fr)); gap: .85rem; }
+    .operations-grid > .panel { height: 19rem; overflow: hidden; }
+    .battery-grid { display: grid; grid-template-columns: repeat(4, minmax(12rem, 1fr)); gap: .85rem; }
     .lower-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: .85rem; }
     .panel {
       min-width: 0; padding: 1rem; border: 1px solid var(--border); border-radius: 1rem;
@@ -80,6 +82,34 @@
     .panel--wide { grid-column: span 2; }
     .panel-head { display: flex; justify-content: space-between; gap: .65rem; align-items: start; }
     .panel-head h3 { max-width: 14rem; }
+    .forecast-scroll { height: 15.3rem; margin-top: .35rem; padding-right: .55rem; overflow-y: scroll; scrollbar-width: thin; scrollbar-color: var(--solar-input) var(--neutral-track); }
+    .forecast-initial { min-height: 15.5rem; }
+    .forecast-hero { padding: .48rem .6rem; border: 1px solid #665925; border-radius: .7rem; background: #2b2819; }
+    .forecast-hero strong { display: block; color: #ffe27a; font-size: .88rem; }
+    .forecast-energy { margin: .28rem 0 .08rem; font-size: 1.52rem; font-weight: 800; }
+    .forecast-bars { display: flex; align-items: end; justify-content: space-around; gap: .3rem; height: 8rem; margin: .55rem 0 0; padding-top: .65rem; border-bottom: 1px solid var(--border); }
+    .forecast-day { display: grid; grid-template-rows: 1fr auto auto; align-items: end; justify-items: center; gap: .18rem; height: 100%; color: var(--muted); font-size: .62rem; }
+    .forecast-bar { width: 1.2rem; height: var(--bar-height); min-height: .5rem; border-radius: .35rem .35rem .1rem .1rem; background: linear-gradient(#ffe37b, var(--solar-input)); }
+    .forecast-day b { color: var(--text); font-size: .64rem; }
+    .hourly-list { display: grid; gap: .28rem; }
+    .hourly-row { display: grid; grid-template-columns: 2.8rem 1fr auto; align-items: center; gap: .45rem; padding: .42rem .25rem; border-bottom: 1px solid var(--border); font-size: .72rem; }
+    .hourly-power { display: flex; align-items: center; gap: .4rem; }
+    .hourly-meter { width: 100%; height: .34rem; border-radius: 1rem; background: var(--neutral-track); overflow: hidden; }
+    .hourly-meter i { display: block; width: var(--hour-level); height: 100%; background: var(--solar-input); }
+    .forecast-map { margin-top: .8rem; padding-top: .55rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .64rem; }
+    .energy-summary { display: grid; grid-template-columns: repeat(4, minmax(9rem, 1fr)); gap: .7rem; margin-bottom: .9rem; }
+    .energy-card { padding: .85rem; border: 1px solid var(--border); border-radius: .8rem; background: var(--panel-bg); }
+    .energy-card strong { display: block; margin-top: .2rem; font-size: 1.35rem; }
+    .energy-pair { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+    .source-preview-notice { padding: .65rem .8rem; border: 1px solid var(--state-warning); border-radius: .7rem; background: #332b18; color: #ffe5a3; font-size: .78rem; }
+    .source-summary, .forecast-groups { display: flex; flex-wrap: wrap; gap: .45rem; margin: .7rem 0; }
+    .source-tools { display: flex; flex-wrap: wrap; gap: .55rem; align-items: center; margin: .75rem 0; }
+    .source-search { flex: 1 1 16rem; min-width: 0; padding: .55rem .7rem; border: 1px solid var(--border); border-radius: .6rem; background: var(--page-bg); color: var(--text); font: inherit; }
+    .source-filter { padding: .48rem .65rem; border: 1px solid var(--border); border-radius: .55rem; background: var(--panel-bg); color: var(--text); font: inherit; font-size: .75rem; }
+    .source-filter[aria-pressed="true"] { border-color: var(--focus); background: #233a59; }
+    .catalog { overflow-x: auto; }
+    .catalog table { min-width: 48rem; }
+    .complete-principle { margin-top: .75rem; padding-left: .75rem; border-left: .2rem solid var(--focus); color: var(--muted); font-size: .78rem; }
 
     .ring {
       position: relative; width: min(100%, var(--ring-size)); aspect-ratio: 1; margin: .45rem auto .15rem;
@@ -97,13 +127,24 @@
     .ring .outer-track, .ring .inner-track { stroke: var(--neutral-track); }
     .ring .outer-fill { stroke: var(--outer-color); }
     .ring .inner-fill { stroke: var(--inner-color); }
+    .ring .range-arc { stroke-width: 3; opacity: .42; stroke-dasharray: var(--range); stroke-dashoffset: var(--offset); }
+    .ring .solar-range { stroke: var(--solar-input); }
+    .ring .load-range { stroke: var(--house-load); }
+    .ring .range-mark { stroke: none; fill: var(--mark-color); opacity: .65; }
     .ring .current-upper { stroke: var(--battery-charging); }
     .ring .current-lower { stroke: var(--battery-discharging); }
     .ring .current-inner { stroke-width: calc(var(--ring-stroke) - 1); }
+    .battery-current-ring[data-current-state="positive"] .current-positive-arc { opacity: 1; }
+    .battery-current-ring[data-current-state="positive"] .current-negative-arc { opacity: .18; }
+    .battery-current-ring[data-current-state="negative"] .current-positive-arc { opacity: .18; }
+    .battery-current-ring[data-current-state="negative"] .current-negative-arc { opacity: 1; }
+    .battery-current-ring[data-current-state="neutral"] .current-positive-arc,
+    .battery-current-ring[data-current-state="neutral"] .current-negative-arc { opacity: .22; stroke: var(--state-unavailable); }
     .ring .comparison-fill { transform: rotate(180deg); transform-origin: 80px 80px; }
     .ring .range-start { transform: rotate(180deg); transform-origin: 80px 80px; }
     .ring-center { z-index: 1; text-align: center; width: 62%; }
     .primary-value { font-size: clamp(1.55rem, 3vw, 2.25rem); font-weight: 780; line-height: 1.05; }
+    .primary-value .unit { font-size: .56em; font-weight: 720; }
     .secondary-value { margin-top: .28rem; font-size: .9rem; font-weight: 680; }
     .tertiary-value { color: var(--muted); font-size: .74rem; }
     .ring-zero { position: absolute; left: -.1rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: .64rem; }
@@ -126,6 +167,52 @@
     .range-note { text-align: center; color: var(--muted); font-size: .68rem; }
     .delta-badge { display: inline-block; margin-top: .35rem; border: 1px solid var(--border); border-radius: 999px; padding: .16rem .45rem; color: var(--text); font-size: .68rem; font-weight: 720; }
     .sign-convention { margin: .5rem 0 0; text-align: center; color: var(--muted); font-size: .68rem; }
+    .current-positive { color: var(--battery-charging); }
+    .current-negative { color: var(--battery-discharging); }
+    .current-neutral { color: var(--state-unavailable); }
+    .cell-pair { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; margin: 1.15rem 0 .65rem; }
+    .cell-battery { text-align: center; }
+    .cell-dial { position: relative; width: min(100%, 10.5rem); aspect-ratio: 1; margin: .35rem auto .45rem; display: grid; place-items: center; border-radius: 50%; background: #111c2d; }
+    .cell-scale { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+    .cell-scale circle { fill: none; transform-origin: 80px 80px; }
+    .cell-scale-track { stroke: var(--neutral-track); stroke-width: 7; stroke-dasharray: 75 25; stroke-dashoffset: -41.67; }
+    .cell-caution-low, .cell-caution-high { stroke: var(--state-warning); stroke-width: 3; opacity: .7; }
+    .cell-caution-low { stroke-dasharray: 10 90; stroke-dashoffset: -41.67; }
+    .cell-caution-high { stroke-dasharray: 10 90; stroke-dashoffset: -106.67; }
+    .cell-normal-range { stroke: var(--state-healthy); stroke-width: 3; stroke-dasharray: 55 45; stroke-dashoffset: -51.67; opacity: .78; }
+    .cell-average-arc { stroke: var(--state-healthy); stroke-width: 6; stroke-linecap: round; stroke-dasharray: var(--operating-position) calc(100 - var(--operating-position)); stroke-dashoffset: -41.67; }
+    .cell-threshold { stroke-width: 2; opacity: .8; }
+    .cell-cutoff-marker, .cell-upper-marker { stroke: var(--battery-discharging); stroke-width: 3; }
+    .cell-extreme-marker { stroke: #0e1726; stroke-width: 1.5; }
+    .cell-max-marker { fill: var(--state-warning); }
+    .cell-min-marker { fill: var(--text); }
+    .cell-dial[data-state="under-voltage"] .cell-min-marker,
+    .cell-dial[data-state="under-over-voltage"] .cell-min-marker { transform: rotate(150deg); transform-origin: 80px 80px; }
+    .cell-dial[data-state="over-voltage"] .cell-max-marker,
+    .cell-dial[data-state="under-over-voltage"] .cell-max-marker { transform: rotate(60deg); transform-origin: 80px 80px; }
+    .cell-dial[data-state="under-voltage"] .cell-average-arc,
+    .cell-dial[data-state="over-voltage"] .cell-average-arc,
+    .cell-dial[data-state="under-over-voltage"] .cell-average-arc { stroke: var(--state-healthy); }
+    .cell-dial[data-state="normal"] .cell-average-arc { stroke: var(--state-healthy); }
+    .cell-values { z-index: 1; display: grid; gap: .08rem; line-height: 1.15; }
+    .cell-value { font-size: .66rem; color: var(--muted); }
+    .cell-value--average { font-size: .72rem; color: var(--text); font-weight: 800; }
+    .cell-value.out-of-range { color: var(--battery-discharging); font-weight: 750; }
+    .cell-differential { color: var(--muted); font-size: .68rem; }
+    .cell-differential[data-alert="true"] { color: var(--battery-discharging); font-weight: 750; }
+    .cell-scale-note { margin-top: .45rem; text-align: center; color: var(--muted); font-size: .64rem; }
+    .cell-alarm-stack { z-index: 2; display: none; width: 112%; gap: .22rem; }
+    .cell-alarm-banner { padding: .3rem .18rem; border: 1px solid var(--battery-discharging); background: #3a151b; color: var(--battery-discharging); font-size: .72rem; font-weight: 900; line-height: 1.05; text-align: center; white-space: nowrap; }
+    .cell-dial[data-state="under-voltage"] .cell-values,
+    .cell-dial[data-state="over-voltage"] .cell-values,
+    .cell-dial[data-state="under-over-voltage"] .cell-values { display: none; }
+    .cell-dial[data-state="under-voltage"] .cell-alarm-stack,
+    .cell-dial[data-state="over-voltage"] .cell-alarm-stack,
+    .cell-dial[data-state="under-over-voltage"] .cell-alarm-stack { display: grid; }
+    .cell-dial[data-state="under-voltage"] .alarm-over,
+    .cell-dial[data-state="over-voltage"] .alarm-under { display: none; }
+    .operations-grid .state-hero { margin: .9rem 0 .7rem; }
+    .operations-grid .health-summary { gap: .45rem; margin-top: .65rem; }
 
     .trend { width: 100%; height: 12rem; display: block; }
     .trend-grid { stroke: var(--border); stroke-width: 1; }
@@ -141,15 +228,19 @@
 
     @media (max-width: 76rem) {
       .operations-grid { grid-template-columns: repeat(3, minmax(13rem, 1fr)); }
-      .battery-grid { grid-template-columns: repeat(2, minmax(16rem, 1fr)); }
+      .battery-grid { grid-template-columns: repeat(3, minmax(12rem, 1fr)); }
+      .energy-summary { grid-template-columns: repeat(2, minmax(10rem, 1fr)); }
     }
     @media (max-width: 52rem) {
       .operations-grid, .battery-grid, .lower-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .energy-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .panel--wide { grid-column: span 2; }
     }
     @media (max-width: 35rem) {
       .shell { width: min(100% - 1rem, var(--content-width)); }
       .operations-grid, .battery-grid, .lower-grid { grid-template-columns: 1fr; }
+      .energy-summary, .energy-pair { grid-template-columns: 1fr; }
+      .energy-pair { grid-column: span 1; }
       .panel--wide { grid-column: span 1; }
       :root { --ring-size: 11.5rem; }
     }
@@ -173,12 +264,64 @@
       <button class="tab" id="tab-trends" type="button" role="tab" aria-selected="false" aria-controls="panel-trends" tabindex="-1">Trends</button>
       <button class="tab" id="tab-forensics" type="button" role="tab" aria-selected="false" aria-controls="panel-forensics" tabindex="-1">Forensics</button>
       <button class="tab" id="tab-sources" type="button" role="tab" aria-selected="false" aria-controls="panel-sources" tabindex="-1">Sources &amp; Traceability</button>
+      <span class="tab-divider" aria-hidden="true"></span>
+      <button class="tab" id="tab-eg4" type="button" role="tab" aria-selected="false" aria-controls="panel-eg4" tabindex="-1">EG4</button>
+      <button class="tab" id="tab-sa" type="button" role="tab" aria-selected="false" aria-controls="panel-sa" tabindex="-1">SA</button>
+      <button class="tab" id="tab-esp32" type="button" role="tab" aria-selected="false" aria-controls="panel-esp32" tabindex="-1">ESP32</button>
+      <button class="tab" id="tab-volcast" type="button" role="tab" aria-selected="false" aria-controls="panel-volcast" tabindex="-1">Volcast</button>
     </nav>
 
     <section class="tab-panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
     <h2>Current operation</h2>
     <section class="operations-grid" aria-label="Current system operation">
-      <article class="panel" aria-label="Overall system health and source freshness: healthy, primary sources fresh">
+      <article class="panel solar-card" aria-label="Solar and house load ring: 6.4 kilowatts solar, 3.1 kilowatts load, net surplus 3.3 kilowatts, with synthetic rolling 60-minute minimum and maximum context">
+        <div class="panel-head"><h3>Solar vs house load</h3><span class="tag healthy">3.3 kW surplus</span></div>
+        <div class="ring comparison-ring solar-load-ring" data-ring="solar-load-comparison" style="--outer-color:var(--solar-input);--inner-color:var(--house-load)">
+          <svg viewBox="0 0 160 160" role="img" aria-label="Outer yellow ring is solar input at 6.4 kilowatts; inner white ring is house load at 3.1 kilowatts">
+            <circle class="outer-track" cx="80" cy="80" r="70"/>
+            <circle class="inner-track" cx="80" cy="80" r="56"/>
+            <circle class="range-arc solar-range range-start" style="--range:18 82;--offset:-14" pathLength="100" cx="80" cy="80" r="64"/>
+            <circle class="range-arc load-range range-start" style="--range:12 88;--offset:-31" pathLength="100" cx="80" cy="80" r="50"/>
+            <circle class="range-mark" style="--mark-color:var(--solar-input)" cx="27" cy="44" r="2"/>
+            <circle class="range-mark" style="--mark-color:var(--solar-input)" cx="133" cy="44" r="2"/>
+            <circle class="range-mark" style="--mark-color:var(--house-load)" cx="39" cy="48" r="1.8"/>
+            <circle class="range-mark" style="--mark-color:var(--house-load)" cx="121" cy="48" r="1.8"/>
+            <circle class="fill outer-fill comparison-fill" style="--level:80" pathLength="100" cx="80" cy="80" r="70"/>
+            <circle class="fill inner-fill comparison-fill" style="--level:39" pathLength="100" cx="80" cy="80" r="56"/>
+          </svg>
+          <div class="ring-center"><div class="primary-value">3.3 <span class="unit">kW</span></div><div class="secondary-value">13.8 A</div><div class="tertiary-value">240.1 V</div></div>
+        </div>
+        <div class="legend"><span><i class="key" style="--key:var(--solar-input)"></i><b>Solar 6.4 kW</b></span><span><i class="key" style="--key:var(--house-load)"></i>Load 3.1 kW</span></div>
+      </article>
+
+      <article class="panel volcast-card" aria-label="Synthetic Volcast-style solar forecast, not measured production">
+        <div class="panel-head"><h3>Volcast forecast</h3><span class="tag warning">Synthetic forecast</span></div>
+        <div class="forecast-scroll" tabindex="0" aria-label="Scrollable synthetic solar forecast details">
+          <div class="forecast-initial">
+            <div class="forecast-hero"><strong>Favorable solar day expected</strong><div class="forecast-energy">26.8 kWh</div><div class="source">Expected today · forecast, not measured</div></div>
+            <div class="forecast-bars" aria-label="Synthetic five-day daily energy forecast">
+              <div class="forecast-day"><div class="forecast-bar" style="--bar-height:82%"></div><b>26.8</b><span>Thu</span></div>
+              <div class="forecast-day"><div class="forecast-bar" style="--bar-height:64%"></div><b>20.9</b><span>Fri</span></div>
+              <div class="forecast-day"><div class="forecast-bar" style="--bar-height:91%"></div><b>29.7</b><span>Sat</span></div>
+              <div class="forecast-day"><div class="forecast-bar" style="--bar-height:73%"></div><b>23.8</b><span>Sun</span></div>
+              <div class="forecast-day"><div class="forecast-bar" style="--bar-height:48%"></div><b>15.6</b><span>Mon</span></div>
+            </div>
+          </div>
+          <h3>Hourly forecast</h3>
+          <div class="hourly-list">
+            <div class="hourly-row"><time>10:00</time><div class="hourly-power"><div class="hourly-meter"><i style="--hour-level:45%"></i></div><b>3.2 kW</b></div><span>27°C</span></div>
+            <div class="hourly-row"><time>11:00</time><div class="hourly-power"><div class="hourly-meter"><i style="--hour-level:69%"></i></div><b>4.9 kW</b></div><span>29°C</span></div>
+            <div class="hourly-row"><time>12:00</time><div class="hourly-power"><div class="hourly-meter"><i style="--hour-level:87%"></i></div><b>6.2 kW</b></div><span>31°C</span></div>
+            <div class="hourly-row"><time>13:00</time><div class="hourly-power"><div class="hourly-meter"><i style="--hour-level:94%"></i></div><b>6.7 kW</b></div><span>32°C</span></div>
+            <div class="hourly-row"><time>14:00</time><div class="hourly-power"><div class="hourly-meter"><i style="--hour-level:85%"></i></div><b>6.1 kW</b></div><span>33°C</span></div>
+            <div class="hourly-row"><time>15:00</time><div class="hourly-power"><div class="hourly-meter"><i style="--hour-level:63%"></i></div><b>4.5 kW</b></div><span>33°C</span></div>
+          </div>
+          <p class="source">Last update - Thursday - 07-16-2026 - 17:56</p>
+          <div class="forecast-map">API-shaped synthetic fields: state 26.8 · unit_of_measurement kWh · daily energy_kwh / peak_w · hourly entries · detailed five-minute entries deferred to future analytical views · api_version v1</div>
+        </div>
+      </article>
+
+      <article class="panel health-card" aria-label="Overall system health and source freshness: healthy, primary sources fresh">
         <div class="panel-head"><h3>System health</h3><span class="tag healthy">✓ Healthy</span></div>
         <div class="state-hero healthy"><span class="state-icon" aria-hidden="true">✓</span><div><div class="state-title">Normal</div><div class="source">4 of 4 sources available</div></div></div>
         <div class="health-summary">
@@ -189,43 +332,7 @@
         <p class="label">Synthetic source ages</p>
       </article>
 
-      <article class="panel" aria-label="Solar and house load comparison ring: 6.4 kilowatts solar, 3.1 kilowatts load, net surplus 3.3 kilowatts">
-        <div class="panel-head"><h3>Solar vs house load</h3><span class="tag healthy">3.3 kW surplus</span></div>
-        <div class="ring comparison-ring solar-load-ring" data-ring="solar-load-comparison" style="--outer-color:var(--solar-input);--inner-color:var(--house-load)">
-          <svg viewBox="0 0 160 160" role="img" aria-label="Outer yellow ring is solar input at 6.4 kilowatts; inner white ring is house load at 3.1 kilowatts">
-            <circle class="outer-track" cx="80" cy="80" r="70"/>
-            <circle class="inner-track" cx="80" cy="80" r="56"/>
-            <circle class="fill outer-fill comparison-fill" style="--level:80" pathLength="100" cx="80" cy="80" r="70"/>
-            <circle class="fill inner-fill comparison-fill" style="--level:39" pathLength="100" cx="80" cy="80" r="56"/>
-          </svg>
-          <div class="ring-center"><div class="primary-value">+3.3 kW</div><div class="secondary-value">13.8 AC amps net</div><div class="tertiary-value">240.1 V AC</div></div>
-        </div>
-        <div class="legend"><span><i class="key" style="--key:var(--solar-input)"></i><b>Solar 6.4 kW</b></span><span><i class="key" style="--key:var(--house-load)"></i>Load 3.1 kW</span></div>
-        <div class="range-note">Grid return/export: 0.0 kW · available when active</div>
-        <p class="source">ESP32 1s · Synthetic measured solar · normalized load 6s · Synthetic calculated load</p>
-      </article>
-
-      <article class="panel" aria-label="Battery current comparison: Battery 1 positive 25.8 amps DC and Battery 2 positive 25.3 amps DC, net positive 51.1 amps DC charging">
-        <div class="panel-head"><h3>Battery current comparison</h3><span class="tag healthy">Both charging</span></div>
-        <div class="ring bipolar-ring battery-current-ring" data-ring="battery-current-comparison">
-          <svg viewBox="0 0 160 160" role="img" aria-label="Outer bipolar ring is Battery 1 current and inner bipolar ring is Battery 2 current. Positive fills upper green halves and negative fills lower red halves from a shared neutral point.">
-            <path class="upper-track" pathLength="100" d="M10 80 A70 70 0 0 1 150 80"/>
-            <path class="lower-track" pathLength="100" d="M10 80 A70 70 0 0 0 150 80"/>
-            <path class="upper-track current-inner" pathLength="100" d="M25 80 A55 55 0 0 1 135 80"/>
-            <path class="lower-track current-inner" pathLength="100" d="M25 80 A55 55 0 0 0 135 80"/>
-            <path class="fill current-upper" style="--level:52" pathLength="100" d="M10 80 A70 70 0 0 1 150 80"/>
-            <path class="fill current-lower inactive" style="--level:0" pathLength="100" d="M10 80 A70 70 0 0 0 150 80"/>
-            <path class="fill current-upper current-inner" style="--level:51" pathLength="100" d="M25 80 A55 55 0 0 1 135 80"/>
-            <path class="fill current-lower current-inner inactive" style="--level:0" pathLength="100" d="M25 80 A55 55 0 0 0 135 80"/>
-          </svg>
-          <div class="ring-center"><div class="primary-value">+51.1 A</div><div class="secondary-value">2.8 kW DC</div><div class="tertiary-value">Net charging · 54.8 V DC</div></div>
-        </div>
-        <div class="legend"><span><b>Outer · B1 +25.8 A DC</b></span><span>Inner · B2 +25.3 A DC</span></div>
-        <p class="sign-convention">Positive = charging · negative = discharging</p>
-        <p class="source">SolarAssistant / JK BMS · 4s old · Synthetic measured</p>
-      </article>
-
-      <article class="panel" aria-label="Current AC source state: solar and battery supporting loads, grid connected">
+      <article class="panel ac-source-card" aria-label="Current AC source state: solar and battery supporting loads, grid connected">
         <div class="panel-head"><h3>Current AC source</h3><span class="tag healthy">Connected</span></div>
         <div class="state-hero healthy"><span class="state-icon" aria-hidden="true">☀</span><div><div class="state-title">Solar + battery</div><div class="source">Grid connected · no import</div></div></div>
         <div class="health-summary">
@@ -239,8 +346,8 @@
 
     <h2>Battery bank</h2>
     <section class="battery-grid" aria-label="Source-separated battery measurements">
-      <article class="panel" aria-label="Combined SOC comparison ring: trusted SolarAssistant and JK BMS SOC 78 percent, EG4 comparison estimate 83 percent">
-        <div class="panel-head"><h3>Battery SOC comparison</h3><span class="tag healthy">Trusted fresh</span></div>
+      <article class="panel" aria-label="Battery SOC ring: trusted SolarAssistant and JK BMS SOC 78 percent, EG4 estimate 83 percent">
+        <div class="panel-head"><h3>Battery SOC</h3><span class="tag healthy">Trusted fresh</span></div>
         <div class="ring comparison-ring soc-comparison-ring" data-ring="soc-comparison" style="--outer-color:var(--trusted-soc);--inner-color:var(--estimated-soc)">
           <svg viewBox="0 0 160 160" role="img" aria-label="Outer green ring is trusted JK BMS SOC at 78 percent; inner blue ring is EG4 comparison-only estimate at 83 percent">
             <circle class="outer-track" cx="80" cy="80" r="70"/>
@@ -251,11 +358,10 @@
           <div class="ring-center"><div class="primary-value">78%</div><div class="secondary-value">Trusted SOC</div><div class="delta-badge">EG4 +5 pts</div></div>
         </div>
         <div class="legend"><span><i class="key" style="--key:var(--trusted-soc)"></i><b>JK BMS 78%</b></span><span><i class="key" style="--key:var(--estimated-soc)"></i>EG4 83% · comparison only</span></div>
-        <p class="source">SolarAssistant 4s · EG4 8m · no averaging or correction</p>
       </article>
 
-      <article class="panel" aria-label="Combined battery voltage comparison ring: average 54.80 volts DC, battery difference 0.05 volts">
-        <div class="panel-head"><h3>Battery voltage comparison</h3><span class="tag healthy">Both in range</span></div>
+      <article class="panel" aria-label="Battery voltage ring: bank voltage 54.80 volts DC with Battery 1 and Battery 2 values">
+        <div class="panel-head"><h3>Battery voltage</h3><span class="tag healthy">Both in range</span></div>
         <div class="ring comparison-ring voltage-comparison-ring" data-ring="voltage-comparison" style="--outer-color:var(--battery-one);--inner-color:var(--battery-two)">
           <svg viewBox="0 0 160 160" role="img" aria-label="Outer teal ring is Battery 1 at 54.82 volts DC; inner purple ring is Battery 2 at 54.77 volts DC">
             <circle class="outer-track" cx="80" cy="80" r="70"/>
@@ -263,11 +369,72 @@
             <circle class="fill outer-fill comparison-fill" style="--level:68.2" pathLength="100" cx="80" cy="80" r="70"/>
             <circle class="fill inner-fill comparison-fill" style="--level:67.7" pathLength="100" cx="80" cy="80" r="56"/>
           </svg>
-          <div class="ring-center"><div class="primary-value">54.80 V</div><div class="secondary-value">Average DC</div><div class="delta-badge">ΔV 0.05 V</div></div>
+          <div class="ring-center"><div class="primary-value">54.80 <span class="unit">VDC</span></div></div>
         </div>
         <div class="legend"><span><i class="key" style="--key:var(--battery-one)"></i><b>Battery 1 · 54.82 V</b></span><span><i class="key" style="--key:var(--battery-two)"></i>Battery 2 · 54.77 V</span></div>
-        <div class="range-note">48–58 V DC display range · JK BMS · 4s old</div>
-        <p class="source">Synthetic measured values · average calculated</p>
+      </article>
+
+      <article class="panel" aria-label="Battery current: Battery 1 positive 25.8 amps DC and Battery 2 positive 25.3 amps DC, total 51.1 amps charging">
+        <div class="panel-head"><h3>Battery current</h3><span class="tag healthy">Both charging</span></div>
+        <div class="ring bipolar-ring battery-current-ring" data-ring="battery-current-comparison" data-current-state="positive">
+          <svg viewBox="0 0 160 160" role="img" aria-label="Outer bipolar ring is Battery 1 current and inner bipolar ring is Battery 2 current. Positive fills upper green halves and negative fills lower red halves from a shared neutral point.">
+            <path class="upper-track" pathLength="100" d="M10 80 A70 70 0 0 1 150 80"/>
+            <path class="lower-track" pathLength="100" d="M10 80 A70 70 0 0 0 150 80"/>
+            <path class="upper-track current-inner" pathLength="100" d="M25 80 A55 55 0 0 1 135 80"/>
+            <path class="lower-track current-inner" pathLength="100" d="M25 80 A55 55 0 0 0 135 80"/>
+            <path class="fill current-upper current-positive-arc" style="--level:52" pathLength="100" d="M10 80 A70 70 0 0 1 150 80"/>
+            <path class="fill current-lower current-negative-arc" style="--level:52" pathLength="100" d="M10 80 A70 70 0 0 0 150 80"/>
+            <path class="fill current-upper current-inner current-positive-arc" style="--level:51" pathLength="100" d="M25 80 A55 55 0 0 1 135 80"/>
+            <path class="fill current-lower current-inner current-negative-arc" style="--level:51" pathLength="100" d="M25 80 A55 55 0 0 0 135 80"/>
+          </svg>
+          <div class="ring-center"><div class="primary-value current-positive">51.1 <span class="unit">A</span></div><div class="secondary-value">54.8 V</div></div>
+        </div>
+        <div class="legend"><span class="current-positive"><b>Outer · B1 25.8 A</b></span><span class="current-positive">Inner · B2 25.3 A</span></div>
+        <!-- Future source/history formatting: positive values may be unsigned; negative values use accounting style, for example (3000). -->
+      </article>
+
+      <article class="panel" aria-label="Synthetic Battery cell voltage means and ranges for Battery 1 and Battery 2">
+        <div class="panel-head"><h3>Battery cell voltage</h3><span class="tag warning">Synthetic</span></div>
+        <div class="cell-pair">
+          <div class="cell-battery"><strong>Battery 1</strong>
+            <div class="cell-dial" data-state="normal" data-low-limit="2.50" data-high-limit="3.65" data-low-position="5-o'clock" data-high-position="2-o'clock" data-direction="clockwise-long-arc" data-clamp-policy="endpoint-only; preserve numeric value" style="--operating-position:60.39" aria-label="Battery 1 open cell-voltage operating range from 2.50 volts at 5 o'clock clockwise to 3.65 volts at 2 o'clock; average 3.426 volts, maximum 3.433 volts, minimum 3.420 volts">
+              <svg class="cell-scale" viewBox="0 0 160 160" role="img" aria-label="Fixed linear cell-voltage scale, not state of charge">
+                <circle class="cell-scale-track" pathLength="100" cx="80" cy="80" r="55"/>
+                <circle class="cell-caution-low" pathLength="100" cx="80" cy="80" r="55"/>
+                <circle class="cell-normal-range" pathLength="100" cx="80" cy="80" r="55"/>
+                <circle class="cell-caution-high" pathLength="100" cx="80" cy="80" r="55"/>
+                <circle class="cell-average-arc" pathLength="100" cx="80" cy="80" r="47"/>
+                <line class="cell-threshold cell-cutoff-marker" x1="129" y1="80" x2="140" y2="80" transform="rotate(150 80 80)"/>
+                <line class="cell-threshold cell-upper-marker" x1="129" y1="80" x2="140" y2="80" transform="rotate(60 80 80)"/>
+                <circle class="cell-extreme-marker cell-max-marker" cx="124" cy="80" r="3" transform="rotate(369.1 80 80)"/>
+                <circle class="cell-extreme-marker cell-min-marker" cx="124" cy="80" r="3" transform="rotate(366.0 80 80)"/>
+              </svg>
+              <div class="cell-values"><div class="cell-value cell-value--average">3.426 V Avg</div><div class="cell-value">3.433 V Max</div><div class="cell-value">3.420 V Min</div></div>
+              <div class="cell-alarm-stack" aria-live="polite"><div class="cell-alarm-banner alarm-under">UNDER VOLTAGE <span id="b1-under-voltage" data-live-value="minimum">2.43 V</span></div><div class="cell-alarm-banner alarm-over">OVER VOLTAGE <span id="b1-over-voltage" data-live-value="maximum">3.71 V</span></div></div>
+            </div>
+            <div class="cell-differential">13 mV Differential</div>
+          </div>
+          <div class="cell-battery"><strong>Battery 2</strong>
+            <div class="cell-dial" data-state="normal" data-low-limit="2.50" data-high-limit="3.65" data-low-position="5-o'clock" data-high-position="2-o'clock" data-direction="clockwise-long-arc" data-clamp-policy="endpoint-only; preserve numeric value" style="--operating-position:60.20" aria-label="Battery 2 open cell-voltage operating range from 2.50 volts at 5 o'clock clockwise to 3.65 volts at 2 o'clock; average 3.423 volts, maximum 3.430 volts, minimum 3.417 volts">
+              <svg class="cell-scale" viewBox="0 0 160 160" role="img" aria-label="Fixed linear cell-voltage scale, not state of charge">
+                <circle class="cell-scale-track" pathLength="100" cx="80" cy="80" r="55"/>
+                <circle class="cell-caution-low" pathLength="100" cx="80" cy="80" r="55"/>
+                <circle class="cell-normal-range" pathLength="100" cx="80" cy="80" r="55"/>
+                <circle class="cell-caution-high" pathLength="100" cx="80" cy="80" r="55"/>
+                <circle class="cell-average-arc" pathLength="100" cx="80" cy="80" r="47"/>
+                <line class="cell-threshold cell-cutoff-marker" x1="129" y1="80" x2="140" y2="80" transform="rotate(150 80 80)"/>
+                <line class="cell-threshold cell-upper-marker" x1="129" y1="80" x2="140" y2="80" transform="rotate(60 80 80)"/>
+                <circle class="cell-extreme-marker cell-max-marker" cx="124" cy="80" r="3" transform="rotate(368.3 80 80)"/>
+                <circle class="cell-extreme-marker cell-min-marker" cx="124" cy="80" r="3" transform="rotate(365.3 80 80)"/>
+              </svg>
+              <div class="cell-values"><div class="cell-value cell-value--average">3.423 V Avg</div><div class="cell-value">3.430 V Max</div><div class="cell-value">3.417 V Min</div></div>
+              <div class="cell-alarm-stack" aria-live="polite"><div class="cell-alarm-banner alarm-under">UNDER VOLTAGE <span id="b2-under-voltage" data-live-value="minimum">2.43 V</span></div><div class="cell-alarm-banner alarm-over">OVER VOLTAGE <span id="b2-over-voltage" data-live-value="maximum">3.71 V</span></div></div>
+            </div>
+            <div class="cell-differential">13 mV Differential</div>
+          </div>
+        </div>
+        <div class="cell-scale-note">Low limit 2.50 V · High limit 3.65 V</div>
+        <!-- The open operating arc runs clockwise along the long path from the low stop at 5 o'clock to the high stop at 2 o'clock. Out-of-range Min/Max markers clamp to their endpoint stop without a red continuation arc; alarm banners retain exact live values. Yellow boundaries are prototype visual guidance, not verified JK BMS configuration. Each pack independently supports normal, under-voltage, over-voltage, and under-over-voltage states. -->
       </article>
 
     </section>
@@ -276,6 +443,19 @@
     <section class="tab-panel" id="panel-trends" role="tabpanel" aria-labelledby="tab-trends" hidden>
       <h2>Trends</h2>
       <p class="tab-intro">Future source-labeled historical charts will live here. The current shape is synthetic and establishes layout only.</p>
+      <section class="energy-summary" aria-label="Synthetic daily energy summary">
+        <div class="energy-card"><span class="label">Solar generated today</span><strong>18.6 kWh</strong><span class="source">Synthetic calculated</span></div>
+        <div class="energy-card"><span class="label">House consumed today</span><strong>14.2 kWh</strong><span class="source">Synthetic calculated</span></div>
+        <div class="energy-pair" aria-label="Synthetic grid import and export">
+          <div class="energy-card"><span class="label">Grid imported</span><strong>1.1 kWh</strong><span class="source">Synthetic measured</span></div>
+          <div class="energy-card"><span class="label">Grid exported</span><strong>4.3 kWh</strong><span class="source">Synthetic measured</span></div>
+        </div>
+        <div class="energy-pair" aria-label="Synthetic battery charged and discharged energy">
+          <div class="energy-card"><span class="label">Battery charged</span><strong>7.8 kWh</strong><span class="source">Synthetic calculated</span></div>
+          <div class="energy-card"><span class="label">Battery discharged</span><strong>2.4 kWh</strong><span class="source">Synthetic calculated</span></div>
+        </div>
+        <div class="energy-card"><span class="label">Self-consumption</span><strong class="unavailable">Unavailable</strong><span class="source">Pending reliable calculation</span></div>
+      </section>
       <div class="lower-grid">
       <article class="panel panel--wide" aria-label="Synthetic recent power trend placeholder">
         <div class="panel-head"><h3>Recent trends</h3><span class="tag unavailable">Placeholder · 3 hours</span></div>
@@ -328,6 +508,58 @@
         <p class="source">No live or historical evidence is embedded in this file</p>
       </article>
       </div>
+    </section>
+
+    <section class="tab-panel" id="panel-eg4" role="tabpanel" aria-labelledby="tab-eg4" hidden>
+      <h2>EG4</h2>
+      <p class="source-preview-notice">Synthetic layout preview — not connected to live EG4 source data.</p>
+      <div class="source-summary"><span class="tag healthy">Synthetic fresh</span><span class="tag unavailable">3 representative rows</span><span class="tag unavailable">Read-only catalog</span></div>
+      <div class="source-tools"><label class="label" for="search-eg4">Search EG4 parameters</label><input class="source-search" id="search-eg4" type="search" placeholder="Metric or source field"><button class="source-filter" type="button" aria-pressed="true">Show all</button><button class="source-filter" type="button" aria-pressed="false">Show changed</button><button class="source-filter" type="button" aria-pressed="false">Show unavailable</button></div>
+      <div class="panel catalog"><table><thead><tr><th>Metric</th><th>Current value</th><th>Unit</th><th>Freshness</th><th>Original source field</th><th>Classification</th></tr></thead><tbody>
+        <tr><td>Inverter operating state</td><td>Online</td><td>state</td><td>8m · Fresh</td><td><code>run_status</code></td><td>Synthetic normalized</td></tr>
+        <tr><td>Estimated battery SOC</td><td>83</td><td>%</td><td>8m · Fresh</td><td><code>soc</code></td><td>Synthetic estimated</td></tr>
+        <tr><td>AC-couple power</td><td>6.4</td><td>kW</td><td>8m · Fresh</td><td><code>acCouplePower</code></td><td>Synthetic measured</td></tr>
+      </tbody></table></div>
+      <p class="complete-principle">Representative rows only. Production Show all will expose every parsed, non-secret, read-only parameter, including null, unavailable, stale, unsupported, and unknown fields.</p>
+    </section>
+
+    <section class="tab-panel" id="panel-sa" role="tabpanel" aria-labelledby="tab-sa" hidden>
+      <h2>SolarAssistant</h2>
+      <p class="source-preview-notice">Synthetic layout preview — not connected to live SolarAssistant source data.</p>
+      <div class="source-summary"><span class="tag healthy">Synthetic fresh</span><span class="tag unavailable">3 representative rows</span><span class="tag unavailable">Read-only catalog</span></div>
+      <div class="source-tools"><label class="label" for="search-sa">Search SolarAssistant parameters</label><input class="source-search" id="search-sa" type="search" placeholder="Metric or source field"><button class="source-filter" type="button" aria-pressed="true">Show all</button><button class="source-filter" type="button" aria-pressed="false">Show changed</button><button class="source-filter" type="button" aria-pressed="false">Show unavailable</button></div>
+      <div class="panel catalog"><table><thead><tr><th>Metric</th><th>Current value</th><th>Unit</th><th>Freshness</th><th>Original source field</th><th>Classification</th></tr></thead><tbody>
+        <tr><td>Trusted battery SOC</td><td>78</td><td>%</td><td>4s · Fresh</td><td><code>battery_state_of_charge</code></td><td>Synthetic measured</td></tr>
+        <tr><td>Battery 1 current</td><td>+25.8</td><td>A DC</td><td>4s · Fresh</td><td><code>battery_1_current</code></td><td>Synthetic normalized</td></tr>
+        <tr><td>BMS alarm summary</td><td>Unavailable</td><td>state</td><td>4s · Unknown</td><td><code>bms_alarm</code></td><td>Synthetic unavailable</td></tr>
+      </tbody></table></div>
+      <p class="complete-principle">Representative rows only. Production Show all will expose every parsed, non-secret, read-only parameter, including null, unavailable, stale, unsupported, and unknown fields.</p>
+    </section>
+
+    <section class="tab-panel" id="panel-esp32" role="tabpanel" aria-labelledby="tab-esp32" hidden>
+      <h2>ESP32</h2>
+      <p class="source-preview-notice">Synthetic layout preview — not connected to live ESP32 source data.</p>
+      <div class="source-summary"><span class="tag healthy">Synthetic fresh</span><span class="tag unavailable">3 representative rows</span><span class="tag unavailable">Read-only catalog</span></div>
+      <div class="source-tools"><label class="label" for="search-esp32">Search ESP32 parameters</label><input class="source-search" id="search-esp32" type="search" placeholder="Metric or source field"><button class="source-filter" type="button" aria-pressed="true">Show all</button><button class="source-filter" type="button" aria-pressed="false">Show changed</button><button class="source-filter" type="button" aria-pressed="false">Show unavailable</button></div>
+      <div class="panel catalog"><table><thead><tr><th>Metric</th><th>Current value</th><th>Unit</th><th>Freshness</th><th>Original source field</th><th>Classification</th></tr></thead><tbody>
+        <tr><td>AC-couple power</td><td>6.4</td><td>kW</td><td>1s · Fresh</td><td><code>ac_couple_power</code></td><td>Synthetic measured</td></tr>
+        <tr><td>Active microinverters</td><td>12</td><td>count</td><td>1s · Fresh</td><td><code>active_microinverters</code></td><td>Synthetic measured</td></tr>
+        <tr><td>Forensic event state</td><td>Unknown</td><td>state</td><td>1s · Unknown</td><td><code>forensic_event</code></td><td>Synthetic normalized</td></tr>
+      </tbody></table></div>
+      <p class="complete-principle">Representative rows only. Production Show all will expose every parsed, non-secret, read-only parameter, including null, unavailable, stale, unsupported, and unknown fields.</p>
+    </section>
+
+    <section class="tab-panel" id="panel-volcast" role="tabpanel" aria-labelledby="tab-volcast" hidden>
+      <h2>Volcast</h2>
+      <p class="source-preview-notice">Synthetic layout preview — not connected to live Volcast source data.</p>
+      <div class="forecast-groups"><span class="tag warning">Daily forecast</span><span class="tag warning">Hourly forecast</span><span class="tag warning">Five-minute forecast</span></div>
+      <div class="source-tools"><label class="label" for="search-volcast">Search Volcast parameters</label><input class="source-search" id="search-volcast" type="search" placeholder="Metric or source field"><button class="source-filter" type="button" aria-pressed="true">Show all</button><button class="source-filter" type="button" aria-pressed="false">Show changed</button><button class="source-filter" type="button" aria-pressed="false">Show unavailable</button></div>
+      <div class="panel catalog"><table><thead><tr><th>Metric</th><th>Current value</th><th>Unit</th><th>Freshness</th><th>Original source field</th><th>Classification</th></tr></thead><tbody>
+        <tr><td>Daily expected energy</td><td>26.8</td><td>kWh</td><td>Synthetic update</td><td><code>forecast.daily[0].energy_kwh</code></td><td>Synthetic estimated</td></tr>
+        <tr><td>Hourly forecast power</td><td>6.2</td><td>kW</td><td>Synthetic update</td><td><code>forecast.hourly[12].power_w</code></td><td>Synthetic estimated</td></tr>
+        <tr><td>Five-minute forecast power</td><td>6.35</td><td>kW</td><td>Synthetic update</td><td><code>forecast.detailed[144].power_w</code></td><td>Synthetic estimated</td></tr>
+      </tbody></table></div>
+      <p class="complete-principle">Representative rows only; hundreds of samples are intentionally omitted here. Production Show all will expose every parsed, non-secret, read-only parameter, including null, unavailable, stale, unsupported, and unknown fields, and all parsed five-minute entries will be accessible.</p>
     </section>
     <footer>Offline visual review artifact · no collection, refresh, or control actions</footer>
   </main>

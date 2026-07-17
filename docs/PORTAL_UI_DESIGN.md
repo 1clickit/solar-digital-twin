@@ -1,185 +1,234 @@
-# Solar Digital Twin Portal UI Prototype
+# Solar Digital Twin Portal UI Design
 
 ## Status and Boundary
 
-This is a reviewable visual prototype, not an accepted Engineering Bible
-decision. `prototypes/solar_portal_mockup.html` is a standalone offline file
-containing synthetic example values only. It does not replace or modify the
-operational EG4 portal, collect telemetry, read evidence, or contact a device,
-service, API, or filesystem.
+This document is the authoritative design record for the reviewable Solar
+Digital Twin portal prototype and its accepted future implementation direction.
+It does not promote the prototype to an operational portal or authorize
+deployment.
 
-## Initial Hosting Decision
+`prototypes/solar_portal_mockup.html` is a standalone offline file containing
+synthetic example values only. It does not replace the operational EG4 portal,
+collect telemetry, read evidence, or contact a device, service, API, or
+filesystem.
+
+## Hosting and Runtime Separation
 
 The prototype and initial production Solar Digital Twin portal should be hosted
-on `solardt`. The portal should remain operationally separate from collectors
-and eventually run under an appropriate unprivileged identity. Keeping it on
-`solardt` initially avoids an unnecessary additional Proxmox VM or container,
-a network-filesystem dependency, duplicated state, and extra maintenance.
+on `solardt`, remain operationally separate from collectors, and eventually run
+under an appropriate unprivileged identity. This avoids an unnecessary VM or
+container, network-filesystem dependency, duplicated state, and added
+maintenance.
 
-A separate Proxmox web VM or LXC should be reconsidered only when justified by
-external or less-trusted network exposure, reverse-proxy or DMZ requirements,
-measurable resource contention, independent availability or maintenance needs,
-or a shared web-services platform.
+A separate frontend host should be reconsidered only for external or
+less-trusted exposure, reverse-proxy or DMZ requirements, measurable resource
+contention, independent availability or maintenance, or a shared web-services
+platform. A separated frontend must use a controlled read-only interface and
+must not mount or receive credentials, raw evidence directories, or the live
+project filesystem.
 
-If the frontend is separated later, it should consume a controlled read-only
-interface from `solardt`. It must not mount or receive direct access to
-credentials, raw evidence directories, or the live project filesystem.
+## Accepted Navigation and Overview
 
-This is a reviewable architecture decision. It does not authorize deployment,
-installation, service startup, or any change to an operational portal.
+`Overview` is the operation-first default tab. The compact current-operation
+row is, in order:
 
-## Current-Operation-First Tabs and Layout
+1. Solar vs house load
+2. Volcast forecast
+3. System health
+4. Current AC source
 
-The operation-first `Overview` tab is selected by default. It contains only the
-current health, solar/load, battery-current, AC-source state, SOC comparison,
-and voltage comparison needed for quick reference. The
-other primary tabs keep deeper material available without making Overview
-unnecessarily tall:
+The Battery bank row is, in order:
 
-- `Trends` contains source-labeled historical-chart placeholders;
-- `Forensics` contains the synthetic latest notice and future timeline,
-  confidence, and cross-source-correlation space;
-- `Sources & Traceability` contains source freshness, provenance, normalized-
-  data boundaries, and evidence traceability.
+1. Battery SOC
+2. Battery voltage
+3. Battery current
+4. Battery cell voltage
 
-The embedded tab behavior makes no network request and stores no state. Semantic
-tab buttons and panels expose their relationships and selected state to
-assistive technology, and support click, Left/Right Arrow, Home, and End
-navigation.
+Battery titles do not use the word `comparison`. Overview is curated and
+operational rather than provenance-heavy. Long source, calculation, and
+traceability explanations belong in `Sources & Traceability`, source-data tabs,
+or metric-history views rather than beneath homepage dials.
 
-The first row answers the normal operational questions in quick-glance order:
+The remaining primary tabs are `Trends`, `Forensics`, and
+`Sources & Traceability`. Embedded tab behavior is local, stores no state, and
+uses semantic buttons and panels with keyboard navigation and assistive-
+technology relationships.
 
-1. Are the system and its sources healthy and fresh?
-2. How does solar input compare with house load, and what is the net result?
-3. Is the battery bank charging or discharging, and by how much?
-4. Which AC source is active?
+## Accepted Operational Cards
 
-The Solar/load widget combines distinct concentric arcs and places the net power
-result in the center. The next section combines Trusted Battery SOC from
-SolarAssistant/JK BMS and EG4 Estimated SOC in one comparison ring while keeping
-their values and sources distinct. The trusted SOC remains the dominant center
-value, and EG4 remains labeled comparison only; the values are never merged,
-averaged, substituted, or silently corrected. Battery 1 and Battery 2 voltage
-share a comparison ring whose center shows their calculated average and whose
-legend preserves each measured value and a voltage delta. Source and
-observation-age labels remain visible but compact.
+### Solar vs house load
 
-Battery current is the primary quick-reference battery-flow gauge in the top
-operational row. The battery section below is a balanced two-card row containing
-SOC and voltage comparisons. The previous `Combined bank` card and the separate
-Battery bank power ring have been removed.
+The combined presentation centers:
 
-## Ring Family and Geometry
+- `3.3 kW`
+- `13.8 A`
+- `240.1 V`
 
-All rings share component classes, sizing variables, track treatment, typography,
-and SVG geometry. Comparison rings use paired concentric arcs. Their center
-shows the most trusted or actionable summary: trusted SOC for the SOC comparison,
-average DC voltage for the battery-voltage comparison, and net power for the
-solar/load comparison. Compact legends associate each arc with its individual
-value and source so color is not the only cue.
+There is no leading plus sign. Compact Solar and Load values remain. The
+synthetic prototype includes subtle rolling 60-minute minimum/maximum context,
+while provenance and calculation explanations are absent beneath the dial.
 
-The battery-current comparison uses independent outer and inner bipolar rings
-for Battery 1 and Battery 2 from a shared neutral point. Positive DC current
-fills the upper green semicircle and negative DC current fills the lower red
-semicircle. Individual signed current labels identify each battery, while the
-center shows compact net DC current. Net battery kW and bank voltage remain
-useful supporting values but do not require a separate ring. Numeric angles,
-coordinates, and other ring-geometry labels are implementation details and must
-not be visible to users.
+### Volcast forecast
 
-Solar input versus grid return/export remains an available directional concept,
-but the primary operational power comparison is solar input versus house load.
+Volcast remains synthetic-only. Its Overview card has the same general size as
+the other top-row cards and uses the broad information organization of the
+Volcast phone application without copying, embedding, or representing itself as
+that application. The internal content region scrolls: initial content ends
+around the multi-day bars, while hourly information and the following timestamp
+require scrolling:
 
-Single-direction rings remain part of the visual family for measurements where
-comparison or direction is not meaningful. Voltage arcs show position within a
-labeled operating range rather than implying direction. AC source and freshness
-remain state cards because numeric sweeps would be misleading.
+`Last update - Thursday - 07-16-2026 - 17:56`
 
-## Electrical Display Hierarchy
+Future production retrieval should run server-side every 30 minutes. Browser
+F5 may request an immediate additional server-side refresh, with duplicate or
+simultaneous refreshes coalesced. The browser must never receive the API key or
+contact Volcast directly. A failed refresh retains the last successful
+forecast. `Forecast issued` or generated time is shown only when Volcast
+explicitly supplies that timestamp.
 
-Each ring centers the most actionable unit: net kW for solar/load and signed net
-DC current for battery flow. The battery-current ring keeps net battery kW and
-DC voltage as smaller supporting values. Every current remains explicitly
-labeled AC or DC, and each card identifies its example as `Synthetic measured`
-or `Synthetic calculated`. Source names and synthetic observation ages remain
-visible.
+The complete Volcast source-data tab must expose daily, hourly, and all parsed
+five-minute forecast entries. The compact Overview card must not render
+hundreds of five-minute rows. API keys remain outside Git, chat, logs, command
+arguments, reports, and ordinary backups.
 
-The prototype display convention is positive current = charging and negative
-current = discharging. Before binding live data, SolarAssistant's native current
-field polarity must be verified. If its convention differs, polarity must be
-normalized at the adapter boundary rather than silently reinterpreted in the
-portal.
+### Battery SOC
 
-## Central Theme and Scale Variables
+Trusted SolarAssistant/JK BMS SOC remains central. EG4 SOC remains a separately
+identified comparison estimate and is never merged, averaged, substituted, or
+used to silently correct the trusted value.
 
-The page's `:root` custom properties are the adjustment point for the visual
-system:
+### Battery voltage
 
-- `--battery-charging`: green charging arc
-- `--battery-discharging`: red discharging arc
-- `--solar-input`: yellow solar-input arc
-- `--grid-export`: blue grid-return/export arc
-- `--neutral-track`: available but inactive ring track
-- `--state-healthy`, `--state-warning`, `--state-stale`, and
-  `--state-unavailable`: freshness and availability states
-- `--panel-bg`, `--text`, and `--muted`: panel and typography colors
-- `--ring-size`, `--ring-stroke`, and `--ring-radius`: shared ring scale
+The center reads `54.80 VDC`, without an `Average` label or homepage delta.
+Battery 1 and Battery 2 pack voltages remain visible.
 
-Changing one of these variables changes the corresponding component treatment;
-SVG markup does not contain individually hard-coded theme colors.
+### Battery current
 
-## Future Data Binding
+The center reads `51.1 A` and `54.8 V`; the earlier `2.8 kW DC` center line is
+removed. Homepage current does not require a leading sign. Charging uses green
+upper arcs, discharging uses red lower arcs, and near-zero uses neutral gray.
+Precise signed values remain available in source-data and history views. Where
+appropriate, future negative source/history values use accounting form such as
+`(3000)`.
 
-A future implementation may bind only source-labeled, freshness-aware normalized
-data. It must preserve the authority of raw evidence, keep measured and
-calculated values distinguishable, and show unavailable or stale data honestly.
-The prototype's embedded values and trend shapes must not be treated as source
-records or an integration contract.
+### Current AC source and health
 
-## Future Device Navigation and Parameter History
+AC source and freshness remain compact state cards rather than misleading
+numeric sweeps. State, mode, availability, and source freshness must not be
+represented as healthy when unknown or stale.
 
-**Overview is curated; device tabs are complete.** Overview presents the small
-set of trusted, actionable summaries needed for normal operation. In contrast,
-each future `EG4`, `SolarAssistant`, and `ESP32` tab must make every available
-parsed, non-secret, read-only parameter exposed by that source accessible, not
-merely a selected or commonly useful subset.
+## Battery Cell Voltage
 
-Future device-specific technical tabs should appear at the far right of the
-primary navigation. Complete device views include current values and null,
-unavailable, stale, unsupported, and unknown values where the source exposes
-them. They include status, mode, alarm, identity, counter, diagnostic, and
-telemetry fields. Each parsed parameter should retain its original source field
-name, stable portal metric identifier, normalized display name, unit, source
-timestamp, observation age and freshness, provenance/source, and classification
-as measured, calculated, normalized, estimated, or derived.
+### Accepted homepage data model
 
-Device fields should be grouped by purpose rather than presented as one
-unstructured table. Search, filtering, collapsed sections, and `show all`,
-`show changed`, and `show unavailable` controls may improve usability, but they
+The homepage needs only these four values per pack:
+
+- average cell voltage;
+- highest cell voltage;
+- lowest cell voltage; and
+- differential or imbalance.
+
+They support normal visualization, spread, low-voltage detection, high-voltage
+detection, simultaneous low/high detection, and future local events. Individual
+cell voltages and identities, native BMS alarms, configured BMS thresholds,
+protection states, and release thresholds may be useful later but are not
+prerequisites for this homepage function. `Sum` is not interchangeable with
+average cell voltage.
+
+### Safety semantics
+
+The Solar Digital Twin initially uses `2.50 V` as the low cell-voltage display
+and alarm threshold and `3.65 V` as the high threshold. These must not be
+claimed as exact JK BMS configuration unless later verified. Yellow caution
+ranges are prototype visual guidance, not verified BMS settings. Green is the
+normal operating region; yellow is caution near either limit; short red stop
+markers identify the limits.
+
+Each battery behaves independently. A minimum below `2.50 V` displays
+`UNDER VOLTAGE` followed by the actual live value. A maximum above `3.65 V`
+displays `OVER VOLTAGE` followed by the actual live value. When both conditions
+exist, two stacked banners show both independently updating actual values.
+Alarm banners take priority and may replace normal Avg/Max/Min content. The
+actual abnormal value must never be replaced by the threshold value.
+
+Future production behavior should create threshold-crossed and threshold-
+cleared events and preserve first-observed and last-observed timestamps,
+duration, battery identity, actual value, threshold, source, freshness, and
+provenance. Related SolarAssistant and EG4 events may be linked without merging
+source identities, and event history remains after the visible alarm clears.
+This prototype does not implement live alarms or event logging.
+
+### Current synthetic checkpoint
+
+The current prototype has two enlarged Battery 1 and Battery 2 dials with:
+
+- a shared open operating arc from the low limit near 5 o'clock clockwise to
+  the high limit near 2 o'clock;
+- short red threshold stops, yellow caution ends, and a dominant green normal
+  region;
+- Avg, Max, Min, and dynamic-style differential text;
+- normal, under-voltage, over-voltage, and simultaneous-fault structures; and
+- actual alarm values in hidden synthetic alarm states.
+
+The moving inner green indicator has been judged visually ambiguous because it
+can resemble simultaneous occupancy of many voltages. Its replacement is the
+next focused visual experiment.
+
+## Trends
+
+The Trends tab includes or will include solar energy generated today, house
+energy consumed today, grid imported and exported today, and battery charged
+and discharged today. Self-consumption percentage is shown only after its
+accounting can be calculated reliably; the prototype must not present a
+fabricated percentage as trustworthy.
+
+## Complete Source-Data Tabs
+
+**Overview is curated; device tabs are complete.** The far-right tabs are
+`EG4`, `SA` (with `SolarAssistant` as the panel heading), `ESP32`, and `Volcast`.
+They are currently functional synthetic layouts, not live integrations.
+
+In production, a true `Show all` view must expose every available parsed,
+non-secret, read-only parameter preserved from each source, including present, null,
+unavailable, stale, unsupported, and unknown values. It must retain original
+source field names, normalized names, stable metric identifiers, units, source
+or receipt timestamps, freshness and age, provenance, and measured,
+calculated, normalized, derived, or estimated classification. Telemetry,
+identity, status, mode, alarm, counter, and diagnostic fields remain accessible.
+Grouping, search, filtering, and collapsed sections may improve usability but
 must not silently omit parameters from a true `Show all` view.
 
-Complete does not include passwords, tokens, API keys, encryption keys,
-credentials, or other secret material. Writable controls and device actions
-must not be mixed into the read-only telemetry view. Enormous unparsed raw
-payloads must not be presented as ordinary parameters; raw evidence remains
-reachable through controlled traceability mechanisms instead of being confused
-with parsed device parameters.
+The complete view excludes passwords, tokens, API keys, encryption keys, credentials, and other secret
+material are excluded. Writable controls and device actions must not be mixed
+into the read-only telemetry view. Large unparsed raw payloads are also excluded
+from ordinary telemetry views. Raw evidence remains
+available through controlled traceability rather than being confused with
+parsed parameters.
 
-Each parameter should have a stable metric identifier and later be clickable to
-open its history. Parameter history should retain source, units, freshness,
-provenance, measurement type, and time-range selection. Related metrics may be
-compared without silently merging their sources. A side drawer may support
-quick inspection, while a dedicated parameter page or URL may support deeper
-forensic analysis. These are reviewed intentions only and are not implemented
-or authorized for deployment by this prototype.
+## Metric History
 
-## Browser-Review Choices
+Each stable metric identifier may later be clickable to open its history in a
+dedicated parameter page or URL. History supports time-range selection,
+minimum, maximum, average, last-change time, missing-data periods, source
+identity, freshness, provenance, compatible comparisons, and related events.
+Related sources may be compared but never silently merged. A side drawer may
+support quick inspection while the dedicated page supports deeper analysis.
 
-The following remain intentionally easy to adjust after visual review:
+## Theme, Accessibility, and Data Binding
 
-- card density and the desktop column balance;
-- ring diameter, stroke width, and center-value type scale;
-- exact theme hues and contrast within the named semantic roles;
-- half-ring magnitude scales for solar/grid and battery power;
-- placement and wording of compact direction legends;
-- trend height and the amount of lower-page detail visible at once.
+CSS custom properties centralize semantic colors, panel and text colors, ring
+sizes, stroke widths, and geometry. Components use labels, placement, symbols,
+and accessible descriptions so color is not the only cue. There is no flashing
+or distracting animation, and responsive layouts preserve readable controls.
+
+Future binding may use only source-labeled, freshness-aware normalized data.
+Raw evidence remains authoritative, measured and calculated values remain
+distinguishable, and unavailable or stale values are shown honestly. The
+prototype's synthetic values are neither source records nor an integration
+contract.
+
+## Remaining Visual Question
+
+The next experiment will test short Min/Avg/Max scale markers and a compact
+avionics-style numeric readout. Exact placement of the numeric readout remains a
+focused browser-review question rather than an accepted final layout.

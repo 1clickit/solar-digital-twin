@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Controlled SolarAssistant and ESP32 captures awaiting completion verification
+Validated synthetic Solar Digital Twin portal prototype and documented design direction; controlled captures still await separately approved completion verification
 
 Next Task:
-After the configured ESP32 and SolarAssistant capture periods should have completed, perform separately approved minimal read-only completion and evidence-integrity verification.
+Prototype the next synthetic Battery cell voltage marker and avionics-style readout experiment without connecting to live data or runtime state.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -180,19 +180,21 @@ main
 - Verified current state on 2026-07-16: the dedicated runtime is installed
   under `/opt/solar-digital-twin`, and the administrator-controlled credential
   remains protected outside Git
-- A 24-hour capture is active as `solardt-sa` in the root-owned detached tmux
-  session `solarassistant-24h`; it began at approximately `2026-07-16 02:00
-  America/Chicago`, was configured for 86,400 seconds, and should stop
-  automatically
-- The read-only live monitor is active as `solardt-sa` in the root-owned
-  detached tmux session `solarassistant-monitor` at
-  `http://192.168.3.11:8792`; its health endpoint returned `{"status":"ok"}`
+- A 24-hour capture launched as `solardt-sa` in the root-owned detached tmux
+  session `solarassistant-24h` at approximately `2026-07-16 02:00
+  America/Chicago`, configured for 86,400 seconds and automatic stop. Its
+  completion state has not yet been verified
+- The read-only live monitor was last verified running as `solardt-sa` in the
+  root-owned detached tmux session `solarassistant-monitor` at
+  `http://192.168.3.11:8792`; its health endpoint returned `{"status":"ok"}`.
+  Its current state also remains pending separately approved verification
 - Collector PID 92638 and monitor PID 92674 were historical observations only;
   PIDs are transient and are not stable runtime configuration
-- The active collector must not be stopped, restarted, redeployed, or modified
+- Until completion verification, the collector must not be stopped, restarted,
+  redeployed, or modified
   without Chris's explicit approval. Safe development may continue only when it
   cannot alter the installed collector or retained-output behavior
-- The running monitor may continue to show an `Unknown` badge despite fresh
+- The installed monitor may continue to show an `Unknown` badge despite fresh
   data. This remains non-blocking because the correction is committed and
   pushed but has not been deployed to the active monitor
 - Commit `a227b68` reproduced the badge defect offline: bare JavaScript
@@ -209,6 +211,31 @@ main
 - Clean interruption verified during password prompt and active collection
 - Project published to GitHub
 
+- The standalone Solar Digital Twin portal prototype remains synthetic-only,
+  offline, and separate from the operational EG4 portal and all collectors
+- The accepted Overview order is Solar vs house load, Volcast forecast, System
+  health, and Current AC source; the Battery bank row is Battery SOC, Battery
+  voltage, Battery current, and Battery cell voltage
+- Functional synthetic source-data tabs now cover EG4, SolarAssistant, ESP32,
+  and Volcast while documenting that production `Show all` views must preserve
+  every parsed, non-secret, read-only parameter
+- The current Battery cell voltage prototype uses two enlarged open-arc dials,
+  red endpoint stops, yellow caution ends, a dominant green normal region,
+  Avg/Max/Min and differential values, and four independent normal/alarm state
+  structures
+- The moving inner green cell-voltage indicator was judged visually ambiguous.
+  The immediate offline design task is to replace it with short white Avg, red
+  Max, and blue Min scale markers plus an authoritative dynamic digital readout
+- `docs/PORTAL_UI_DESIGN.md` is the authoritative portal design record;
+  `docs/chat_ideas/README.md` is a non-authoritative holding area for deferred,
+  open, and superseded design ideas
+- The temporary synthetic preview is expected to remain available at
+  `http://192.168.3.11:8793/solar_portal_mockup.html` for browser review; this
+  repository checkpoint does not authorize or modify that server
+- The validated portal prototype, focused tests, and design documentation form
+  one local commit checkpoint created by this work unit. It is intentionally
+  not pushed pending separate approval
+
 - Repomix evaluation stopped as an active task; Repomix remains only an optional future architecture-audit tool.
 - Codex CLI installation and ChatGPT authentication successfully validated on `solardt`.
 - Native Bubblewrap/AppArmor sandboxing, workspace-write mode, and explicit approval boundaries successfully validated.
@@ -224,7 +251,7 @@ main
   seconds for a pending network read
 - Collector PID 107886 was a transient historical observation, not stable
   runtime configuration
-- Active raw evidence is
+- The capture's raw evidence path is
   `/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z.ndjson`;
   its derived retained sibling is
   `/home/chris/solar-digital-twin/evidence/esp32/esp32_sse_20260716_180514Z_retained.ndjson`
@@ -237,7 +264,7 @@ main
 - Until completion verification, do not stop, restart, signal, attach to,
   redeploy, or modify the ESP32 collector; change its collector or retention
   behavior; or alter or truncate either active evidence file
-- Do not modify the active SolarAssistant collector. EG4 workflows remain
+- Do not modify the protected SolarAssistant collector. EG4 workflows remain
   unchanged. Ordinary repository development may continue only when it cannot
   affect either active process or its evidence outputs
 - Commit `5fef46b` pushed to `origin/main`; `main` was clean and synchronized afterward.

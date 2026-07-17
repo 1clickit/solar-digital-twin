@@ -65,6 +65,12 @@ docs/Engineering_Bible.md
 docs/EG4_LOCAL_PORTAL.md
     Current EG4 portal operations and the primary engineering-interface plan.
 
+docs/PORTAL_UI_DESIGN.md
+    Accepted design direction and synthetic-only boundary for the future primary portal.
+
+docs/chat_ideas/README.md
+    Non-authoritative holding area for deferred, open, and superseded portal ideas.
+
 docs/EG4_FORENSIC_CORRELATION.md
     Offline-tested ESP32 frequency retention and planned AC-couple correlation design.
 
