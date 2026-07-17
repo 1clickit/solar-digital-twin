@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Confirmed complete EG4 overlap coverage and documented the bounded three-source correlation plan
+Implemented and synthetically validated the bounded offline three-source correlation analyzer
 
 Next Task:
-Implement and synthetically test the offline three-source correlation analyzer; require separate approval for protected input resolution and real execution.
+Review and prepare explicit bounded real-input adapters and protected-input access; require separate approval before implementation or real execution.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -286,6 +286,19 @@ main
   `docs/EG4_FORENSIC_CORRELATION.md`. The exact protected SolarAssistant raw
   filename still requires separately approved metadata-only resolution; it was
   not guessed and permissions were not weakened
+- The pure offline three-source analyzer is implemented at
+  `src/solar_digital_twin/analysis/forensic_correlation.py`. It normalizes
+  explicit source timestamp semantics to UTC, preserves provenance, aligns
+  nearest source context without interpolation, detects configurable partial
+  collapse and zero-output candidates, and reports explainable confidence
+  factors without claiming causation
+- Seventeen focused synthetic analyzer tests cover abrupt and gradual shapes,
+  missing and out-of-tolerance sources, timezone offsets, EG4 cadence gaps,
+  availability and frequency context, multiple events, separate trusted and
+  estimated SOC roles, input immutability, and reduced ESP32 context. No real
+  evidence, operational database, or protected path was used
+- Real-input adapters, protected SolarAssistant filename resolution, and any
+  real-evidence execution remain separately approved future work
 - Commit `5fef46b` pushed to `origin/main`; `main` was clean and synchronized afterward.
 
 ## Current Reporting Implementation

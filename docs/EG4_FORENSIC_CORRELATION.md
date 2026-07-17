@@ -2,9 +2,9 @@
 
 ## Status
 
-This document records the approved bounded investigation and reporting plan.
-Synthetic analyzer implementation is the current task in `NEXT_TASK.md`; real
-evidence analysis remains separately approved.
+This document records the approved bounded investigation, implemented
+synthetic analyzer, and reporting plan. Real-evidence input resolution and
+analysis remain separately approved.
 
 The proposed work must remain:
 
@@ -325,6 +325,44 @@ receipt timestamps. EG4 requires the explicit conversions above. Correlation
 must use UTC internally and may render Central time only for operator reports.
 
 ## Bounded Offline Correlation-Analysis Plan
+
+### Implemented synthetic analyzer
+
+`src/solar_digital_twin/analysis/forensic_correlation.py` is a pure, offline
+component that accepts already parsed, source-labeled record streams. It does
+not open files, databases, protected paths, credentials, or network resources.
+Callers must provide each original timestamp, its source-specific timestamp
+kind, and an explicit timezone for naive source times. The analyzer preserves
+the original timestamp and provenance while normalizing its internal timeline
+and report timestamps to UTC.
+
+The first conservative detector uses configurable minimum baseline, absolute
+and percentage drop, plateau-sample, recovery, zero-output, search-window, gap,
+alignment, and frequency-support thresholds. It requires an abrupt EG4 drop,
+at least two reduced-output plateau samples, and a later recovery. It reports
+non-zero partial collapse separately from zero output, supports multiple events,
+and orders unsorted parsed input deterministically without changing it.
+
+SolarAssistant and ESP32 nearest-record matches use conservative default
+tolerances of 15 and 2 seconds. Exact, nearest, missing, and out-of-tolerance
+results remain distinct; the analyzer does not interpolate or invent evidence.
+It attaches an ESP32 native-sample window for frequency, event, and availability
+context. EG4 SOC remains labeled as a comparison estimate, while
+SolarAssistant/JK BMS remains the trusted battery source.
+
+Confidence is intentionally explainable (`low`, `moderate`, or `high`). Output
+lists the factors that raise or lower confidence, always retains cloud cover or
+normal solar variability as an alternative explanation, and never claims
+causation. Seventeen focused synthetic tests cover partial and zero-output
+events, recovery shapes, cloud-like and no-event controls, missing and
+out-of-tolerance context, timezone normalization, cadence gaps, availability
+and frequency context, distinct SOC roles, multiple events, deterministic
+ordering, input immutability, and reduced ESP32 context equivalence.
+
+This validation does not authorize execution against EG4 SQLite, actual JSON
+or NDJSON evidence, generated operational reports, or the protected
+SolarAssistant directory. Explicit input adapters and any real-data report run
+belong to a later separately approved work unit.
 
 ### Selected sources
 

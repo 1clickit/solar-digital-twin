@@ -2,13 +2,13 @@
 
 ## Objective
 
-Implement and synthetically test the bounded offline
-EG4/SolarAssistant/ESP32 correlation analyzer. Run it on the completed real
-datasets only after the protected SolarAssistant raw filename and evidence
-access are separately approved.
+Review and prepare the separately approved real-input phase for the bounded
+offline EG4/SolarAssistant/ESP32 correlation analyzer. Do not run it on real
+evidence during preparation.
 
 ## Context
 
+The pure parsed-stream analyzer and 17 synthetic scenario tests are complete.
 EG4 coverage is **Complete** for the full ESP32 overlap: 177 unique day-series
 samples and 47 runtime snapshots, with no gap over 20 minutes and no malformed
 overlap JSON. Timestamp semantics and the bounded analysis plan are recorded in
@@ -18,17 +18,16 @@ unit.
 
 ## Scope
 
-1. Add a repository-local offline analyzer with synthetic tests for alignment,
-   missing sources, offsets, abrupt steps, non-zero plateaus, recovery, gradual
-   cloud-like ramps, availability transitions, and no-event controls.
-2. Open EG4 SQLite read-only and stream SolarAssistant and ESP32 NDJSON with
-   bounded memory; preserve source identity, native samples, and timestamp
-   provenance.
+1. Review the implemented synthetic analyzer interface, thresholds, alignment
+   tolerances, source roles, and confidence limitations before real use.
+2. Define explicit bounded-memory adapters for the selected EG4 SQLite rows and
+   SolarAssistant/ESP32 NDJSON without opening operational inputs in this
+   preparation step.
 3. Resolve only the SolarAssistant raw filename and access method through a
    separately approved metadata-only action without reading credentials or
    changing permissions.
-4. Require separate approval before running against protected SolarAssistant
-   evidence and the completed real datasets.
+4. Require separate approval before implementing or running adapters against
+   protected SolarAssistant evidence and the completed real datasets.
 5. Keep generated output in `/tmp` or ignored reports. Do not modify evidence,
    production retention, collectors, databases, services, or runtime state.
 
@@ -47,6 +46,7 @@ deploy the monitor during correlation implementation or analysis.
 
 ## Success
 
-The analyzer passes synthetic validation, protected input resolution and real
-execution remain separately approved, output is reproducible and source-
-labeled, and all evidence and runtime state remain unchanged.
+The synthetic analyzer remains validated and offline-only; the reviewed next
+work request defines exact adapters, protected access, output destination, and
+real-run limits without weakening permissions. Real execution remains a
+separate explicit approval, and all evidence and runtime state remain unchanged.

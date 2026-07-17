@@ -128,6 +128,10 @@ src/solar_digital_twin/collectors/esp32_sse.py
 scripts/analyze_esp32_retention.py
     Streaming offline raw/retained ESP32 retention assessment utility.
 
+src/solar_digital_twin/analysis/forensic_correlation.py
+    Pure offline three-source timestamp alignment and conservative synthetic
+    AC-couple event analysis.
+
 docs/AI_ENGINEERING_FRAMEWORK_MVP.md
     Reusable AI engineering framework MVP boundary design.
 
