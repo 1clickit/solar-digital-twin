@@ -30,10 +30,13 @@ boundaries.
 ## Bounded autonomy
 
 Once a bounded objective is authorized, Codex may proceed without duplicate
-confirmation through inspection, in-scope edits, tests, defect correction,
-validation, directly related documentation, exact staging, and creation of the
-validated local commit. It must not ask again for an action already authorized
-within that work unit.
+confirmation through every explicitly included activity: inspection, in-scope
+edits, temporary non-evidence working files, tests and linters, defect
+correction, repository health checks, validation, directly related
+documentation, exact staging, an authorized local commit, and a normal push
+when expressly authorized. It must not ask again for an action already
+authorized within that work unit or make Chris routinely reconfirm technical
+decisions ChatGPT has already bounded.
 
 Codex may perform ordinary read-only repository, non-secret telemetry,
 completed-evidence, report, metadata/hash, strict read-only database, approved
@@ -44,6 +47,25 @@ dumps.
 
 `CONTRIBUTING.md` is authoritative for standing, one-approval, and always-gated
 actions; preservation, change audit, Git, and push policy; and risk escalation.
+Its “Manual operation and bounded Codex workflow” section is the canonical
+definition of manual one-step operation, complete bounded autonomy, interface
+confirmations, escalation, and reviewability.
+
+## Stop and escalation behavior
+
+Stop and report the exact condition when the repository or inputs differ
+unexpectedly, work would exceed or conflict with scope, installation or
+unapproved runtime/service/network/deployment action is needed, protected
+secrets would need handling, evidence or databases would be destructively
+changed, production collector/retention behavior would change outside scope,
+or an unapproved or destructive Git action would be required. Do not improvise
+past material ambiguity.
+
+Chris returns the stopped request and context to ChatGPT, which decides whether
+to issue a revised bounded authorization. A platform confirmation does not
+expand scope: use it only for the exact authorized action. If it requests
+broader filesystem, credential, service, runtime, installation, or destructive
+Git access that was not explicitly authorized, stop and escalate.
 
 ## Guardrails
 

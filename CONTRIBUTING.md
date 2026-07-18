@@ -79,6 +79,84 @@ Chris when uncertainty could materially affect physical safety, evidence
 integrity, credentials, availability, recovery, major cost, or project
 direction.
 
+## Manual operation and bounded Codex workflow
+
+This section is canonical for the distinction between actions Chris performs
+and work Codex performs locally.
+
+### Manual operation by Chris
+
+“One actionable step at a time” primarily governs commands or consequential
+actions Chris must personally perform. Give one clear actionable step, name the
+exact host and shell, and pause for the observed result when the next action
+depends on it. ChatGPT remains responsible for routine software-engineering
+judgment; do not transfer that burden to Chris.
+
+### Complete bounded Codex work units
+
+Codex operates under one complete bounded work unit at a time. Once Chris
+authorizes it, Codex proceeds uninterrupted through every activity explicitly
+included in that unit. This may include authorized repository reads and
+inspection, in-scope edits, temporary non-evidence working files, tests,
+linters, repository health checks, validation, directly related documentation,
+staging only the approved files, a specifically authorized local commit, and a
+normal push when the work unit expressly authorizes it.
+
+Codex must not request repeated permission for an already-authorized activity.
+Chris should not be placed in a routine “press Y” role after ChatGPT has already
+classified the action, scope, and safeguards. This autonomy never expands the
+work unit or bypasses execution-environment security controls.
+
+### Escalation boundary
+
+Codex stops and returns the exact condition when:
+
+- an action exceeds or conflicts with the work unit, or material ambiguity or
+  scope expansion invalidates the plan;
+- the repository is unexpectedly dirty, divergent, on the wrong checkpoint,
+  or contains unexpected files or behavior;
+- software installation is required;
+- an unapproved service, timer, process, runtime, network, VM, deployment,
+  collector, or production-retention change is required;
+- credentials, tokens, authorization headers, or protected secrets would need
+  handling;
+- raw evidence would be modified, deleted, normalized in place, or overwritten;
+- a database migration or destructive database operation is required;
+- an unapproved commit or push, or any amend, reset, rebase, merge, force-push,
+  destructive Git action, or history rewrite is required; or
+- continuing would otherwise become unsafe or materially ambiguous.
+
+Chris returns the exact stopped request and surrounding context to ChatGPT.
+ChatGPT decides whether proceeding is appropriate and, when needed, prepares a
+revised bounded authorization. Codex does not improvise beyond the boundary.
+
+### Interface-enforced confirmations
+
+The Codex execution environment may display a mandatory platform confirmation
+even when the bounded work unit already authorizes the exact action. Such a
+prompt is an interface control, not a request for Chris to make a new technical
+decision. Codex may use it only when the displayed action exactly matches the
+authorized activity and may not broaden the action because confirmation is
+available.
+
+A confirmation involving broader filesystem access, installation, credentials,
+services, runtime changes, destructive Git activity, or another protected
+boundary requires stopping and escalation unless that exact activity is
+explicitly authorized. Project policy does not bypass platform controls.
+
+### Reviewability and durable records
+
+Review uses the available combination of the original bounded request, Codex's
+compact completion report, Git status/diff/history and remote synchronization,
+test and repository-health results, the Codex session or activity record, and
+append-only `CHANGE_AUDIT.md` entries for persistent changes. Together these
+show whether Codex remained within authorization.
+
+Interface and session history may be transient. It is not durable project
+evidence unless a documented retention mechanism preserves it. Git and the
+repository audit are the durable project records; evidence-specific provenance
+remains governed by its own immutable records.
+
 ## Preservation: archive instead of delete
 
 Preserve project information rather than permanently deleting it as routine

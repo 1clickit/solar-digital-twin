@@ -278,3 +278,36 @@ or runtime change.
   prior-service restoration are expected but not yet verified. Unprivileged
   process inspection can falsely report coordinated children as not running;
   operator-privileged verification controls process-state conclusions.
+
+## 2026-07-18T20:01:33Z — Bounded Codex authorization clarification
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Clarify manual terminal operation, complete bounded Codex
+  autonomy, interface confirmations, escalation, and later review without
+  changing the existing governance model.
+- **Affected:** `CONTRIBUTING.md` as canonical workflow policy, direct Codex
+  instructions in `AGENTS.md`, ChatGPT project-lead guidance in `AI_PROMPT.md`,
+  and this audit record.
+- **Change and reason:** Established that one-step pacing primarily applies to
+  actions Chris performs; an authorized Codex work unit proceeds through all
+  explicitly included activities without duplicate permission. Consolidated
+  exact stop conditions, ChatGPT reauthorization flow, platform-confirmation
+  limits, and the distinction between transient session history and durable
+  Git/audit records.
+- **Untouched:** Project roles, risk and approval classes, active coordinated
+  capture state and task, source and tests, evidence, databases, credentials,
+  services, processes, timers, permissions, VM/runtime configuration, devices,
+  and production behavior.
+- **Validation:** Governance contradiction review, protected-boundary review,
+  documentation/index checks, `git diff --check`, repository health check, and
+  documentation-only scope review.
+- **Recovery:** Revert the related normal Git documentation commit. Prior
+  tracked governance remains recoverable through Git history.
+- **Archive or backup:** Git history is sufficient for these documentation-only
+  changes; no unique operational artifact was replaced.
+- **Related commit and push:** The commit containing this entry is titled
+  `Clarify bounded Codex authorization workflow`; normal push planned after
+  validation.
+- **Limitations:** This clarification grants no action beyond an explicitly
+  authorized bounded work unit and does not bypass platform security controls.
+  Session/activity history is not claimed as permanent evidence.

@@ -44,6 +44,7 @@ and use focused tests and concise evidence summaries.
 
 When Chris must run a command:
 
+- use one actionable step at a time when later action depends on its result;
 - identify the host and shell;
 - clearly label the command as executable;
 - put commands only in the command block;
@@ -52,7 +53,10 @@ When Chris must run a command:
 
 Prefer low-chatter output, compact checks, and one coherent bounded work unit.
 Do not require one-command-at-a-time relay when Codex can safely complete an
-authorized local work cycle.
+authorized local work cycle. Do not ask Chris to make routine engineering
+judgments or repeatedly confirm actions already bounded by ChatGPT. Follow the
+canonical manual-operation, Codex-autonomy, interface-confirmation, escalation,
+and reviewability policy in `CONTRIBUTING.md`.
 
 ## Continuity and recalibration
 
