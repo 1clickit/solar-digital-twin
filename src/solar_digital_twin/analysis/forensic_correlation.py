@@ -91,12 +91,17 @@ def _iso(value: datetime) -> str:
 
 
 def _safe_record(record: TimedRecord) -> dict[str, Any]:
+    values = dict(record.values)
+    if values.get("metric_id") == "text_sensor-04_forensic_event_log":
+        for key in ("event", "value", "status"):
+            if key in values:
+                values[key] = _bounded_event_description(values[key])
     return {
         "source": record.source,
         "timestamp_utc": _iso(record.timestamp_utc),
         "original_timestamp": record.original_timestamp,
         "timestamp_kind": record.timestamp_kind,
-        "values": dict(record.values),
+        "values": values,
         "provenance": dict(record.provenance),
     }
 
@@ -144,9 +149,45 @@ def _window(
     return [record for record in records if start <= record.timestamp_utc <= end]
 
 
-def _availability_transitions(records: Sequence[TimedRecord]) -> int:
-    states = [record.values.get("available") for record in records if "available" in record.values]
-    return sum(before != after for before, after in zip(states, states[1:]))
+def _transition_summary(records: Sequence[TimedRecord]) -> dict[str, Any]:
+    availability: dict[str, Any] = {}
+    values: dict[str, Any] = {}
+    availability_count = 0
+    state_change_count = 0
+    state_changes: list[dict[str, Any]] = []
+    for record in records:
+        metric = str(record.values.get("metric_id", "unknown"))
+        if "available" in record.values:
+            current = record.values["available"]
+            if metric in availability and availability[metric] != current:
+                availability_count += 1
+            availability[metric] = current
+        if metric.startswith(("binary_sensor-", "text_sensor-")) and metric != "text_sensor-04_forensic_event_log":
+            current = record.values.get("value")
+            if metric in values and values[metric] != current:
+                state_change_count += 1
+                if len(state_changes) < 20:
+                    state_changes.append(
+                        {
+                            "metric_id": metric,
+                            "from": _bounded_event_description(values[metric]),
+                            "to": _bounded_event_description(current),
+                            "timestamp_utc": _iso(record.timestamp_utc),
+                        }
+                    )
+            values[metric] = current
+    return {
+        "availability_transitions": availability_count,
+        "state_transition_count": state_change_count,
+        "state_transitions": state_changes,
+        "state_transitions_truncated": state_change_count > len(state_changes),
+    }
+
+
+def _bounded_event_description(value: Any) -> str:
+    lines = [line.strip() for line in str(value).splitlines() if line.strip()]
+    description = lines[-1] if lines else ""
+    return description if len(description) <= 160 else description[:157] + "..."
 
 
 def _esp32_summary(records: Sequence[TimedRecord], threshold: float) -> dict[str, Any]:
@@ -155,14 +196,22 @@ def _esp32_summary(records: Sequence[TimedRecord], threshold: float) -> dict[str
         for record in records
         if isinstance(record.values.get("frequency_hz"), (int, float))
     ]
-    event_names = sorted(
-        {
-            str(record.values["event"])
-            for record in records
-            if record.values.get("event") not in (None, "")
-        }
-    )
+    event_names: list[str] = []
+    event_seen: set[str] = set()
+    event_descriptions_truncated = False
+    for record in records:
+        if record.values.get("event") in (None, ""):
+            continue
+        description = _bounded_event_description(record.values["event"])
+        if description in event_seen:
+            continue
+        event_seen.add(description)
+        if len(event_names) < 20:
+            event_names.append(description)
+        else:
+            event_descriptions_truncated = True
     frequency_range = max(frequencies) - min(frequencies) if frequencies else None
+    transitions = _transition_summary(records)
     return {
         "records": len(records),
         "frequency_min_hz": min(frequencies) if frequencies else None,
@@ -170,7 +219,8 @@ def _esp32_summary(records: Sequence[TimedRecord], threshold: float) -> dict[str
         "frequency_change_hz": frequency_range,
         "frequency_supporting": frequency_range is not None and frequency_range >= threshold,
         "events": event_names,
-        "availability_transitions": _availability_transitions(records),
+        "event_descriptions_truncated": event_descriptions_truncated,
+        **transitions,
     }
 
 
@@ -260,9 +310,6 @@ def analyze_correlation(
         if not qualifies:
             index += 1
             continue
-        event_type = (
-            "zero_output" if after <= cfg.zero_output_threshold_w else "partial_collapse"
-        )
         plateau_limit = float(baseline) - cfg.minimum_drop_w
         plateau: list[TimedRecord] = []
         recovery_index = None
@@ -314,6 +361,11 @@ def analyze_correlation(
             gap_limited=gap_limited,
         )
         plateau_powers = [float(item.values["ac_couple_power_w"]) for item in plateau]
+        event_type = (
+            "zero_output"
+            if min(plateau_powers) <= cfg.zero_output_threshold_w
+            else "partial_collapse"
+        )
         events.append(
             {
                 "event_type": event_type,

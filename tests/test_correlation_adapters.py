@@ -74,7 +74,7 @@ class CorrelationAdapterTests(unittest.TestCase):
             "INSERT INTO runtime_snapshots VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 "unit-a",
-                "2026-02-03T18:01:00Z",
+                "2026-02-03 18:01:00",
                 "2026-02-03 12:01:00",
                 "synthetic",
                 "normal",
@@ -189,6 +189,8 @@ class CorrelationAdapterTests(unittest.TestCase):
         self.assertEqual(record.values["warning"], 0)
         self.assertEqual(record.values["fault"], 0)
         self.assertEqual(record.values["grid_frequency_hz"], 60.0)
+        self.assertEqual(record.timestamp_utc, START + timedelta(minutes=1))
+        self.assertEqual(record.original_timestamp, "2026-02-03 18:01:00")
         self.assertEqual(record.provenance["table"], "runtime_snapshots")
 
     def test_valid_solarassistant_poll_groups_scopes_and_trusted_soc(self):

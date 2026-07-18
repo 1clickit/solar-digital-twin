@@ -213,8 +213,8 @@ def iter_eg4_runtime_records(
             ORDER BY server_time
             """,
             (
-                start.isoformat().replace("+00:00", "Z"),
-                end.isoformat().replace("+00:00", "Z"),
+                start.replace(tzinfo=None).isoformat(sep=" "),
+                end.replace(tzinfo=None).isoformat(sep=" "),
             ),
         )
         while rows := cursor.fetchmany(batch_size):
@@ -236,6 +236,7 @@ def iter_eg4_runtime_records(
                     row["server_time"],
                     "cloud_server_time",
                     values,
+                    naive_timezone="UTC",
                     provenance={
                         "input_name": Path(database_path).name,
                         "table": "runtime_snapshots",
@@ -334,6 +335,15 @@ def iter_solarassistant_records(
                     f"SolarAssistant line {line_number}: timestamps are not monotonic"
                 )
             previous_time = timestamp
+            if timestamp > end:
+                if current_timestamp is not None:
+                    current_time = normalize_timestamp(current_timestamp)
+                    if _in_window(current_time, start, end):
+                        yield _solar_poll_record(
+                            path, current_timestamp, metrics, first_line, last_line
+                        )
+                current_timestamp = None
+                break
             topic = record.get("topic")
             if not isinstance(topic, str) or not topic:
                 raise AdapterError(f"SolarAssistant line {line_number}: missing topic")
@@ -392,6 +402,7 @@ def iter_esp32_records(
     if start > end:
         raise AdapterError("start_utc must not be after end_utc")
     path = Path(input_path)
+    previous_time: datetime | None = None
     try:
         handle = path.open("r", encoding="utf-8")
     except OSError as exc:
@@ -400,6 +411,13 @@ def iter_esp32_records(
         for line_number, line in enumerate(handle, 1):
             record = _json_object(line, "ESP32", line_number)
             timestamp = _receipt_time(record, "ESP32", line_number)
+            if previous_time is not None and timestamp < previous_time:
+                raise AdapterError(
+                    f"ESP32 line {line_number}: timestamps are not monotonic"
+                )
+            previous_time = timestamp
+            if timestamp > end:
+                break
             entity_id = record.get("id")
             if not isinstance(entity_id, str) or not entity_id:
                 raise AdapterError(f"ESP32 line {line_number}: missing entity id")

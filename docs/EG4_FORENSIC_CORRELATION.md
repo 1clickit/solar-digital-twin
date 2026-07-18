@@ -376,7 +376,8 @@ output files, or import-time actions.
 SQLite uses URI `mode=ro`, `PRAGMA query_only`, fixed table/column selections,
 parameterized time bounds, schema checks, and batched `fetchmany` iteration.
 EG4 day source times are explicitly interpreted as `America/Chicago`; runtime
-`server_time` is canonical UTC. Only selected warning, fault, and operating-mode
+`server_time` is stored without an offset but explicitly interpreted as UTC.
+Only selected warning, fault, and operating-mode
 keys are extracted from runtime JSON, never the complete payload.
 
 NDJSON inputs are read one line at a time. SolarAssistant records from one poll
