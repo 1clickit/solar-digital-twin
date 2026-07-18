@@ -5,9 +5,10 @@ The raw standalone collector was implemented and manually verified on
 2026-07-13. The separate retained-output stage is covered by offline tests. The
 fixed 12-hour live-verification capture completed successfully on 2026-07-17
 and passed evidence-integrity review as described below. The subsequent
-full-capture retention assessment found no implementation defect and recommends
-leaving policy unchanged pending event-window validation. See
-`docs/ESP32_RETENTION_ASSESSMENT.md`. The collector is
+full-capture assessment and real-window replay found no implementation defect
+and adopted the conservative candidate for a separately reviewed rollout. The
+production policy remains unchanged; the implementation and canary design are
+in `docs/ESP32_RETENTION_PRODUCTION_PLAN.md`. The collector is
 `src/solar_digital_twin/collectors/esp32_sse.py`.
 
 ## Collection Decision
@@ -110,10 +111,16 @@ Completion and evidence integrity are confirmed. The completed assessment:
 
 The measured ratios were 91.382% by record and 95.770% by byte. Current behavior
 matches the documented frequency-only selective policy; all non-frequency
-entities pass through. No retention change is approved. Candidate policy replay
-against known forensic windows remains required before implementation.
+entities pass through. The replay is complete and supports an Adopt decision,
+but no production retention change has occurred. Implementation, canary
+activation, canary analysis, and retirement remain separate milestones.
 
 ## Smallest Safe Implementation Step
-The standalone read-only collector reconnects with bounded backoff, filters approved entity IDs, timestamps each update, and appends raw and separately retained newline-delimited JSON under ignored `evidence/`.
+The standalone read-only collector reconnects with bounded backoff, filters
+approved entity IDs, timestamps each update, and writes raw and separately
+retained newline-delimited JSON under ignored `evidence/`.
 
-Do not modify the EG4 collector, SQLite schema, firmware, thresholds, services, or portal. A later step may transform raw updates into aligned one-second rows.
+The next repository-only step implements the versioned conservative writer and
+opt-in canary mode defined in `docs/ESP32_RETENTION_PRODUCTION_PLAN.md`, without
+live activation. Do not modify the EG4 collector, SQLite schema, firmware,
+services, device, or portal.

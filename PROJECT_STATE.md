@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Validated bounded three-source forensic correlation with real evidence and recalibrated project governance
+Adopted conservative ESP32 replay and completed the reversible production rollout plan
 
 Next Task:
-Prepare the smallest safe production-retention implementation plan for the accepted conservative ESP32 candidate.
+Implement the versioned conservative ESP32 retained writer and opt-in dual-output canary mode with synthetic tests only.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -278,6 +278,14 @@ main
   reducing the current retained stream by 84.35% by records and 75.82% by
   bytes. `docs/ESP32_RETENTION_REPLAY.md` records the evidence, limitations,
   acceptance criteria, and Adopt decision
+- `docs/ESP32_RETENTION_PRODUCTION_PLAN.md` defines `esp32-conservative-v1`,
+  one-process independent current/candidate writers, versioned output and
+  manifest provenance, a 12-hour daytime canary, non-destructive rollback,
+  post-capture verification, and 14 production acceptance gates
+- The rollout is explicitly phased: repository implementation without live
+  activation, separately approved three-output canary, offline canary analysis,
+  and only then an owner-reviewed future policy transition. Current production
+  retention and raw evidence behavior remain unchanged
 - The complete ESP32 window overlaps SolarAssistant, both use compatible
   `solardt` UTC receipt timestamps, and no clock reversal or timezone conflict
   was found. Later offline correlation is supportable, but matching EG4 evidence

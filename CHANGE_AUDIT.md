@@ -88,3 +88,30 @@ or runtime change.
 - **Limitations:** No real availability transition occurred in the capture;
   synthetic tests preserve that policy path. Cloud cover remains an alternative
   explanation, and implementation/deployment remain separate work units.
+
+## 2026-07-18T04:16:44Z — Production ESP32 retention rollout plan
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Convert the adopted replay decision into a safe, reversible
+  production implementation and canary plan without activating it.
+- **Affected:** ESP32 production-retention plan, telemetry and replay documents,
+  project index, project state, next task, and this audit record.
+- **Change and reason:** Defined `esp32-conservative-v1`, one-process independent
+  dual-policy writers, versioned output/manifest provenance, a 12-hour daytime
+  three-output canary, bounded monitoring, non-destructive rollback,
+  deterministic verification, 14 acceptance gates, and separate implementation,
+  activation, analysis, and retirement milestones.
+- **Untouched:** Source, tests, collectors, production retention, evidence,
+  devices, services, databases, portal, credentials, permissions, captures,
+  firmware, network, and runtime state.
+- **Validation:** Policy/replay consistency and scope searches, documentation
+  and index review, `git diff --check`, repository health check, and final
+  documentation-only diff review.
+- **Recovery:** Revert the related normal Git commit. Prior documentation remains
+  recoverable in Git; no operational artifact was replaced or archived.
+- **Related commit and push:** The commit containing this entry, titled `Plan
+  production ESP32 retention rollout`; normal milestone push planned after
+  validation.
+- **Limitations:** Real availability transitions remain unobserved. The plan
+  requires synthetic coverage and treats absent real transitions or events as a
+  canary qualification rather than proof of full forensic validation.

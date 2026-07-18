@@ -94,6 +94,10 @@ docs/ESP32_RETENTION_REPLAY.md
     Deterministic real-window replay of raw, current-retained, and conservative
     ESP32 streams, with the accepted candidate decision and qualifications.
 
+docs/ESP32_RETENTION_PRODUCTION_PLAN.md
+    Versioned dual-output implementation, canary, rollback, verification, and
+    production-acceptance plan for the adopted conservative ESP32 policy.
+
 docs/TELEMETRY_SOURCE_ROLES.md
     Agreed authority, comparison, forensic, and display roles for telemetry sources.
 

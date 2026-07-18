@@ -2,44 +2,46 @@
 
 ## Objective
 
-Prepare the smallest safe production-retention implementation plan for the
-accepted conservative ESP32 candidate. Do not deploy or change collector
-behavior in the planning work unit.
+Implement the versioned `esp32-conservative-v1` retained writer and opt-in
+dual-output canary mode with synthetic tests only. Do not deploy, run a live
+capture, or change the current default policy.
 
 ## Context
 
-The deterministic replay in `docs/ESP32_RETENTION_REPLAY.md` preserved all
-three validated classifications, the stable control, every full-capture
-binary/text transition, frequency ranges and ordering, UTC chronology, and
-provenance. It reduced current retained volume by 84.35% by records and 75.82%
-by bytes. Production behavior remains unchanged and raw evidence remains
-authoritative.
+`docs/ESP32_RETENTION_PRODUCTION_PLAN.md` defines the accepted policy exactly,
+chooses one collector process with independent current/candidate writers,
+specifies versioned filenames and an append-only manifest, and separates
+repository implementation, live canary, analysis, and policy retirement.
+Production behavior remains unchanged and raw evidence remains authoritative.
 
 ## Scope
 
-1. Map the accepted entity deadbands and 60-second heartbeat into an explicit,
-   reviewable ESP32 retention-policy design.
-2. Preserve first records, availability transitions, exact text/binary changes,
-   UTC timestamps, provenance, and complete raw evidence.
-3. Define focused synthetic tests for availability transitions, boundary
-   seeding, event ordering, and rollback to the current policy.
-4. Define a bounded post-implementation capture verification and decision gate.
-5. Do not deploy, alter runtime, or start a capture during the planning work.
+1. Add the pure `esp32-conservative-v1` per-entity policy using the adopted
+   deadbands and 60-second heartbeat.
+2. Preserve the current policy as the default and add explicit opt-in canary
+   mode with independent retained state and failure isolation.
+3. Add exclusive output creation, versioned candidate naming, and append-only
+   capture-manifest identity without changing raw record shape.
+4. Import the canonical policy into offline replay rather than duplicating it.
+5. Add the focused synthetic tests enumerated in the production plan.
+6. Do not access a device, deploy, alter runtime, or start a capture.
 
 ## Runtime boundary
 
 Use strict read-only, bounded offline access. Do not access credentials,
 tokens, protected collector or monitor logs, device controls, services, or
 unrelated files. Do not restart or modify the SolarAssistant monitor, EG4
-workflow, ESP32 collector, evidence, database, permissions, or runtime.
+workflow, installed ESP32 collector, evidence, database, permissions, or
+runtime. Repository source changes remain limited to the implementation scope.
 
 ## Following task
 
-After the plan is reviewed, implement the candidate in a bounded repository
-work unit without deployment. A later separately approved capture should verify
-real availability handling and operational size reduction.
+After repository implementation is reviewed and pushed, request one approval
+for the preflight and approximately 12-hour three-output daytime canary. Canary
+analysis and retirement remain later milestones.
 
 ## Success
 
-The plan is explicit, testable, reversible, evidence-preserving, and separates
-repository implementation from later deployment and capture verification.
+The implementation is offline-tested, current behavior remains the default,
+raw semantics are unchanged, each retained failure is isolated, and the code is
+ready for a separately approved canary without activating it.

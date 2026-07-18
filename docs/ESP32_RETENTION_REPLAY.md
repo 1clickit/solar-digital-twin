@@ -112,8 +112,8 @@ tested candidate.
 
 ## Next implementation step
 
-Prepare the smallest production-retention implementation plan: map the accepted
-candidate into explicit ESP32 policy configuration, preserve raw output and all
-first/availability/text/binary changes, add synthetic availability and boundary
-tests, define rollback, and require a separately approved capture verification.
-Do not deploy from this replay report.
+The production plan is now authoritative in
+`docs/ESP32_RETENTION_PRODUCTION_PLAN.md`. The next work unit implements the
+versioned policy and opt-in dual-output canary mode with synthetic tests only.
+Live activation and capture verification remain separately approved milestones;
+do not deploy from this replay report.
