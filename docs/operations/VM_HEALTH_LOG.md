@@ -97,5 +97,52 @@ measured facts. Do not invent unavailable measurements.
 
 ## Health entries
 
-No VM health measurement has been recorded yet. The first read-only review is
-the immediate operational work unit in `NEXT_TASK.md`.
+At policy creation, no VM health measurement had been recorded.
+
+### 2026-07-18T03:52:24Z — Normal
+
+- **Reason:** Initial measured baseline
+- **Responsible actor:** ChatGPT-directed Codex
+- **System identity:** `solardt`; Ubuntu 24.04.4 LTS; Linux
+  `6.8.0-134-generic` on x86_64
+- **Root filesystem:** ext4, 78 GiB total, 13 GiB used, 62 GiB available,
+  17% used. Project paths use the same root filesystem; no separate local
+  project filesystem was found
+- **Inodes:** 5,177,344 total, 178,929 used, 4,998,415 available, 4% used
+- **Memory and swap:** 3.8 GiB memory total, 1.6 GiB used, 2.2 GiB available;
+  3.8 GiB swap total with 525 MiB used. Available memory, negligible load, and
+  low consumer percentages show no current memory pressure; swap use should be
+  compared at later reviews
+- **Uptime and load:** 10 days 23 hours; 2 CPUs; load averages 0.00, 0.02,
+  and 0.02, negligible relative to CPU capacity
+- **Leading consumers:** `python` was the highest sampled CPU consumer at
+  2.1%; `MainThread` was the highest sampled memory process name at 14.3%,
+  followed by other `MainThread` processes and `codex` at 6.8%. Command
+  arguments and environments were not recorded
+- **Failed units:** systemd state `running`; no failed units reported
+- **Storage growth:** repository 841,560,064 bytes, dominated by the
+  801,882,112-byte repository evidence directory. The two largest project
+  files were ESP32 raw and retained evidence at 156,174,965 and 149,568,755
+  bytes. SolarAssistant protected evidence used 80,965,632 allocated bytes
+  through existing read-only access. EG4 SQLite was 5,341,184 bytes; reports
+  used 4,366,336 bytes; no repository log files were found. Relevant `/tmp`
+  project files were small (largest observed: 12,641 bytes). Evidence run
+  directories span July 7–17, but no prior health baseline exists for a
+  measured growth-rate comparison
+- **Filesystem/disk warnings:** bounded unprivileged journal review found no
+  filesystem error, I/O error, out-of-space condition, or read-only remount.
+  Older boot warnings concerned virtual PCI hot-plug initialization and a
+  device reset, not an observed storage-capacity or filesystem fault. Direct
+  `dmesg` access was unavailable without privilege and was not bypassed
+- **Inaccessible measurements:** direct privileged disk diagnostics and the
+  kernel ring buffer were unavailable by design. Credential locations,
+  protected collector/monitor logs, and unrelated private files were not
+  accessed
+- **Previous-entry comparison:** No prior measured baseline
+- **Capacity assessment:** ample filesystem, inode, memory, and CPU capacity
+  exists for the next bounded offline analysis. Current storage is far below
+  the 70% advisory threshold
+- **Classification:** Normal
+- **Recommended follow-up:** proceed with the bounded ESP32 retention-candidate
+  comparison. Repeat this health review within 30 calendar days and at the
+  documented event-driven checkpoints; compare swap and evidence growth then

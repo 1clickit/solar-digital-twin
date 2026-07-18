@@ -4,7 +4,7 @@ Current Milestone:
 Validated bounded three-source forensic correlation with real evidence and recalibrated project governance
 
 Next Task:
-Perform the first documented read-only solardt VM health review; then resume the bounded ESP32 retention-candidate comparison.
+Compare raw and current-retained ESP32 context against the conservative retention candidate using validated real event windows.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -323,8 +323,13 @@ main
   risk, approval, archive-first, audit, commit, and milestone-push policy
 - `docs/operations/VM_HEALTH_LOG.md` now defines the read-only 30-day and
   event-driven VM health schedule, capacity thresholds, append-only health
-  entries, and prohibition on automatic remediation or evidence deletion. No
-  VM measurement was taken during the documentation correction
+  entries, and prohibition on automatic remediation or evidence deletion
+- The initial read-only `solardt` VM health baseline was measured at
+  `2026-07-18T03:52:24Z` and classified **Normal**: root filesystem use 17%,
+  inode use 4%, 2.2 GiB memory available, negligible two-CPU load, systemd
+  running with no failed units, and no observed filesystem/I/O/out-of-space
+  warning. No remediation was performed; repeat within 30 days and at the
+  documented event-driven checkpoints
 - Commit `b88941d` is pushed to `origin/main`; `main` was clean and synchronized
   before the governance reset
 
