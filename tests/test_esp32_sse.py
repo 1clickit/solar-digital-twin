@@ -73,17 +73,22 @@ class FileDouble:
 
 
 class CollectorHarness:
-    def __init__(self, raw=None, retained=None):
+    def __init__(self, raw=None, retained=None, manifest=None, conservative=None):
         self.raw = raw or FileDouble("raw")
         self.retained = retained or FileDouble("retained")
+        self.manifest = manifest or FileDouble("manifest")
+        self.conservative = conservative or FileDouble("conservative")
         self.tempdir = TemporaryDirectory()
         self.raw_path = Path(self.tempdir.name) / "esp32_sse_test.ndjson"
 
     def cleanup(self):
         self.tempdir.cleanup()
 
-    def patches(self, request_side_effect, **extra):
-        opened = iter((self.raw, self.retained))
+    def patches(self, request_side_effect, mode="current", **extra):
+        outputs = [self.manifest, self.raw, self.retained]
+        if mode == "canary":
+            outputs.append(self.conservative)
+        opened = iter(outputs)
         patches = [
             patch.object(esp32_sse, "new_output_path", return_value=self.raw_path),
             patch.object(Path, "mkdir"),
@@ -100,14 +105,17 @@ class CollectorHarness:
 
 
 class Esp32CollectorTests(unittest.TestCase):
-    def make_harness(self, raw=None, retained=None):
-        harness = CollectorHarness(raw, retained)
+    def make_harness(self, raw=None, retained=None, manifest=None, conservative=None):
+        harness = CollectorHarness(raw, retained, manifest, conservative)
         self.addCleanup(harness.cleanup)
         return harness
 
-    def run_until_interrupt(self, harness, responses, **extra_patches):
+    def run_until_interrupt(
+        self, harness, responses, mode="current", **extra_patches
+    ):
         patches = harness.patches(
             [*responses, KeyboardInterrupt()],
+            mode=mode,
             **extra_patches,
         )
         with patches[0], patches[1], patches[2], patches[3], patches[4]:
@@ -115,7 +123,13 @@ class Esp32CollectorTests(unittest.TestCase):
                 extra.start()
             try:
                 with self.assertRaises(KeyboardInterrupt):
-                    esp32_sse.collect(0)
+                    esp32_sse.collect(
+                        0,
+                        retention_mode=mode,
+                        collector_version=(
+                            "test-version" if mode != "current" else None
+                        ),
+                    )
             finally:
                 for extra in reversed(patches[5:]):
                     extra.stop()
@@ -127,16 +141,16 @@ class Esp32CollectorTests(unittest.TestCase):
             FileDouble("retained", events),
         )
 
-        def retain_after_raw(record, policy, monotonic_now):
+        def retain_after_raw(record, monotonic_now):
             self.assertEqual(events[-1], "raw_flush")
-            return True
+            return "pass_through"
 
         self.run_until_interrupt(
             harness,
             [FakeResponse([sse_event("text_sensor-00_current_status", "On")])],
             retain=patch.object(
-                esp32_sse,
-                "should_retain_record",
+                esp32_sse.CurrentESP32RetentionPolicy,
+                "retention_reason",
                 side_effect=retain_after_raw,
             ),
         )
@@ -156,6 +170,18 @@ class Esp32CollectorTests(unittest.TestCase):
                 "evidence/esp32/"
                 "esp32_sse_20260714_120000Z_retained.ndjson"
             ),
+        )
+        self.assertEqual(
+            esp32_sse.conservative_output_path(raw),
+            Path(
+                "evidence/esp32/"
+                "esp32_sse_20260714_120000Z_"
+                "retained_esp32-conservative-v1.ndjson"
+            ),
+        )
+        self.assertEqual(
+            esp32_sse.manifest_output_path(raw),
+            Path("evidence/esp32/esp32_sse_20260714_120000Z_manifest.ndjson"),
         )
 
     def test_allowlist_and_receipt_timestamp_are_unchanged(self):
@@ -204,6 +230,30 @@ class Esp32CollectorTests(unittest.TestCase):
             [60.0, 60.04],
         )
 
+    def test_both_policy_states_survive_one_stream_reconnect(self):
+        harness = self.make_harness()
+        responses = [
+            FakeResponse([sse_event("sensor-01_gen_frequency", 60.00)]),
+            FakeResponse(
+                [
+                    sse_event("sensor-01_gen_frequency", 60.03),
+                    sse_event("sensor-01_gen_frequency", 60.04),
+                ],
+                interrupt=True,
+            ),
+        ]
+        self.run_until_interrupt(harness, responses, mode="canary")
+
+        expected = [60.0, 60.04]
+        self.assertEqual(
+            [json.loads(line)["value"] for line in harness.retained.lines],
+            expected,
+        )
+        self.assertEqual(
+            [json.loads(line)["value"] for line in harness.conservative.lines],
+            expected,
+        )
+
     def test_frequency_policy_state_starts_fresh_for_each_collect_run(self):
         first_run = self.make_harness()
         second_run = self.make_harness()
@@ -233,6 +283,10 @@ class Esp32CollectorTests(unittest.TestCase):
 
         self.assertTrue(harness.raw.closed)
         self.assertTrue(harness.retained.closed)
+        self.assertTrue(harness.manifest.closed)
+        manifest = [json.loads(line) for line in harness.manifest.lines]
+        self.assertEqual([item["event"] for item in manifest], ["start", "completion"])
+        self.assertEqual(manifest[0]["retained_outputs"][0]["policy_id"], "esp32-frequency-v1")
 
     def test_keyboard_interrupt_closes_both_outputs(self):
         harness = self.make_harness()
@@ -240,6 +294,10 @@ class Esp32CollectorTests(unittest.TestCase):
 
         self.assertTrue(harness.raw.closed)
         self.assertTrue(harness.retained.closed)
+        self.assertTrue(harness.manifest.closed)
+        manifest = [json.loads(line) for line in harness.manifest.lines]
+        self.assertEqual(manifest[-1]["event"], "interruption")
+        self.assertEqual(manifest[-1]["stop_reason"], "keyboard_interrupt")
 
     def test_retained_write_failure_is_reported_once_and_raw_continues(self):
         retained = FileDouble("retained", fail_write=True)
@@ -270,6 +328,8 @@ class Esp32CollectorTests(unittest.TestCase):
             nonlocal open_count
             open_count += 1
             if open_count == 1:
+                return harness.manifest
+            if open_count == 2:
                 return harness.raw
             raise OSError("private retained path details")
 
@@ -324,14 +384,189 @@ class Esp32CollectorTests(unittest.TestCase):
                 harness,
                 [response],
                 retain=patch.object(
-                    esp32_sse,
-                    "should_retain_record",
+                    esp32_sse.CurrentESP32RetentionPolicy,
+                    "retention_reason",
                     side_effect=ValueError("private record value"),
                 ),
             )
 
         self.assertEqual(len(harness.raw.lines), 2)
         self.assertEqual(harness.retained.lines, [])
+
+    def test_canary_uses_one_stream_and_independent_retained_writers(self):
+        harness = self.make_harness()
+        response = FakeResponse(
+            [
+                sse_event("sensor-01_gen_frequency", 60.0),
+                sse_event("text_sensor-00_current_status", "NORMAL"),
+            ],
+            interrupt=True,
+        )
+        self.run_until_interrupt(harness, [response], mode="canary")
+
+        self.assertEqual(len(harness.raw.lines), 2)
+        self.assertEqual(len(harness.retained.lines), 2)
+        self.assertEqual(len(harness.conservative.lines), 2)
+        manifest = [json.loads(line) for line in harness.manifest.lines]
+        self.assertTrue(manifest[0]["canary"])
+        self.assertEqual(manifest[0]["collector_version"], "test-version")
+        self.assertEqual(
+            [item["policy_id"] for item in manifest[0]["retained_outputs"]],
+            ["esp32-frequency-v1", "esp32-conservative-v1"],
+        )
+        self.assertTrue(harness.retained.closed)
+        self.assertTrue(harness.conservative.closed)
+
+    def test_conservative_failure_does_not_disable_current_output(self):
+        conservative = FileDouble("conservative", fail_write=True)
+        harness = self.make_harness(conservative=conservative)
+        response = FakeResponse(
+            [
+                sse_event("text_sensor-00_current_status", "One"),
+                sse_event("text_sensor-00_current_status", "Two"),
+            ],
+            interrupt=True,
+        )
+        with redirect_stdout(StringIO()):
+            self.run_until_interrupt(harness, [response], mode="canary")
+
+        self.assertEqual(len(harness.raw.lines), 2)
+        self.assertEqual(len(harness.retained.lines), 2)
+        self.assertEqual(conservative.events.count("conservative_write"), 1)
+        manifest = [json.loads(line) for line in harness.manifest.lines]
+        candidate = manifest[-1]["retained_outputs"][1]
+        self.assertEqual(candidate["status"], "disabled")
+        self.assertEqual(candidate["error_type"], "OSError")
+
+    def test_current_failure_does_not_disable_conservative_output(self):
+        retained = FileDouble("retained", fail_write=True)
+        harness = self.make_harness(retained=retained)
+        response = FakeResponse(
+            [
+                sse_event("text_sensor-00_current_status", "One"),
+                sse_event("text_sensor-00_current_status", "Two"),
+            ],
+            interrupt=True,
+        )
+        with redirect_stdout(StringIO()):
+            self.run_until_interrupt(harness, [response], mode="canary")
+
+        self.assertEqual(len(harness.raw.lines), 2)
+        self.assertEqual(len(harness.conservative.lines), 2)
+
+    def test_both_retained_failures_leave_raw_collection_active(self):
+        harness = self.make_harness(
+            retained=FileDouble("retained", fail_write=True),
+            conservative=FileDouble("conservative", fail_write=True),
+        )
+        response = FakeResponse(
+            [
+                sse_event("text_sensor-00_current_status", "One"),
+                sse_event("text_sensor-00_current_status", "Two"),
+            ],
+            interrupt=True,
+        )
+        with redirect_stdout(StringIO()):
+            self.run_until_interrupt(harness, [response], mode="canary")
+
+        self.assertEqual(len(harness.raw.lines), 2)
+        final = json.loads(harness.manifest.lines[-1])
+        self.assertEqual(
+            [item["status"] for item in final["retained_outputs"]],
+            ["disabled", "disabled"],
+        )
+
+    def test_retained_failure_is_not_manifested_as_normal_completion(self):
+        harness = self.make_harness(retained=FileDouble("retained", fail_write=True))
+        response = FakeResponse(
+            [sse_event("text_sensor-00_current_status", "One")]
+        )
+        patches = harness.patches([response])
+        monotonic = patch.object(
+            esp32_sse.time,
+            "monotonic",
+            side_effect=[0.0, 0.0, 0.0, 0.1, 1.0],
+        )
+        with (
+            patches[0],
+            patches[1],
+            patches[2],
+            patches[3],
+            patches[4],
+            monotonic,
+            redirect_stdout(StringIO()),
+        ):
+            esp32_sse.collect(1.0)
+
+        final = json.loads(harness.manifest.lines[-1])
+        self.assertEqual(final["event"], "retained_output_failure")
+        self.assertEqual(final["stop_reason"], "retained_output_disabled")
+        self.assertEqual(len(harness.raw.lines), 1)
+
+    def test_opt_in_modes_require_explicit_collector_version(self):
+        with self.assertRaisesRegex(ValueError, "collector_version"):
+            esp32_sse.collect(1, retention_mode="canary")
+
+    def test_default_mode_does_not_open_conservative_output(self):
+        harness = self.make_harness()
+        self.run_until_interrupt(
+            harness,
+            [FakeResponse([sse_event("text_sensor-00_current_status", "One")])],
+        )
+        self.assertEqual(harness.conservative.lines, [])
+        self.assertFalse(harness.conservative.closed)
+        start = json.loads(harness.manifest.lines[0])
+        self.assertFalse(start["canary"])
+        self.assertEqual(start["retention_mode"], "current")
+
+    def test_any_existing_canary_path_refuses_before_network_or_truncation(self):
+        with TemporaryDirectory() as directory:
+            raw = Path(directory) / "esp32_sse_collision.ndjson"
+            paths = [
+                raw,
+                esp32_sse.retained_output_path(raw),
+                esp32_sse.conservative_output_path(raw),
+                esp32_sse.manifest_output_path(raw),
+            ]
+            for existing in paths:
+                with self.subTest(existing=existing.name):
+                    for path in paths:
+                        path.unlink(missing_ok=True)
+                    existing.write_text("preserve-me")
+                    with (
+                        patch.object(
+                            esp32_sse, "new_output_path", return_value=raw
+                        ),
+                        patch.object(esp32_sse.requests, "get") as get,
+                        self.assertRaisesRegex(FileExistsError, "already exists"),
+                    ):
+                        esp32_sse.collect(
+                            1,
+                            retention_mode="canary",
+                            collector_version="test-version",
+                        )
+                    get.assert_not_called()
+                    self.assertEqual(existing.read_text(), "preserve-me")
+
+    def test_raw_write_failure_is_manifested_and_stops_collection(self):
+        raw = FileDouble("raw", fail_write=True)
+        harness = self.make_harness(raw=raw)
+        response = FakeResponse(
+            [sse_event("text_sensor-00_current_status", "One")]
+        )
+        patches = harness.patches([response])
+        with (
+            patches[0],
+            patches[1],
+            patches[2],
+            patches[3],
+            patches[4],
+            self.assertRaises(OSError),
+        ):
+            esp32_sse.collect(0)
+        manifest = [json.loads(line) for line in harness.manifest.lines]
+        self.assertEqual(manifest[-1]["event"], "failure")
+        self.assertEqual(manifest[-1]["stop_reason"], "OSError")
 
 
 if __name__ == "__main__":

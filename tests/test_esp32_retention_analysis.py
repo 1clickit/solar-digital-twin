@@ -4,6 +4,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from scripts.analyze_esp32_retention import analyze, replay_candidate
+from solar_digital_twin.collectors.esp32_retention import (
+    ConservativeESP32RetentionPolicy,
+)
 
 
 def record(timestamp, entity, value):
@@ -97,6 +100,42 @@ class Esp32RetentionAnalysisTests(unittest.TestCase):
             raw.write_text("".join(json.dumps(item) + "\n" for item in records))
             with self.assertRaisesRegex(ValueError, "timestamp moved backward"):
                 replay_candidate(raw, output)
+
+    def test_replay_matches_canonical_policy_with_availability(self):
+        records = [
+            record("2026-07-16T00:00:00.000Z", "sensor-01_gen_frequency", 60.0),
+            record("2026-07-16T00:00:01.000Z", "sensor-01_gen_frequency", 60.01),
+            {
+                **record(
+                    "2026-07-16T00:00:02.000Z",
+                    "sensor-01_gen_frequency",
+                    60.0,
+                ),
+                "state": "unavailable",
+            },
+            {
+                **record(
+                    "2026-07-16T00:00:03.000Z",
+                    "sensor-01_gen_frequency",
+                    60.0,
+                ),
+                "state": "60.0",
+            },
+        ]
+        policy = ConservativeESP32RetentionPolicy()
+        expected = [
+            item
+            for second, item in enumerate(records)
+            if policy.retention_reason(item, float(second)) is not None
+        ]
+        with TemporaryDirectory() as directory:
+            raw = Path(directory) / "raw.ndjson"
+            output = Path(directory) / "candidate.ndjson"
+            raw.write_text("".join(json.dumps(item) + "\n" for item in records))
+            replay_candidate(raw, output)
+            actual = [json.loads(line) for line in output.read_text().splitlines()]
+
+        self.assertEqual(actual, expected)
 
 
 if __name__ == "__main__":

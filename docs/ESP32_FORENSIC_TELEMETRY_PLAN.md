@@ -120,7 +120,10 @@ The standalone read-only collector reconnects with bounded backoff, filters
 approved entity IDs, timestamps each update, and writes raw and separately
 retained newline-delimited JSON under ignored `evidence/`.
 
-The next repository-only step implements the versioned conservative writer and
-opt-in canary mode defined in `docs/ESP32_RETENTION_PRODUCTION_PLAN.md`, without
-live activation. Do not modify the EG4 collector, SQLite schema, firmware,
-services, device, or portal.
+The versioned conservative writer and opt-in canary mode defined in
+`docs/ESP32_RETENTION_PRODUCTION_PLAN.md` are implemented and synthetically
+validated. The historical `esp32-frequency-v1` output remains the default;
+`esp32-conservative-v1` is dormant unless explicitly selected. No live canary,
+deployment, or production-default change occurred. The next step is a
+separately authorized canary preflight and daytime capture; do not modify the
+EG4 collector, SQLite schema, firmware, services, device, or portal.

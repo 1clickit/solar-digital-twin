@@ -141,7 +141,12 @@ src/solar_digital_twin/collectors/retention.py
     Shared source-independent change and heartbeat retention mechanics.
 
 src/solar_digital_twin/collectors/esp32_sse.py
-    Standalone read-only ESPHome SSE evidence collector.
+    Standalone read-only ESPHome SSE evidence collector with default current
+    retention and dormant explicit dual-output canary support.
+
+src/solar_digital_twin/collectors/esp32_retention.py
+    Versioned current and conservative ESP32 retention policies, canonical
+    deadbands, and entity-local availability normalization.
 
 scripts/analyze_esp32_retention.py
     Streaming offline raw/retained ESP32 assessment and deterministic candidate

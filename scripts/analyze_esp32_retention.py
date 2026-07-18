@@ -9,24 +9,17 @@ import math
 from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from solar_digital_twin.collectors.esp32_retention import (
+    CONSERVATIVE_NUMERIC_DEADBANDS,
+    record_is_unavailable,
+)
+
 FREQUENCY_ID = "sensor-01_gen_frequency"
-UNAVAILABLE = {"unavailable", "unknown", "none", "nan", "null"}
-NUMERIC_DEADBANDS = {
-    "sensor-01_estimated_total_ac-coupled_power": 10.0,
-    "sensor-01_estimated_active_microinverters": 0.1,
-    "sensor-01_estimated_curtailment_percent": 0.5,
-    FREQUENCY_ID: 0.04,
-    "sensor-01_gen_l1_current": 0.1,
-    "sensor-01_estimated_gen_l1-l2_voltage": 0.1,
-    "sensor-01_estimated_total_ac-coupled_energy": 10.0,
-    "sensor-02_power_ramp_rate": 10.0,
-    "sensor-02_frequency_ramp_rate": 0.04,
-    "sensor-02_largest_power_drop_since_reset": 10.0,
-    "sensor-02_total_events_since_reset": 1.0,
-}
+NUMERIC_DEADBANDS = dict(CONSERVATIVE_NUMERIC_DEADBANDS)
 
 
 def timestamp_seconds(value: str) -> float:
@@ -45,10 +38,6 @@ def numeric(value: Any) -> float | None:
 
 def value_key(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
-
-
-def unavailable(value: Any) -> bool:
-    return value is None or str(value).strip().lower() in UNAVAILABLE
 
 
 @dataclass
@@ -74,7 +63,7 @@ class EntityStats:
     def observe(self, record: dict[str, Any], byte_count: int) -> None:
         now = timestamp_seconds(record["received_at_utc"])
         key = value_key(record.get("value"))
-        is_unavailable = unavailable(record.get("value"))
+        is_unavailable = record_is_unavailable(record)
         current_numeric = numeric(record.get("value"))
         self.raw_count += 1
         self.raw_bytes += byte_count
@@ -146,7 +135,7 @@ class CandidateRun:
         state = self.states.setdefault(entity, PolicyState())
         value = record.get("value")
         current_numeric = numeric(value)
-        current_unavailable = unavailable(value)
+        current_unavailable = record_is_unavailable(record)
         now = timestamp_seconds(record["received_at_utc"])
         reason = None
         if not state.seen:
@@ -155,7 +144,9 @@ class CandidateRun:
             reason = "availability_transition"
         elif current_numeric is not None and entity in self.candidate.numeric_deadbands:
             threshold = self.candidate.numeric_deadbands[entity]
-            if state.last_numeric is None or abs(current_numeric - state.last_numeric) >= threshold:
+            if state.last_numeric is None or abs(
+                Decimal(str(current_numeric)) - Decimal(str(state.last_numeric))
+            ) >= Decimal(str(threshold)):
                 reason = "change"
         elif value_key(value) != value_key(state.last_value):
             reason = "change"
@@ -168,7 +159,8 @@ class CandidateRun:
         if reason is not None:
             self._retain(reason, entity, byte_count)
             state.last_value = value
-            state.last_numeric = current_numeric
+            if current_numeric is not None:
+                state.last_numeric = current_numeric
             state.last_unavailable = current_unavailable
             state.last_retained_at = now
             state.seen = True

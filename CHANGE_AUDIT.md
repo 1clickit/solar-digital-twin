@@ -115,3 +115,33 @@ or runtime change.
 - **Limitations:** Real availability transitions remain unobserved. The plan
   requires synthetic coverage and treats absent real transitions or events as a
   canary qualification rather than proof of full forensic validation.
+
+## 2026-07-18T04:57:24Z — ESP32 conservative-retention canary implementation
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Implement the adopted conservative retained policy and dormant
+  dual-output canary path using synthetic data only.
+- **Affected:** ESP32 retention and SSE collector source, offline replay script,
+  focused synthetic tests, production/telemetry documentation, project state,
+  next task, index, and this audit record.
+- **Change and reason:** Added versioned independent policies, exact candidate
+  deadbands and availability normalization, exclusive output creation,
+  isolated retained writers, explicit canary selection, versioned candidate
+  naming, and a separate append-only capture manifest so a later live canary is
+  reversible and does not replace the current default.
+- **Untouched:** Existing evidence, production deployment and defaults, devices,
+  endpoints, captures, services, collectors in operation, databases, portal,
+  credentials, permissions, firmware, network, and physical system.
+- **Validation:** Focused retention/collector/replay tests, full suite, Python
+  compilation, documentation/index checks, `git diff --check`, repository
+  health check, and synthetic-only/offline scope review.
+- **Recovery:** Revert the related normal Git commit. Existing evidence and
+  production behavior require no conversion or cleanup.
+- **Archive or backup:** Git history preserves prior tracked implementation; no
+  unique operational artifact was replaced.
+- **Related commit and push:** The commit containing this entry, titled
+  `Implement ESP32 retention canary support`; normal milestone push planned
+  after validation.
+- **Limitations:** Real availability transitions remain unobserved. The new
+  path remains dormant pending a separately authorized live canary and its
+  independent analysis; `esp32-frequency-v1` remains the production default.

@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Adopted conservative ESP32 replay and completed the reversible production rollout plan
+Implemented production-ready ESP32 conservative-retention canary support with synthetic tests only
 
 Next Task:
-Implement the versioned conservative ESP32 retained writer and opt-in dual-output canary mode with synthetic tests only.
+Prepare the separately authorized approximately 12-hour daytime live canary without retiring the current policy.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -347,6 +347,24 @@ main
   running with no failed units, and no observed filesystem/I/O/out-of-space
   warning. No remediation was performed; repeat within 30 days and at the
   documented event-driven checkpoints
+- The ESP32 collector now identifies the existing default retained policy as
+  `esp32-frequency-v1` and implements the adopted `esp32-conservative-v1`
+  policy with exact documented deadbands, a 60-second heartbeat, and independent
+  per-entity availability state
+- Explicit opt-in canary mode uses one SSE stream to write authoritative raw,
+  current retained, and versioned conservative retained outputs. The current
+  policy and historical retained filename remain the default; conservative
+  output is not created without explicit selection
+- New capture outputs use exclusive creation, and a separate append-only
+  manifest records capture, collector-version, mode, policy, output, and final
+  completion/interruption/failure provenance without changing telemetry records
+- Retained writers have independent policy and failure state. Raw write and
+  flush remain first and authoritative; one retained failure does not disable
+  raw or the other retained writer
+- Synthetic coverage verifies unavailable entry and restoration, including a
+  restoration equal to the last pre-unavailable numeric value. No real
+  availability transition has yet been observed, and no deployment or live
+  canary was performed
 - Commit `b88941d` is pushed to `origin/main`; `main` was clean and synchronized
   before the governance reset
 
