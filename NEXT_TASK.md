@@ -2,55 +2,42 @@
 
 ## Objective
 
-Perform a bounded offline comparison of the current ESP32 retained evidence
-and the documented conservative retention candidate against the validated real
-three-source event windows. Do not change production retention behavior.
+Perform the first read-only `solardt` VM health review and append the measured
+result to `docs/operations/VM_HEALTH_LOG.md`. Do not perform remediation.
 
 ## Context
 
-The real-evidence dry run validated the read-only adapters and analyzer against
-the completed overlapping EG4, SolarAssistant, and ESP32 captures. It found
-bounded partial-collapse and zero-output candidates, verified compatible UTC
-alignment, preserved trusted SolarAssistant SOC versus estimated EG4 SOC, and
-left all source evidence unchanged. Commit `b88941d` contains the validated
-compatibility corrections and is synchronized with `origin/main`.
-
-Trusted read-only SolarAssistant telemetry analysis is now permitted through
-the established least-privilege read model without repeated administrator
-intervention. Credentials, tokens, protected logs, unrelated runtime files,
-and write access remain outside that authority.
+The governance correction established a minimum 30-day and event-driven VM
+health schedule, but intentionally took no operational measurement. The
+procedure, thresholds, required observations, secret-safety boundary, and
+entry format are authoritative in `docs/operations/VM_HEALTH_LOG.md`.
 
 ## Scope
 
-1. Use only the already identified bounded real event and control windows.
-2. Replay the documented conservative ESP32 retention candidate offline without
-   modifying either raw or retained evidence.
-3. Compare raw, current retained, and conservative-candidate context for event
-   timing, plateau, recovery, frequency, binary events, availability, and
-   confidence classification.
-4. Quantify record and byte reduction for the bounded windows and state any
-   forensic information lost or changed.
-5. Preserve cloud cover and ordinary variability as alternative explanations;
-   do not claim causation.
-6. Recommend either keeping current retention or a separately reviewed bounded
-   policy implementation. Do not deploy or recapture during this work unit.
+1. Inspect root filesystem use and free space, inode use, memory, swap, uptime,
+   load averages, summarized leading CPU/memory consumers, relevant failed
+   systemd units, approved local disk/filesystem warnings, and aggregate
+   evidence/database/report/log growth.
+2. Assess capacity for the next planned bounded analysis or capture.
+3. Compare with an earlier logged entry if one exists; for this first review,
+   record that no prior health-log baseline exists.
+4. Classify the result as normal, advisory, or action required using the
+   documented thresholds and engineering judgment.
+5. Append only the concise result. Do not include full process listings, large
+   logs, secrets, tokens, credentials, authorization data, or unrelated private
+   details.
+6. Do not delete, archive, move, resize, restart, rotate, tune, or otherwise
+   remediate anything in this work unit.
 
-## Runtime boundary
+## Following technical task
 
-Use strict read-only, bounded offline access. Do not access credentials,
-tokens, protected collector or monitor logs, device controls, services, or
-unrelated files. Do not restart or modify the SolarAssistant monitor, EG4
-workflow, ESP32 collector, evidence, database, permissions, or runtime.
-
-## Following task
-
-After retention equivalence is reviewed, prepare the smallest defensible
-three-source forensic report of the validated candidate windows, including
-provenance, limitations, confidence factors, and the narrowest useful next
-physical or professional measurement if telemetry remains inconclusive.
+Resume the bounded offline comparison of current ESP32 retained evidence and
+the conservative retention candidate against validated real three-source event
+windows. Do not change evidence or production retention behavior.
 
 ## Success
 
-The comparison is reproducible, bounded, evidence-preserving, and clear about
-what the smaller candidate retains or loses. Any production policy change
-remains a separate risk-classified operation.
+The first dated health entry records measured capacity and performance facts,
+classification, and any recommended follow-up without changing runtime state.
+Any persistent corrective action is proposed as a separate risk-classified
+work unit and receives a `CHANGE_AUDIT.md` entry if performed.

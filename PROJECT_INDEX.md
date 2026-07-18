@@ -54,6 +54,10 @@ CHANGE_AUDIT.md
     Append-only record of persistent repository, host, runtime, permission,
     service, device, database, and network changes.
 
+docs/operations/VM_HEALTH_LOG.md
+    Append-only read-only solardt VM performance, capacity, and storage-health
+    review procedure and log.
+
 ## Repository Layout
 
 src/

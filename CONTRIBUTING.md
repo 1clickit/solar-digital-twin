@@ -100,6 +100,13 @@ change. Temporary bounded-work files belong under `/tmp` and may expire through
 normal operating-system cleanup; do not label unique artifacts as temporary to
 delete them.
 
+Unique operational artifacts outside Git require an appropriate archive or
+backup. Storage pressure is not authorization to delete raw evidence. Address
+capacity through safe archiving, approved additional storage, relocation of
+reproducible derived products, reviewed retention changes, or another
+documented capacity plan. Do not create elaborate duplicate archives for
+ordinary tracked material already recoverable through Git history.
+
 ## Append-only change audit
 
 `CHANGE_AUDIT.md` is the authoritative append-only record of persistent
@@ -112,6 +119,12 @@ references the original. Include, where applicable: UTC time, actor, purpose,
 affected files or components, change and reason, explicitly untouched scope,
 validation/tests, recovery or rollback, archive/backup location, related commit
 and push state, and unresolved risks or limitations.
+
+Routine read-only inspection needs no audit entry unless it produces a
+significant engineering finding or persistent report. Creating the audit entry
+for a work unit does not recursively require another entry. Audit entries must
+never contain passwords, tokens, API keys, authorization headers, credential
+contents, secret arguments, or sensitive runtime output.
 
 ## Git and milestone synchronization
 
@@ -131,9 +144,8 @@ before retiring prior versions.
 
 ## VM and operational health
 
-After an approved persistent host or runtime change, perform proportionate
-read-only health checks within the work-unit scope: relevant service state,
-expected endpoint or process health, available storage, time synchronization
-when timing matters, and repository cleanliness. Record the checks in
-`CHANGE_AUDIT.md`. Do not broaden a health check into invasive inspection of
-unrelated services, credentials, evidence, or private runtime state.
+Follow the read-only schedule, observations, thresholds, and append-only entry
+format in `docs/operations/VM_HEALTH_LOG.md`. A normal health review is recorded
+there, not duplicated in `CHANGE_AUDIT.md`. Any persistent corrective action
+resulting from it receives a change-audit entry. Do not broaden a health review
+into invasive inspection or automatic remediation.

@@ -17,6 +17,10 @@ Read:
 7. `PROJECT_INDEX.md` — navigation when more context is needed
 8. `BACKLOG.md` and `docs/chat_ideas/README.md` only when deferred ideas matter
 
+Persistent changes follow the archive-first and append-only audit policy in
+`CONTRIBUTING.md`. Periodic and event-driven read-only VM health reviews are
+recorded in `docs/operations/VM_HEALTH_LOG.md`.
+
 Inspect the current branch, HEAD, and working tree before changing anything.
 Resolve authoritative-document contradictions before new implementation.
 
