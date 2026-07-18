@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from scripts.analyze_esp32_retention import analyze
+from scripts.analyze_esp32_retention import analyze, replay_candidate
 
 
 def record(timestamp, entity, value):
@@ -59,6 +59,44 @@ class Esp32RetentionAnalysisTests(unittest.TestCase):
 
         combined = result["candidates"]["conservative_combined_60s"]
         self.assertEqual(combined["reasons"]["availability_transition"], 1)
+
+    def test_replay_candidate_writes_only_selected_unchanged_records(self):
+        records = [
+            record("2026-07-16T00:00:00.000Z", "sensor-test", 1.0),
+            record("2026-07-16T00:00:01.000Z", "sensor-test", 1.0),
+            record("2026-07-16T00:00:02.000Z", "sensor-test", "unavailable"),
+            record("2026-07-16T00:00:03.000Z", "sensor-test", 2.0),
+        ]
+        with TemporaryDirectory() as directory:
+            raw = Path(directory) / "raw.ndjson"
+            output = Path(directory) / "candidate.ndjson"
+            content = "".join(json.dumps(item) + "\n" for item in records)
+            raw.write_text(content)
+            before = raw.read_bytes()
+            result = replay_candidate(raw, output)
+
+            replayed = [json.loads(line) for line in output.read_text().splitlines()]
+            self.assertEqual(raw.read_bytes(), before)
+
+        self.assertEqual(replayed, [records[0], records[2], records[3]])
+        self.assertEqual(result["records"], 3)
+        self.assertEqual(result["reasons"]["first"], 1)
+        self.assertEqual(result["reasons"]["availability_transition"], 2)
+        self.assertEqual(result["entity_counts"], {"sensor-test": 3})
+        self.assertEqual(result["first_timestamp_utc"], records[0]["received_at_utc"])
+        self.assertEqual(result["last_timestamp_utc"], records[3]["received_at_utc"])
+
+    def test_replay_candidate_rejects_backward_timestamps(self):
+        records = [
+            record("2026-07-16T00:00:01.000Z", "sensor-test", 1),
+            record("2026-07-16T00:00:00.000Z", "sensor-test", 2),
+        ]
+        with TemporaryDirectory() as directory:
+            raw = Path(directory) / "raw.ndjson"
+            output = Path(directory) / "candidate.ndjson"
+            raw.write_text("".join(json.dumps(item) + "\n" for item in records))
+            with self.assertRaisesRegex(ValueError, "timestamp moved backward"):
+                replay_candidate(raw, output)
 
 
 if __name__ == "__main__":

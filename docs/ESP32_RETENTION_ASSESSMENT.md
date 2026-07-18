@@ -7,11 +7,11 @@ The completed 12-hour capture was assessed offline with the streaming utility
 both input files remained unchanged. The implemented policy behaved as
 documented; no collector defect was found.
 
-Keep the production retention policy unchanged for now. A conservative
-candidate could reduce derived retained volume substantially, but its proposed
-entity deadbands must first be replayed against known forensic windows and
-reviewed with later cross-source correlation evidence. Storage reduction does
-not justify weakening forensic evidence.
+Keep the production retention policy unchanged until a separate implementation
+work unit. The conservative candidate has now passed deterministic real-window
+replay and is accepted as the basis for that implementation; results and
+qualifications are authoritative in `docs/ESP32_RETENTION_REPLAY.md`. Storage
+reduction alone still does not justify weakening forensic evidence.
 
 ## Evidence and totals
 
@@ -123,9 +123,8 @@ before any implementation.
 
 ## Recommendation and following work
 
-No policy or collector change is approved. Keep complete raw evidence and the
-current retained policy until the candidate is validated against event windows.
-The next bounded task is to establish matching EG4 evidence availability and
-prepare the offline EG4/SolarAssistant/ESP32 correlation plan. That correlation
-work should also identify representative ESP32 windows for later conservative
-retention-policy replay. Any implementation remains a separate reviewed task.
+The candidate replay preserved all validated event classifications, the stable
+control, and all full-capture binary/text changes while producing 61,724 records
+and 36,174,692 bytes. It is accepted for a separately reviewed implementation
+plan. No policy or collector change occurred, and complete raw evidence remains
+authoritative. See `docs/ESP32_RETENTION_REPLAY.md` for the decision record.

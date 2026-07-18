@@ -135,12 +135,14 @@ class CandidateRun:
         self.count = 0
         self.byte_count = 0
         self.reasons: Counter[str] = Counter()
+        self.entity_counts: Counter[str] = Counter()
+        self.entity_bytes: Counter[str] = Counter()
 
-    def observe(self, record: dict[str, Any], byte_count: int) -> None:
+    def observe(self, record: dict[str, Any], byte_count: int) -> str | None:
         entity = record["id"]
         if self.candidate.current_frequency_only and entity != FREQUENCY_ID:
-            self._retain("pass_through", byte_count)
-            return
+            self._retain("pass_through", entity, byte_count)
+            return "pass_through"
         state = self.states.setdefault(entity, PolicyState())
         value = record.get("value")
         current_numeric = numeric(value)
@@ -164,17 +166,20 @@ class CandidateRun:
         ):
             reason = "heartbeat"
         if reason is not None:
-            self._retain(reason, byte_count)
+            self._retain(reason, entity, byte_count)
             state.last_value = value
             state.last_numeric = current_numeric
             state.last_unavailable = current_unavailable
             state.last_retained_at = now
             state.seen = True
+        return reason
 
-    def _retain(self, reason: str, byte_count: int) -> None:
+    def _retain(self, reason: str, entity: str, byte_count: int) -> None:
         self.count += 1
         self.byte_count += byte_count
         self.reasons[reason] += 1
+        self.entity_counts[entity] += 1
+        self.entity_bytes[entity] += byte_count
 
 
 def candidates() -> list[Candidate]:
@@ -184,6 +189,50 @@ def candidates() -> list[Candidate]:
         Candidate("exact_change_120s", 120.0, {}, False),
         Candidate("conservative_combined_60s", 60.0, NUMERIC_DEADBANDS),
     ]
+
+
+def replay_candidate(
+    raw_path: Path,
+    output_path: Path,
+    candidate_name: str = "conservative_combined_60s",
+) -> dict[str, Any]:
+    """Write one deterministic derived candidate stream without changing input."""
+    try:
+        candidate = next(item for item in candidates() if item.name == candidate_name)
+    except StopIteration as exc:
+        raise ValueError(f"unknown retention candidate: {candidate_name}") from exc
+
+    run = CandidateRun(candidate)
+    first_timestamp = last_timestamp = None
+    previous_time: float | None = None
+    with raw_path.open("r", encoding="utf-8") as source, output_path.open(
+        "x", encoding="utf-8"
+    ) as output:
+        for line_number, line in enumerate(source, 1):
+            try:
+                record = json.loads(line)
+                now = timestamp_seconds(record["received_at_utc"])
+            except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+                raise ValueError(f"raw line {line_number}: malformed record") from exc
+            if previous_time is not None and now < previous_time:
+                raise ValueError(f"raw line {line_number}: timestamp moved backward")
+            previous_time = now
+            byte_count = len(line.encode("utf-8"))
+            if run.observe(record, byte_count) is not None:
+                output.write(line)
+                first_timestamp = first_timestamp or record["received_at_utc"]
+                last_timestamp = record["received_at_utc"]
+
+    return {
+        "candidate": candidate.name,
+        "records": run.count,
+        "bytes": run.byte_count,
+        "first_timestamp_utc": first_timestamp,
+        "last_timestamp_utc": last_timestamp,
+        "reasons": dict(run.reasons),
+        "entity_counts": dict(run.entity_counts),
+        "entity_bytes": dict(run.entity_bytes),
+    }
 
 
 def analyze(raw_path: Path, retained_path: Path) -> dict[str, Any]:
@@ -265,6 +314,8 @@ def analyze(raw_path: Path, retained_path: Path) -> dict[str, Any]:
                 "bytes": run.byte_count,
                 "byte_percent": round(100 * run.byte_count / raw_bytes, 3),
                 "reasons": dict(run.reasons),
+                "entity_counts": dict(run.entity_counts),
+                "entity_bytes": dict(run.entity_bytes),
             }
             for run in runs
         },
@@ -275,12 +326,27 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("raw", type=Path)
     parser.add_argument("retained", type=Path)
+    parser.add_argument(
+        "--candidate-output",
+        type=Path,
+        help="Write the selected unchanged-record candidate stream to this new path.",
+    )
+    parser.add_argument(
+        "--candidate",
+        default="conservative_combined_60s",
+        choices=[item.name for item in candidates()],
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    print(json.dumps(analyze(args.raw, args.retained), indent=2, sort_keys=True))
+    result = analyze(args.raw, args.retained)
+    if args.candidate_output is not None:
+        result["replay"] = replay_candidate(
+            args.raw, args.candidate_output, args.candidate
+        )
+    print(json.dumps(result, indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":

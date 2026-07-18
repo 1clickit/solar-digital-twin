@@ -4,7 +4,7 @@ Current Milestone:
 Validated bounded three-source forensic correlation with real evidence and recalibrated project governance
 
 Next Task:
-Compare raw and current-retained ESP32 context against the conservative retention candidate using validated real event windows.
+Prepare the smallest safe production-retention implementation plan for the accepted conservative ESP32 candidate.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -267,8 +267,17 @@ main
   bytes exactly. Frequency retained 13.81%; every non-frequency entity retained
   100% by documented pass-through design. No implementation defect was found
 - A conservative offline candidate estimated 61,724 records and 36,174,692
-  bytes, but no policy change is approved until known forensic event windows
-  validate that candidate. Current production behavior remains unchanged
+  bytes. Deterministic replay confirmed those exact totals and accepted the
+  candidate for a separate implementation plan; current production behavior
+  remains unchanged
+- Raw, current-retained, and conservative-candidate streams preserved the same
+  partial-collapse and two zero-output classifications, high confidence, and
+  stable no-event control. All 17,687 full-capture binary/text transitions were
+  identical; UTC chronology, entity identity, and provenance were preserved
+- The candidate retained 14.304% of raw records and 23.163% of raw bytes,
+  reducing the current retained stream by 84.35% by records and 75.82% by
+  bytes. `docs/ESP32_RETENTION_REPLAY.md` records the evidence, limitations,
+  acceptance criteria, and Adopt decision
 - The complete ESP32 window overlaps SolarAssistant, both use compatible
   `solardt` UTC receipt timestamps, and no clock reversal or timezone conflict
   was found. Later offline correlation is supportable, but matching EG4 evidence

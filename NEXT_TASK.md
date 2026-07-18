@@ -2,39 +2,29 @@
 
 ## Objective
 
-Compare raw and current-retained ESP32 context against the conservative
-retention candidate using validated real event windows. Do not change evidence
-or production retention behavior.
+Prepare the smallest safe production-retention implementation plan for the
+accepted conservative ESP32 candidate. Do not deploy or change collector
+behavior in the planning work unit.
 
 ## Context
 
-The initial `solardt` VM health baseline is recorded in
-`docs/operations/VM_HEALTH_LOG.md` and classified **Normal**. Root filesystem
-use is 17%, inode use is 4%, memory availability is healthy, load is negligible,
-systemd reports no failed units, and capacity is sufficient for this bounded
-offline analysis. Swap use and evidence growth should be compared at later
-health reviews but do not block the current task.
-
-The real-evidence dry run validated the read-only adapters and analyzer against
-the completed overlapping EG4, SolarAssistant, and ESP32 captures. It found
-bounded partial-collapse and zero-output candidates, verified compatible UTC
-alignment, preserved trusted SolarAssistant SOC versus estimated EG4 SOC, and
-left all source evidence unchanged.
+The deterministic replay in `docs/ESP32_RETENTION_REPLAY.md` preserved all
+three validated classifications, the stable control, every full-capture
+binary/text transition, frequency ranges and ordering, UTC chronology, and
+provenance. It reduced current retained volume by 84.35% by records and 75.82%
+by bytes. Production behavior remains unchanged and raw evidence remains
+authoritative.
 
 ## Scope
 
-1. Use only the already identified bounded real event and control windows.
-2. Replay the documented conservative ESP32 retention candidate offline without
-   modifying either raw or retained evidence.
-3. Compare raw, current retained, and conservative-candidate context for event
-   timing, plateau, recovery, frequency, binary events, availability, and
-   confidence classification.
-4. Quantify record and byte reduction for the bounded windows and state any
-   forensic information lost or changed.
-5. Preserve cloud cover and ordinary variability as alternative explanations;
-   do not claim causation.
-6. Recommend either keeping current retention or a separately reviewed bounded
-   policy implementation. Do not deploy or recapture during this work unit.
+1. Map the accepted entity deadbands and 60-second heartbeat into an explicit,
+   reviewable ESP32 retention-policy design.
+2. Preserve first records, availability transitions, exact text/binary changes,
+   UTC timestamps, provenance, and complete raw evidence.
+3. Define focused synthetic tests for availability transitions, boundary
+   seeding, event ordering, and rollback to the current policy.
+4. Define a bounded post-implementation capture verification and decision gate.
+5. Do not deploy, alter runtime, or start a capture during the planning work.
 
 ## Runtime boundary
 
@@ -45,13 +35,11 @@ workflow, ESP32 collector, evidence, database, permissions, or runtime.
 
 ## Following task
 
-After retention equivalence is reviewed, prepare the smallest defensible
-three-source forensic report of the validated candidate windows, including
-provenance, limitations, confidence factors, and the narrowest useful next
-physical or professional measurement if telemetry remains inconclusive.
+After the plan is reviewed, implement the candidate in a bounded repository
+work unit without deployment. A later separately approved capture should verify
+real availability handling and operational size reduction.
 
 ## Success
 
-The comparison is reproducible, bounded, evidence-preserving, and clear about
-what the smaller candidate retains or loses. Any production policy change
-remains a separate risk-classified operation.
+The plan is explicit, testable, reversible, evidence-preserving, and separates
+repository implementation from later deployment and capture verification.

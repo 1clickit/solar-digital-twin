@@ -90,6 +90,10 @@ docs/ESP32_FORENSIC_TELEMETRY_PLAN.md
 docs/ESP32_RETENTION_ASSESSMENT.md
     Reproducible full-capture ESP32 retention measurements, candidate comparison, and policy recommendation.
 
+docs/ESP32_RETENTION_REPLAY.md
+    Deterministic real-window replay of raw, current-retained, and conservative
+    ESP32 streams, with the accepted candidate decision and qualifications.
+
 docs/TELEMETRY_SOURCE_ROLES.md
     Agreed authority, comparison, forensic, and display roles for telemetry sources.
 
@@ -136,7 +140,8 @@ src/solar_digital_twin/collectors/esp32_sse.py
     Standalone read-only ESPHome SSE evidence collector.
 
 scripts/analyze_esp32_retention.py
-    Streaming offline raw/retained ESP32 retention assessment utility.
+    Streaming offline raw/retained ESP32 assessment and deterministic candidate
+    replay utility.
 
 src/solar_digital_twin/analysis/forensic_correlation.py
     Pure offline three-source timestamp alignment and conservative synthetic

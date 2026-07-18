@@ -59,3 +59,32 @@ or runtime change.
   archive audit and VM health policy`; not pushed at entry creation.
 - **Follow-up:** Perform the first real read-only VM health review and append its
   result to the health log. No baseline measurements exist yet.
+
+## 2026-07-18T04:01:42Z — Conservative ESP32 retention replay
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Reproduce the documented conservative retention candidate and
+  test its forensic equivalence against validated real event/control windows.
+- **Affected:** Offline analysis utility and focused tests; ESP32 retention,
+  project-state, index, next-task, replay-report, and audit documentation.
+- **Change and reason:** Added deterministic candidate-stream output and tests,
+  replayed the immutable 12-hour capture under `/tmp`, and documented an Adopt
+  decision after all classifications and complete-capture binary/text changes
+  were preserved with material storage reduction.
+- **Evidence identity:** Raw SHA-256
+  `c48d647f97175261e7e015886001acc5bb06207e5336b3677e949ef9fe447059`;
+  current-retained SHA-256
+  `f2f78957078ed50cd9162f54e669e00e1a23a5e9149c67092d8c11b38e06d6ca`.
+- **Untouched:** Evidence contents, production retention and collector defaults,
+  services, devices, databases, portal, permissions, credentials, and runtime.
+- **Validation:** Focused and full tests, deterministic replay, event/control
+  comparison, pre/post evidence metadata and hashes, Python compilation,
+  documentation checks, `git diff --check`, and repository health check.
+- **Recovery:** Revert the related Git commit. Candidate output is reproducible
+  derived material under `/tmp`; source evidence remains authoritative.
+- **Related commit and push:** The commit containing this entry, titled
+  `Validate conservative ESP32 retention replay`; normal milestone push planned
+  after validation.
+- **Limitations:** No real availability transition occurred in the capture;
+  synthetic tests preserve that policy path. Cloud cover remains an alternative
+  explanation, and implementation/deployment remain separate work units.
