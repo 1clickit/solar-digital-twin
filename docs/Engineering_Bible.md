@@ -3,9 +3,29 @@
 **Version:** 0.2
 **Status:** Living Document
 
-## Mission
+## Primary engineering mission
 
-Build an engineering-grade Digital Twin for a residential power system that preserves raw evidence, correlates data from multiple sources, and produces defensible engineering analysis.
+Solar Digital Twin is not primarily a dashboard project. Its immediate mission
+is to produce trustworthy, reproducible evidence that helps determine whether
+the observed AC-coupled solar-production problem is caused by EG4 inverter
+failure, unsuitable or defective EG4 AC-coupling behavior, configuration or
+control behavior, Chilicon microinverter behavior, frequency or grid-forming
+interaction, communications or data limitations, or another identifiable
+system condition.
+
+The practical target is defensible, reproducible evidence strong enough for an
+informed decision; telemetry alone may not provide overwhelming proof. The
+project should help Chris decide whether to continue with the current system,
+correct a configuration or targeted defect, pursue warranty or manufacturer
+escalation, obtain one narrowly scoped professional measurement, convert some
+or all production to DC coupling, replace a specific component, or stop
+investing in a path that evidence shows is unlikely to succeed.
+
+The portal, collectors, evidence store, reports, correlation analyzer, and
+future automation serve this mission. They may become more broadly useful, but
+software expansion must not obscure the original problem. When professional
+electrical testing is necessary, identify the narrowest useful test rather
+than recommending open-ended expensive troubleshooting.
 
 ## Primary User and Intended Use
 
@@ -31,6 +51,17 @@ may continue after this baseline.
 - Reports, the portal, Home Assistant, and future APIs are derived consumers.
 - Optimize only after measurement.
 - Prefer simple architectures until complexity is justified.
+
+## Cost and practical discipline
+
+Chris is working within meaningful fixed-income and cash-flow constraints.
+Prioritize existing equipment, available telemetry, low-cost diagnostics,
+reversible changes, preserved evidence, and targeted professional help only
+where necessary. Establish clear decision thresholds before major spending.
+Do not recommend replacing equipment merely to exchange one poorly understood
+problem for another. Recommend major purchases or architecture replacement
+only when evidence shows lower-cost paths are unlikely to produce a reliable
+result.
 
 ## Current Architecture
 
@@ -116,6 +147,14 @@ future OPNsense VLANs and firewall rules provide the planned primary network-
 containment boundary. Credential architecture, authentication-failure behavior,
 and recovery choices must be approved before additional credentialed collector
 work.
+
+Risk is managed rather than eliminated. Controls protect credentials, evidence,
+recovery options, and the physical system while remaining proportional to
+plausible harm in a trusted home-lab. Ordinary read-only telemetry and offline
+analysis should not carry the same friction as credentials, configuration,
+control, public exposure, or destructive action. Delay, manual burden, and
+unnecessary complexity are also engineering risks. The authoritative approval,
+preservation, and audit policy is `CONTRIBUTING.md`.
 
 ## Roadmap
 

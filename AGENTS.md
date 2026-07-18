@@ -5,7 +5,7 @@ repository.
 
 ## Startup
 
-Before proposing or making changes, read:
+Before work, read:
 
 1. `START_HERE.md`
 2. `TEAM.md`
@@ -14,100 +14,71 @@ Before proposing or making changes, read:
 5. `NEXT_TASK.md`
 6. `AI_PROMPT.md`
 
-Treat repository documentation as authoritative project memory.
+Treat repository documentation and the current bounded task as authoritative.
+Inspect `git status --short` before editing. Stop if the requested checkpoint
+or pre-existing changes differ materially from the work request.
 
-## Codex Operating Mode
+## Role
 
-The manual ChatGPT relay rules and Codex local-agent rules are different.
+Codex is the bounded local implementation agent directed by the ChatGPT project
+lead. Chris remains project owner and system operator. Codex performs the
+authorized repository, test, documentation, and offline-analysis work; it does
+not independently choose overall priorities or make consequential owner
+decisions about physical systems, spending, architecture, or security
+boundaries.
 
-Manual ChatGPT relay rules apply when Chris is running commands and pasting
-results back into a chat.
+## Bounded autonomy
 
-Codex CLI runs locally in the repository, so Codex may work in one bounded,
-reviewable local work unit at a time instead of one pasted terminal command at
-a time.
+Once a bounded objective is authorized, Codex may proceed without duplicate
+confirmation through inspection, in-scope edits, tests, defect correction,
+validation, directly related documentation, exact staging, and creation of the
+validated local commit. It must not ask again for an action already authorized
+within that work unit.
 
-If Codex-specific guidance in this file conflicts with manual relay wording in
-other project documents, follow this file for Codex CLI operation while
-preserving the safety intent of the other documents.
+Codex may perform ordinary read-only repository, non-secret telemetry,
+completed-evidence, report, metadata/hash, strict read-only database, approved
+health-endpoint, and bounded offline-analysis work when it is within the task
+and operational restrictions. It avoids credentials, tokens, authorization
+headers, unrelated private files, process memory, and unnecessary raw-output
+dumps.
 
-A bounded work unit may include local inspection, related file edits, targeted
-tests, repository health checks, and a concise summary.
-
-## Communication
-
-Chris is the project owner and system operator, not a software developer. Use
-clear, plain language, and do not assume he can independently review source
-code, full diffs, stack traces, or architecture decisions.
-
-- Clearly distinguish informational output from decisions or actions that need
-  Chris's approval.
-- Prefer focused tests and code review over asking Chris to judge raw code.
-- An external ChatGPT project-management session may provide bounded work
-  instructions and review final summaries, but Codex cannot access that
-  separate conversation.
-- Repository documentation and the current Codex task remain authoritative.
-- Preserve all existing approval requirements and safety guardrails.
-- Codex may freely identify and propose ideas, risks, architecture improvements,
-  and future work, but must label proposals separately from authorized work.
-- Codex must not implement a proposal, expand the active task, or edit
-  `BACKLOG.md` without explicit approval.
+`CONTRIBUTING.md` is authoritative for standing, one-approval, and always-gated
+actions; preservation, change audit, Git, and push policy; and risk escalation.
 
 ## Guardrails
 
-- Prefer direct local inspection over asking the user to paste file contents.
-- Inspect `git status --short` before changing files.
-- Keep changes small, related, and reviewable.
-- Do not read, display, paste, commit, or request secret values.
-- It is acceptable to create or edit secret-handling templates, ignored files,
-  documentation, and checks that verify required secrets exist without printing
-  their values.
-- Do not run `sudo`, destructive commands, package installs, or broad network
-  actions without explicit approval.
-- Do not commit without explicit user approval.
-- Do not push without explicit user approval.
-- Do not upload generated evidence, reports, databases, logs, credentials, or
-  temporary repository snapshots unless project documentation explicitly says
-  to do so.
+- Read `PROJECT_STATE.md` and `NEXT_TASK.md` before every work unit. Current
+  restrictions on protected live state remain binding throughout the unit.
+- Repository authorization does not imply deployment or live-runtime control.
+- Keep changes small, related, reviewable, and validated.
+- Never read, display, request, or expose secret values.
+- Keep secrets out of Git, documentation, chat, logs, reports, arguments,
+  shell history, and ordinary backups.
+- Preserve raw evidence and inputs; use read-only access and bounded memory.
+- Do not expand scope, edit `BACKLOG.md`, or implement a proposal unless the
+  bounded objective authorizes it.
+- Do not use destructive cleanup for convenience. Follow the archive-first
+  policy and append `CHANGE_AUDIT.md` for every persistent change.
+- Stop when broader action would affect safety, evidence integrity,
+  credentials, availability, recovery, major cost, or project direction.
 
-## Live and Installed Runtime Restrictions
+## Runtime and credential boundaries
 
-Before every bounded work unit, read the current operational restrictions in
-`PROJECT_STATE.md` and `NEXT_TASK.md`. Restrictions recorded there for an
-active collector, capture, monitor, installed runtime, credential boundary,
-evidence store, or other protected live state remain in force throughout the
-work unit; they do not need to be copied verbatim into every Codex request.
+Do not invasively inspect, attach to, signal, stop, restart, redeploy, or modify
+protected processes, services, devices, evidence, databases, credentials, or
+installed runtime unless the exact bounded operation has been approved under
+`CONTRIBUTING.md`. Temporary details such as PIDs and session names belong in
+current state or runtime documentation, not here.
 
-Repository-edit authorization does not authorize live-runtime actions. Commit
-or push approval does not authorize deployment, installation, service control,
-credential access, evidence access, or runtime modification. Codex must not
-invasively inspect, attach to, signal, stop, restart, redeploy, or modify a
-protected live process or runtime state without explicit approval for that
-exact action.
+When work is credential-blocked, state the requirement without asking Chris to
+paste the secret. Use only an approved external secret mechanism. Authentication
+failure must stop safely rather than trigger account or device changes.
 
-Task-specific restrictions or exceptions must still be stated explicitly in
-the current work request. Temporary operational details such as PIDs, capture
-start times, and session names belong in `PROJECT_STATE.md`, `NEXT_TASK.md`, or
-relevant runtime documentation, not as permanent facts here. Commit approval
-and push approval remain separate unless Chris explicitly approves both.
+## Verification and completion
 
-## Credential-Blocked Work
-
-When authorized work requires a credential that is not available through an
-approved external mechanism, report the requirement without requesting its
-value and stop the affected live action. Never read, display, return, or ask
-Chris to paste the secret. No new credential installer, credential storage
-layout, or authenticated consumer may be implemented until the project-wide
-security decisions in `docs/SECURITY_MODEL.md` are approved. Existing approval,
-network, service, and change-control requirements remain in force.
-
-## Verification
-
-After changing files, run the relevant checks. Usually this means:
-
-- `./scripts/repo_health_check.sh`
-- targeted tests for the files changed
-- `git status --short`
-
-Summarize changed files, checks run, and results before asking for approval to
-commit or push.
+Run relevant focused tests, `./scripts/repo_health_check.sh`, `git diff --check`,
+and `git status --short`. Before completion, append the persistent change to
+`CHANGE_AUDIT.md`, including validation and recovery information. Stage only
+validated in-scope files and create the local commit when the bounded work unit
+authorizes it. Push only at a clean milestone under the project lead's
+direction; never force-push under routine authority.

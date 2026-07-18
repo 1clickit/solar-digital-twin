@@ -2,49 +2,55 @@
 
 ## Objective
 
-Review the synthetic input adapters and prepare an exact, separately approved
-metadata-only SolarAssistant evidence inventory. Do not inspect metadata or run
-the analyzer on real evidence without that approval.
+Perform a bounded offline comparison of the current ESP32 retained evidence
+and the documented conservative retention candidate against the validated real
+three-source event windows. Do not change production retention behavior.
 
 ## Context
 
-The pure parsed-stream analyzer and synthetic input adapters are complete.
-EG4 coverage is **Complete** for the full ESP32 overlap: 177 unique day-series
-samples and 47 runtime snapshots, with no gap over 20 minutes and no malformed
-overlap JSON. Timestamp semantics and the bounded analysis plan are recorded in
-`docs/EG4_FORENSIC_CORRELATION.md`. The exact protected SolarAssistant raw
-filename remains intentionally unresolved by the unprivileged planning work
-unit.
+The real-evidence dry run validated the read-only adapters and analyzer against
+the completed overlapping EG4, SolarAssistant, and ESP32 captures. It found
+bounded partial-collapse and zero-output candidates, verified compatible UTC
+alignment, preserved trusted SolarAssistant SOC versus estimated EG4 SOC, and
+left all source evidence unchanged. Commit `b88941d` contains the validated
+compatibility corrections and is synchronized with `origin/main`.
+
+Trusted read-only SolarAssistant telemetry analysis is now permitted through
+the established least-privilege read model without repeated administrator
+intervention. Credentials, tokens, protected logs, unrelated runtime files,
+and write access remain outside that authority.
 
 ## Scope
 
-1. Review the implemented adapter schema, timestamp mappings, bounded-window
-   workflow, and analyzer thresholds before real use.
-2. Define the exact administrator-run metadata fields and named-file scope from
-   the procedure in `docs/EG4_FORENSIC_CORRELATION.md`.
-3. Require separate approval before obtaining protected filename, ownership,
-   permission, size, modification-time, capture-window, and completion metadata.
-4. Review those results before separately approving any source hash, controlled
-   read-only copy, analysis read, real execution, report, or cleanup action.
-5. Keep credentials, tokens, unrelated files, production runtime, evidence,
-   databases, and permissions unchanged.
+1. Use only the already identified bounded real event and control windows.
+2. Replay the documented conservative ESP32 retention candidate offline without
+   modifying either raw or retained evidence.
+3. Compare raw, current retained, and conservative-candidate context for event
+   timing, plateau, recovery, frequency, binary events, availability, and
+   confidence classification.
+4. Quantify record and byte reduction for the bounded windows and state any
+   forensic information lost or changed.
+5. Preserve cloud cover and ordinary variability as alternative explanations;
+   do not claim causation.
+6. Recommend either keeping current retention or a separately reviewed bounded
+   policy implementation. Do not deploy or recapture during this work unit.
+
+## Runtime boundary
+
+Use strict read-only, bounded offline access. Do not access credentials,
+tokens, protected collector or monitor logs, device controls, services, or
+unrelated files. Do not restart or modify the SolarAssistant monitor, EG4
+workflow, ESP32 collector, evidence, database, permissions, or runtime.
 
 ## Following task
 
-After the bounded real analysis is reviewed, use its known event windows to
-validate whether the conservative ESP32 retention candidate preserves dropout,
-recovery, plateau, frequency, binary-event, and availability evidence.
-
-## Monitor boundary
-
-The SolarAssistant monitor remains running and healthy but stale after capture
-completion. Its abort-control token requires rotation through a separately
-approved restart before any future abort-capable capture. Do not restart or
-deploy the monitor during correlation implementation or analysis.
+After retention equivalence is reviewed, prepare the smallest defensible
+three-source forensic report of the validated candidate windows, including
+provenance, limitations, confidence factors, and the narrowest useful next
+physical or professional measurement if telemetry remains inconclusive.
 
 ## Success
 
-The reviewed work request is limited to exact metadata fields and one named
-protected capture. It contains no secret retrieval, recursive inspection,
-permission change, monitor restart, or real analysis. Every later access stage
-remains separately approved.
+The comparison is reproducible, bounded, evidence-preserving, and clear about
+what the smaller candidate retains or loses. Any production policy change
+remains a separate risk-classified operation.

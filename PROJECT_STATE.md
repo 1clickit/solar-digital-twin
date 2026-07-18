@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Implemented and synthetically validated offline three-source correlation input adapters
+Validated bounded three-source forensic correlation with real evidence and recalibrated project governance
 
 Next Task:
-Review adapters and prepare a separately approved metadata-only SolarAssistant evidence inventory; real access and execution remain later approvals.
+Compare the conservative ESP32 retention candidate against validated bounded real-event windows without changing evidence or production retention.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -234,9 +234,8 @@ main
 - The temporary synthetic preview is expected to remain available at
   `http://192.168.3.11:8793/solar_portal_mockup.html` for browser review; this
   repository checkpoint does not authorize or modify that server
-- The validated portal prototype, focused tests, and design documentation form
-  one local commit checkpoint created by this work unit. It is intentionally
-  not pushed pending separate approval
+- The validated portal prototype, focused tests, and design documentation were
+  committed and pushed as commit `acfbaf5`
 
 - Repomix evaluation stopped as an active task; Repomix remains only an optional future architecture-audit tool.
 - Codex CLI installation and ChatGPT authentication successfully validated on `solardt`.
@@ -283,9 +282,10 @@ main
   collector provenance. A three-point check aligned ESP32 UTC receipts to
   nearest EG4 day samples within 36-66 seconds
 - The bounded correlation plan is authoritative in
-  `docs/EG4_FORENSIC_CORRELATION.md`. The exact protected SolarAssistant raw
-  filename still requires separately approved metadata-only resolution; it was
-  not guessed and permissions were not weakened
+  `docs/EG4_FORENSIC_CORRELATION.md`. The completed SolarAssistant raw and
+  retained filenames were verified through a least-privilege read-only access
+  model; credentials, tokens, protected logs, and unrelated runtime files
+  remain restricted
 - The pure offline three-source analyzer is implemented at
   `src/solar_digital_twin/analysis/forensic_correlation.py`. It normalizes
   explicit source timestamp semantics to UTC, preserves provenance, aligns
@@ -307,10 +307,22 @@ main
 - The analyzer materializes its supplied records for deterministic ordering.
   A real bounded-memory workflow must therefore detect candidate EG4 windows
   first and supply only bounded high-rate source windows
-- The least-privilege protected SolarAssistant metadata, hash, controlled-copy,
-  analysis, report, and cleanup stages are documented in
-  `docs/EG4_FORENSIC_CORRELATION.md`; each stage requires separate approval
-- Commit `5fef46b` pushed to `origin/main`; `main` was clean and synchronized afterward.
+- The real-data dry run used bounded read-only windows and verified source
+  hashes before and after analysis. It validated real EG4 naive-UTC runtime
+  timestamps, SolarAssistant grouped polls, ESP32 raw/retained context,
+  independent availability transitions, actual alarm/event descriptions, and
+  correct partial-collapse versus zero-output classification. No source was
+  modified and cloud cover remains an alternative explanation
+- Trusted read-only SolarAssistant telemetry analysis may use the established
+  least-privilege reader path without repeated administrator intervention.
+  Credentials, authorization data, tokens, protected logs, unrelated runtime
+  files, and write access remain restricted
+- Governance now defines Chris as project owner and system operator, ChatGPT as
+  proactive project lead and technical engineering partner, and Codex as the
+  bounded local implementation agent. `CONTRIBUTING.md` contains the coherent
+  risk, approval, archive-first, audit, commit, and milestone-push policy
+- Commit `b88941d` is pushed to `origin/main`; `main` was clean and synchronized
+  before the governance reset
 
 ## Current Reporting Implementation
 src/solar_digital_twin/reporting/eg4_daily_report.py
@@ -339,5 +351,5 @@ source .venv/bin/activate
 - Test before every commit.
 - Commit every completed milestone.
 - Keep main clean.
-- Push to GitHub at session end.
+- Push clean milestone commits under project-lead direction and verify sync.
 - Engineering Bible is the design authority.

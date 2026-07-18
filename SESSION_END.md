@@ -1,40 +1,31 @@
-# SESSION END CHECKLIST
+# Session End Checklist
 
-Before ending any engineering session,
-verify the repository can stand on its own.
+Before ending a work session, confirm:
 
 ## Engineering
 
-- [ ] All code changes tested.
-- [ ] No known failing tests introduced.
-- [ ] One logical engineering task completed.
+- The bounded objective is complete or its blocker is documented.
+- Relevant tests and repository checks passed, or failures are recorded.
+- No unsupported conclusion or hidden scope expansion remains.
 
-## Documentation
+## Documentation and audit
 
-- [ ] PROJECT_STATE.md updated.
-- [ ] NEXT_TASK.md updated.
-- [ ] BACKLOG.md updated if new ideas were found.
-- [ ] Workflow documentation updated if improved.
+- `PROJECT_STATE.md` and `NEXT_TASK.md` reflect validated current reality when
+  the work changed it.
+- Persistent changes have an appended `CHANGE_AUDIT.md` entry.
+- Deferred ideas are recorded only in the appropriate authorized location.
 
 ## Repository
 
-- [ ] git status reviewed.
-- [ ] Intended files staged.
-- [ ] Descriptive commit created.
-- [ ] Changes pushed to GitHub.
-- [ ] Confirm the public GitHub repository contains the completed commit; a local-only commit is incomplete.
-- [ ] Working tree clean.
+- Intended files only were staged and committed.
+- `git status --short` was reviewed.
+- Clean milestone commits were pushed under project-lead direction and
+  local/remote synchronization was verified.
+- A local commit that is intentionally awaiting a milestone push is clearly
+  documented; it is not mislabeled as lost or incomplete work.
 
-## Knowledge Transfer
+## Knowledge transfer
 
-Before ending, ask:
-
-Could a brand-new engineer continue this
-project tomorrow using only this repository?
-
-If the answer is "no",
-improve the documentation before ending
-the session.
-
-The objective is continuous knowledge capture,
-not continuous conversation.
+A new session should be able to continue from the repository without relying
+on private conversation history. If it cannot, improve authoritative project
+memory before ending.

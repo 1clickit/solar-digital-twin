@@ -2,9 +2,10 @@
 
 ## Status
 
-This document records the approved bounded investigation, implemented
-synthetic analyzer, and reporting plan. Real-evidence input resolution and
-analysis remain separately approved.
+This document records the bounded investigation, implemented analyzer and
+adapters, completed real-evidence compatibility dry run, and reporting plan.
+Future work remains read-only and bounded unless a risk-classified operation is
+explicitly authorized under `CONTRIBUTING.md`.
 
 The proposed work must remain:
 
@@ -359,10 +360,10 @@ out-of-tolerance context, timezone normalization, cadence gaps, availability
 and frequency context, distinct SOC roles, multiple events, deterministic
 ordering, input immutability, and reduced ESP32 context equivalence.
 
-This validation does not authorize execution against EG4 SQLite, actual JSON
-or NDJSON evidence, generated operational reports, or the protected
-SolarAssistant directory. Explicit input adapters and any real-data report run
-belong to a later separately approved work unit.
+This synthetic validation preceded the completed bounded real-evidence dry run.
+Real source access must use the read-only adapters, explicit paths and windows,
+and the least-privilege boundaries below; it does not authorize runtime,
+credential, device-control, or evidence-write actions.
 
 ### Implemented synthetic input adapters
 
@@ -402,21 +403,22 @@ to the analyzer and call that bounded-memory operation.
 Synthetic temporary SQLite and NDJSON tests validate read-only enforcement,
 schema failures, bounded queries, source scopes, canonical time handling,
 malformed input, availability, lazy iteration, input immutability, provenance,
-and end-to-end partial-collapse detection. No real evidence or operational
-database has been used. Real execution remains separately approved.
+and end-to-end partial-collapse detection. The later bounded real-evidence dry
+run confirmed the adapter assumptions and corrected real-format compatibility
+without modifying evidence or the operational database.
 
-### Future protected SolarAssistant access procedure
+### Protected SolarAssistant read model
 
-The installed evidence directory intentionally prevents `chris` from listing
-or reading collector output. Elevated administrator assistance is therefore
-required, but only after Chris approves the exact metadata or copy action.
+Completed SolarAssistant evidence is available for trusted, least-privilege,
+read-only analysis without repeated administrator intervention. This access
+does not include credentials, tokens, protected logs, unrelated runtime files,
+or write permission.
 
-Before a real run, obtain only the raw filename, retained filename if relevant,
-ownership, permissions, size, modification time, capture window, and completion
-confirmation. Prefer a narrowly scoped administrator-run metadata inventory.
-If analysis access is later approved, use a controlled read-only copy of only
-the named evidence file into a dedicated temporary analysis directory owned by
-the intended unprivileged analyst and protected from other users.
+Before analysis, record the named source, size, modification time, capture
+window, completion state, and hash. Direct read-only analysis is preferred when
+available. If a controlled copy is operationally necessary, treat it as a
+one-approval operation and place only the named evidence in a restrictive
+temporary analysis directory.
 
 The approved procedure must:
 
@@ -431,17 +433,19 @@ The approved procedure must:
    size and hash before analysis;
 6. keep the protected source immutable and open any approved analysis copy
    read-only;
-7. place derived reports only in the separately approved temporary or ignored
+7. place derived reports only in the authorized temporary or ignored
    destination; and
-8. after review and separate approval, remove temporary copies without touching
-   the protected source, then confirm the source metadata still matches.
+8. let temporary bounded-work material expire through normal operating-system
+   cleanup unless it is a unique project artifact, while never touching the
+   protected source.
 
-Separate approval is required for metadata inspection, source hashing, copy
-creation, reading the copy, running the real analyzer, producing a derived
-report, and deleting the temporary copy. No runnable elevated command is
-approved or recorded here. Restarting the monitor merely to rotate the unused
-abort token is unrelated to adapter validation, would alter runtime state, and
-remains a separate future approval before another abort-capable capture.
+Ordinary metadata, hashing, direct read-only analysis, and bounded derived
+reports fall under standing read-only authority. Copying evidence is a
+one-approval operation. Permission weakening, credential/token access, evidence
+modification, or destructive cleanup remains prohibited or always gated. A
+monitor restart solely to rotate the unused abort token is unrelated and
+requires its own risk-classified runtime work unit before another abort-capable
+capture.
 
 ### Selected sources
 
@@ -450,13 +454,13 @@ remains a separate future approval before another abort-capable capture.
   and the 47 immutable JSON evidence runs. Use day samples for aggregate
   AC-couple, grid, load, and EG4 SOC; use runtime for status, warning/fault,
   voltage, and grid/EPS-frequency context.
-- SolarAssistant: use the authoritative non-retained raw NDJSON in
-  `/var/lib/solar-digital-twin/solarassistant/evidence` whose verified receipt
+- SolarAssistant: use authoritative raw
+  `/var/lib/solar-digital-twin/solarassistant/evidence/solarassistant_20260716_070042Z.ndjson`
+  whose verified receipt
   window is `2026-07-16T07:00:43.194Z` through
-  `2026-07-17T07:00:41.713Z`. Its exact protected filename must be resolved by
-  a separately approved metadata-only preflight before analysis; do not guess
-  it or weaken directory permissions. Raw is required because several battery
-  families are intentionally absent from retained output.
+  `2026-07-17T07:00:41.713Z`. Raw is required because several battery families
+  are intentionally absent from retained output. Use the established read-only
+  boundary; do not weaken permissions or inspect unrelated protected files.
 - ESP32: use authoritative raw
   `evidence/esp32/esp32_sse_20260716_180514Z.ndjson`. Raw retains complete
   one-second frequency and all approved events; retained output is used only

@@ -10,11 +10,12 @@ home automation, not banking, military, or large-enterprise identity systems.
 The SolarAssistant-specific custom root-bootstrap experiment was reviewed and
 superseded before installation. The dedicated `solardt-sa` runtime was later
 installed, and its metadata and access verification passed. The protected
-SolarAssistant credential was installed using the approved installer, and one
-short authenticated manual collector verification succeeded. No persistent
-systemd service was created or enabled. The next operational stage is a
-controlled longer evidence capture. The approved practical Home Assistant-style
-operating model below remains unchanged.
+SolarAssistant credential was installed using the approved installer, and the
+completed long-duration capture and later bounded three-source analysis
+succeeded. Trusted read-only telemetry analysis now uses a least-privilege
+reader model; credentials, authorization data, tokens, protected logs,
+unrelated runtime files, and write access remain restricted. The practical
+Home Assistant-style operating model below remains in force.
 
 ## Trusted-Host Boundary
 
@@ -41,6 +42,12 @@ collector privilege, cross-collector credential access, unsafe authentication
 retry loops, unsolicited inbound internet exposure, and lateral movement from
 weak solar or IoT devices. Configuration changes must not remove direct operator
 access, and recovery must not depend on the failed collector itself.
+
+Security is risk-calibrated: ordinary read-only telemetry and bounded offline
+analysis are lower risk than credential, configuration, control, destructive,
+or public-exposure actions. Controls must remain proportional to plausible
+harm; unnecessary delay, manual intervention, and complexity are themselves
+project risks. `CONTRIBUTING.md` defines the shared approval classes.
 
 ## Internet Access
 

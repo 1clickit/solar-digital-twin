@@ -18,23 +18,25 @@ Read in this order:
 4. PROJECT_STATE.md
 5. NEXT_TASK.md
 6. AI_PROMPT.md
-7. SESSION_END.md
+7. AGENTS.md
+8. PROJECT_INDEX.md
+9. SESSION_END.md when ending a session
 
 ## Engineering Documents
 AGENTS.md
     Codex CLI entry point, communication guidance, guardrails, and local-agent operating rules.
 
 AI_PROMPT.md
-    Manual ChatGPT operating and communication guidance.
+    ChatGPT project-lead duties, communication, continuity, and recalibration.
 
 START_HERE.md
     Session startup instructions.
 
 TEAM.md
-    Team roles and communication.
+    Chris, ChatGPT, and Codex roles and working relationship.
 
 CONTRIBUTING.md
-    Engineering workflow and standards.
+    Risk, approval, preservation, audit, Git, and engineering workflow policy.
 
 PROJECT_STATE.md
     Current engineering status.
@@ -47,6 +49,10 @@ BACKLOG.md
 
 SESSION_END.md
     End-of-session checklist.
+
+CHANGE_AUDIT.md
+    Append-only record of persistent repository, host, runtime, permission,
+    service, device, database, and network changes.
 
 ## Repository Layout
 
