@@ -174,3 +174,40 @@ or runtime change.
 - **Limitations:** This guidance authorizes no hardware design, purchase,
   installation, live measurement, or electrical work. Each future action
   remains separately risk-classified and bounded.
+
+## 2026-07-18T05:44:11Z — Coordinated 24-hour capture preparation
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Prepare and launch one isolated read-only 24-hour ESP32, EG4,
+  and SolarAssistant forensic capture on a common UTC interval.
+- **Affected:** Coordinated supervisor and synthetic tests, ESP32 output-path
+  selection and tests, capture runbook, ESP32 plans, project state, next task,
+  index, and this audit record. The later live supervisor creates isolated
+  evidence and runtime provenance outside Git and temporarily stops/restores
+  only recorded competing EG4 units.
+- **Change and reason:** Added exclusive common capture identity and manifest,
+  independent source outputs, isolated EG4 database/evidence, automatic
+  duration and process cleanup, compact status, disk stop threshold, exact
+  prior-unit restoration, synthetic rehearsal, and a 24-hour operational
+  runbook covering nighttime through post-sunset context.
+- **Untouched:** Existing evidence and databases, device/firmware/configuration,
+  production retention defaults, credentials and permissions, portal behavior,
+  physical operation, and unrelated services. No control endpoint is used.
+- **Validation:** Focused synthetic collector/coordinator tests, shortened
+  temporary-directory rehearsal, full test suite, Python compilation,
+  documentation/index checks, `git diff --check`, repository health check, and
+  pre/post Git scope review.
+- **Recovery:** Stop the capture-specific transient unit; its `SIGTERM` cleanup
+  preserves partial evidence and restores only units recorded active before
+  launch. Revert the related normal Git commit for repository rollback; never
+  delete capture artifacts.
+- **Archive or backup:** Git preserves prior tracked code. Isolated live
+  evidence and append-only manifests remain under the coordinated capture root.
+- **Related commit and push:** The commit containing this entry, titled
+  `Prepare coordinated 24-hour forensic capture`; normal milestone push planned
+  before live launch.
+- **Limitations:** Cloud cover and other alternatives remain unresolved. Live
+  availability transitions or forensic events are not guaranteed, and capture
+  completion/analysis is a separate next work unit. Runtime identifiers,
+  actual times, source starts, warnings, and restoration are recorded in the
+  append-only coordinated manifest.

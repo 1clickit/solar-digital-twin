@@ -120,6 +120,12 @@ The standalone read-only collector reconnects with bounded backoff, filters
 approved entity IDs, timestamps each update, and writes raw and separately
 retained newline-delimited JSON under ignored `evidence/`.
 
+The collector also accepts an explicit `--output-dir` for isolated coordinated
+captures. Omitting it preserves the historical `evidence/esp32` default and
+normal `esp32-frequency-v1` behavior. The coordinated 24-hour runbook is
+`docs/COORDINATED_FORENSIC_CAPTURE.md`; it uses explicit canary mode without
+retiring the current policy.
+
 The versioned conservative writer and opt-in canary mode defined in
 `docs/ESP32_RETENTION_PRODUCTION_PLAN.md` are implemented and synthetically
 validated. The historical `esp32-frequency-v1` output remains the default;

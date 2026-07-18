@@ -2,32 +2,28 @@
 
 ## Objective
 
-Prepare the separately authorized live canary for the implemented
-`esp32-conservative-v1` retained writer. Complete the production-plan preflight,
-review the exact invocation, monitoring, stop, rollback, and post-capture
-verification steps, and obtain the one operational approval before launch.
+Monitor, complete, preserve, and analyze the coordinated approximately 24-hour
+ESP32, EG4, and SolarAssistant forensic capture. Verify automatic termination
+and exact prior-service restoration before offline analysis.
 
 ## Context
 
-The repository implementation now provides independent `esp32-frequency-v1`
-and `esp32-conservative-v1` policies, exclusive output creation, explicit
-opt-in canary mode, and a separate append-only capture manifest. Synthetic
-validation passed. Production behavior remains unchanged, the current policy
-remains the default, raw evidence remains authoritative, and no live canary has
-run.
+Chris authorized one common 24-hour interval in place of the earlier 12-hour
+ESP32-only canary. `docs/COORDINATED_FORENSIC_CAPTURE.md` defines isolated
+native outputs, append-only common provenance, competing-writer handling,
+automatic stop/restoration, monitoring, and evidence-preservation boundaries.
+The current ESP32 policy remains the production default.
 
 ## Scope
 
-1. Verify the repository is clean, synchronized, and at the implementation
-   checkpoint with focused and full tests passing.
-2. Perform the documented pre-canary VM capacity, time, destination, collision,
-   monitoring, stop-time, and rollback readiness checks using read-only access.
-3. Review one exact 12-hour daytime canary invocation that produces raw,
-   current-retained, conservative-retained, and manifest outputs from one SSE
-   stream.
-4. Obtain Chris's one operational approval before endpoint access or launch.
-5. Do not retire `esp32-frequency-v1`, change a service, or activate a new
-   production default.
+1. Use compact read-only status checks; do not stream or rewrite evidence.
+2. At terminal state, verify each source's completion, prior-unit restoration,
+   metadata, hashes, parse integrity, cadence, gaps, and source errors.
+3. Preserve all complete or partial evidence and append-only manifests.
+4. Perform bounded offline correlation across the common UTC window and compare
+   raw/current/conservative ESP32 context.
+5. State source gaps, alternative explanations, and confidence without claiming
+   causation or retiring `esp32-frequency-v1`.
 
 ## Runtime boundary
 
@@ -39,12 +35,12 @@ runtime. Repository source changes remain limited to the implementation scope.
 
 ## Following task
 
-After approved canary execution, preserve and hash all outputs and perform the
-separate deterministic canary-analysis milestone. Policy retirement remains a
-later decision after every production acceptance gate passes.
+After evidence analysis, decide whether another capture or a narrowly targeted
+measurement is needed. Policy retirement remains a later owner-reviewed
+decision after every production acceptance gate passes.
 
 ## Success
 
-The exact canary work unit is reviewable, capacity and collision checks are
-complete, monitoring and rollback are ready, and no live endpoint is accessed
-until Chris grants the single operational approval.
+The capture ends cleanly, prior units are restored exactly, immutable source
+evidence and hashes are preserved, correlation findings are reproducible, and
+uncertainty is explicit.

@@ -23,6 +23,7 @@ SSE_URL = "http://192.168.3.13/events"
 MAX_BACKOFF_SECONDS = 30.0
 MANIFEST_SCHEMA = "solar-digital-twin.esp32-capture.v1"
 RETENTION_MODES = ("current", "canary", "conservative")
+DEFAULT_OUTPUT_DIR = Path("evidence/esp32")
 
 APPROVED_IDS = {
     "binary_sensor-03_gen_frequency_high",
@@ -53,9 +54,9 @@ def receipt_timestamp() -> str:
     )
 
 
-def new_output_path() -> Path:
+def new_output_path(output_dir: Path = DEFAULT_OUTPUT_DIR) -> Path:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%SZ")
-    return Path("evidence/esp32") / f"esp32_sse_{stamp}.ndjson"
+    return output_dir / f"esp32_sse_{stamp}.ndjson"
 
 
 def retained_output_path(raw_output: Path) -> Path:
@@ -188,6 +189,12 @@ def parse_args() -> argparse.Namespace:
         "--collector-version",
         help="Non-secret implementation commit recorded in capture provenance.",
     )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=DEFAULT_OUTPUT_DIR,
+        help="Directory for raw, retained, and manifest capture outputs.",
+    )
     args = parser.parse_args()
     if args.retention_mode != "current" and not args.collector_version:
         parser.error("--collector-version is required outside current mode")
@@ -245,13 +252,14 @@ def collect(
     duration: float,
     retention_mode: str = "current",
     collector_version: str | None = None,
+    output_dir: Path = DEFAULT_OUTPUT_DIR,
 ) -> tuple[Path, Path, int, int]:
     if retention_mode not in RETENTION_MODES:
         raise ValueError(f"unsupported retention mode: {retention_mode}")
     if retention_mode != "current" and not collector_version:
         raise ValueError("collector_version is required outside current mode")
 
-    output = new_output_path()
+    output = new_output_path(output_dir)
     retained_output = retained_output_path(output)
     manifest_output = manifest_output_path(output)
     retained_outputs = _retained_outputs(output, retention_mode)
@@ -419,6 +427,7 @@ def main() -> None:
             args.duration,
             retention_mode=args.retention_mode,
             collector_version=args.collector_version,
+            output_dir=args.output_dir,
         )
     except KeyboardInterrupt:
         print("\nStopped cleanly by user.")

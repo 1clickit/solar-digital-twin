@@ -9,12 +9,15 @@ output creation, and a separate append-only manifest. The current policy and
 historical retained filename remain the default. No deployment, device access,
 production activation, or live canary occurred during implementation.
 
-The remaining next milestone is the separately authorized preflight and
-approximately 12-hour daytime live canary. Canary analysis and retirement of
-the current policy remain separate later milestones. No real availability
-transition occurred in the completed replay evidence; entry and restoration
-behavior therefore remains synthetically validated until observed in a future
-approved capture.
+Chris superseded the earlier 12-hour ESP32-only canary with one authorized
+approximately 24-hour coordinated ESP32, EG4, and SolarAssistant capture. The
+operational procedure is `docs/COORDINATED_FORENSIC_CAPTURE.md`. It preserves
+the same explicit ESP32 canary policy comparison while adding nighttime,
+sunrise, daytime, sunset, battery, load, and inverter context. Canary analysis
+and retirement of the current policy remain separate later milestones. No real
+availability transition occurred in the completed replay evidence; entry and
+restoration behavior therefore remains synthetically validated until observed
+in a future approved capture.
 
 ## Decision and boundary
 

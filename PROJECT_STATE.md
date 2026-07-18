@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Implemented production-ready ESP32 conservative-retention canary support with synthetic tests only
+Prepared the isolated 24-hour three-source forensic capture for authorized live launch
 
 Next Task:
-Prepare the separately authorized approximately 12-hour daytime live canary without retiring the current policy.
+Monitor, complete, preserve, and analyze the coordinated 24-hour ESP32, EG4, and SolarAssistant capture.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -365,6 +365,17 @@ main
   restoration equal to the last pre-unavailable numeric value. No real
   availability transition has yet been observed, and no deployment or live
   canary was performed
+- Coordinated capture orchestration now isolates ESP32, EG4, and SolarAssistant
+  evidence beneath one capture ID, records append-only common provenance,
+  enforces approximately 24 hours, and restores only previously active
+  competing EG4 units. It preserves native source formats and production data
+- ESP32 now accepts an explicit output directory without changing its default
+  path or policy. The coordinated run uses explicit canary mode; normal
+  `esp32-frequency-v1` behavior remains the production default
+- The coordinated milestone supersedes the earlier 12-hour ESP32-only canary
+  with an authorized 24-hour common interval covering nighttime, sunrise,
+  daytime, sunset, and post-sunset context. Capture completion and analysis
+  remain the next work unit; cloud cover remains an alternative explanation
 - Commit `b88941d` is pushed to `origin/main`; `main` was clean and synchronized
   before the governance reset
 

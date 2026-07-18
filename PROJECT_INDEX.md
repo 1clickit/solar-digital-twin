@@ -99,6 +99,10 @@ docs/ESP32_RETENTION_PRODUCTION_PLAN.md
     Versioned dual-output implementation, canary, rollback, verification, and
     production-acceptance plan for the adopted conservative ESP32 policy.
 
+docs/COORDINATED_FORENSIC_CAPTURE.md
+    Operational runbook for an isolated 24-hour ESP32, EG4, and SolarAssistant
+    capture with append-only provenance and exact service restoration.
+
 docs/TELEMETRY_SOURCE_ROLES.md
     Agreed authority, comparison, forensic, and display roles for telemetry sources.
 
@@ -148,6 +152,10 @@ src/solar_digital_twin/collectors/esp32_sse.py
 src/solar_digital_twin/collectors/esp32_retention.py
     Versioned current and conservative ESP32 retention policies, canonical
     deadbands, and entity-local availability normalization.
+
+scripts/coordinated_capture.py
+    Three-source isolated capture supervisor, synthetic rehearsal, compact
+    status, duration control, and prior-unit restoration.
 
 scripts/analyze_esp32_retention.py
     Streaming offline raw/retained ESP32 assessment and deterministic candidate

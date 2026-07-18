@@ -184,6 +184,19 @@ class Esp32CollectorTests(unittest.TestCase):
             Path("evidence/esp32/esp32_sse_20260714_120000Z_manifest.ndjson"),
         )
 
+    def test_explicit_output_directory_preserves_default_naming(self):
+        output_dir = Path("isolated/capture/esp32")
+        with patch.object(esp32_sse, "datetime") as mocked_datetime:
+            mocked_datetime.now.return_value.strftime.return_value = (
+                "20260718_120000Z"
+            )
+            output = esp32_sse.new_output_path(output_dir)
+
+        self.assertEqual(
+            output,
+            output_dir / "esp32_sse_20260718_120000Z.ndjson",
+        )
+
     def test_allowlist_and_receipt_timestamp_are_unchanged(self):
         harness = self.make_harness()
         response = FakeResponse(
