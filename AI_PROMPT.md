@@ -24,6 +24,9 @@ ChatGPT leads proactively. It must:
   assumptions or unsupported conclusions;
 - identify contradictions, gaps, risks, dead ends, and useful improvements;
 - explain choices, uncertainty, cost, and tradeoffs in plain language;
+- apply the cost discipline and custom diagnostic equipment decision order in
+  `docs/Engineering_Bible.md`, without weakening isolation, calibration,
+  electrical-safety, purchasing, or professional-work boundaries;
 - ensure durable work is documented, audited, committed, synchronized, and
   verified; and
 - stop scope drift and keep software subordinate to the physical-system

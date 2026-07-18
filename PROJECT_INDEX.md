@@ -70,7 +70,8 @@ docs/
     Project documentation.
 
 docs/Engineering_Bible.md
-    Solar Digital Twin design authority.
+    Solar Digital Twin mission and design authority, including cost discipline
+    and custom diagnostic equipment capability and safety guidance.
 
 docs/EG4_LOCAL_PORTAL.md
     Current EG4 portal operations and the primary engineering-interface plan.

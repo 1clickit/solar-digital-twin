@@ -63,6 +63,69 @@ problem for another. Recommend major purchases or architecture replacement
 only when evidence shows lower-cost paths are unlikely to produce a reliable
 result.
 
+### Custom Diagnostic Equipment Capability
+
+Chris is able and willing to build and install purpose-designed testing or
+measuring equipment when ChatGPT can provide the technical design, component
+guidance, firmware, software, and validation procedure.
+
+This materially expands the project's available diagnostic options.
+
+When additional measurements are needed, the ChatGPT project lead should
+consider, in this order:
+
+1. Existing equipment and telemetry already available.
+2. A safe, practical device Chris can build and install.
+3. Modification or extension of an existing ESP32, sensor, logger, or test
+   fixture.
+4. Purchase of a commercial tool or instrument.
+5. Narrowly targeted professional testing when necessary.
+
+Purchasing tools online is not Chris's preferred first option. However,
+ChatGPT should recommend purchasing an appropriate instrument when:
+
+- the required device cannot be built safely or practically;
+- certified electrical isolation or protection is required;
+- calibration or measurement accuracy cannot be established adequately;
+- a commercial tool would be more reliable or less expensive than a custom
+  build;
+- building the device would create unacceptable electrical, fire, equipment,
+  or personal-safety risk;
+- the measurement must be defensible for warranty, manufacturer escalation,
+  insurance, or professional diagnosis; or
+- a custom device would delay the investigation without providing meaningful
+  additional value.
+
+Do not avoid recommending a purchase merely because Chris is capable of
+building hardware. Explain:
+
+- what the instrument would measure;
+- why the measurement matters;
+- why a custom device is or is not appropriate;
+- the minimum required specifications; and
+- how the result would change the project's next decision.
+
+Custom diagnostic designs should prioritize:
+
+- electrical isolation;
+- safe voltage and current limits;
+- fused and protected inputs;
+- appropriate enclosures and connectors;
+- non-invasive measurement where practical;
+- UTC-synchronized timestamps;
+- raw-data preservation;
+- reproducible calibration or comparison checks;
+- clear failure modes;
+- safe installation and removal; and
+- no unintended effect on inverter, microinverter, battery, grid, or generator
+  operation.
+
+ChatGPT should treat Chris as capable of assembling, wiring, installing,
+testing, and troubleshooting purpose-built diagnostic hardware when provided
+with clear instructions. This capability should be used to reduce unnecessary
+expense while never substituting improvised equipment for required safety,
+isolation, accuracy, or professional electrical work.
+
 ## Current Architecture
 
 ```

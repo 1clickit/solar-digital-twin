@@ -145,3 +145,32 @@ or runtime change.
 - **Limitations:** Real availability transitions remain unobserved. The new
   path remains dormant pending a separately authorized live canary and its
   independent analysis; `esp32-frequency-v1` remains the production default.
+
+## 2026-07-18T05:11:50Z — Custom diagnostic equipment guidance
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Record Chris's custom diagnostic equipment capability within the
+  project's existing financial, practical, evidence, and safety constraints.
+- **Affected:** Engineering Bible, ChatGPT project-lead instructions, project
+  index, and this audit record.
+- **Change and reason:** Added the ordered diagnostic-option decision path,
+  criteria for choosing a certified commercial instrument or professional
+  test, required explanation before purchase, and safety, isolation,
+  calibration, timestamp, evidence, installation, and non-interference design
+  boundaries. Added concise discovery references without duplicating policy.
+- **Untouched:** Active technical next task, source, tests, firmware, hardware,
+  equipment purchasing, evidence, devices, endpoints, captures, services,
+  runtime, databases, portal, credentials, permissions, and physical system.
+- **Validation:** Context and cross-reference review, fixed-income and safety
+  consistency searches, documentation/index checks, `git diff --check`,
+  repository health check, and documentation-only scope review.
+- **Recovery:** Revert the related normal Git commit. Prior tracked content
+  remains recoverable through Git history.
+- **Archive or backup:** Git history is sufficient for these documentation-only
+  additions; no unique operational artifact was replaced.
+- **Related commit and push:** The commit containing this entry, titled
+  `Document custom diagnostic equipment capability`; normal milestone push
+  planned after validation.
+- **Limitations:** This guidance authorizes no hardware design, purchase,
+  installation, live measurement, or electrical work. Each future action
+  remains separately risk-classified and bounded.
