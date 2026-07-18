@@ -2,10 +2,11 @@
 
 ## Objective
 
-Launch a new uniquely identified coordinated approximately 24-hour ESP32, EG4,
-and SolarAssistant forensic capture, verify all three sources start, then
-monitor, complete, preserve, and analyze it. Verify automatic termination and
-exact prior-service restoration before offline analysis.
+Allow active coordinated capture `solar-forensic-20260718T062127Z` to continue
+without interference through its planned automatic end at
+`2026-07-19T06:21:27.571Z`, then verify completion and restoration, preserve
+the evidence unchanged, and prepare the bounded three-source analysis work
+unit.
 
 ## Context
 
@@ -15,32 +16,39 @@ native outputs, append-only common provenance, competing-writer handling,
 automatic stop/restoration, monitoring, and evidence-preservation boundaries.
 The current ESP32 policy remains the production default.
 
-The first live startup attempt, `solar-forensic-20260718T055952Z`, aborted
-cleanly because the coordinator forced the SolarAssistant child into group
-`chris`, which removed its normal `solardt-sa` group access to the protected
-password file. Partial evidence and the append-only manifest remain preserved;
-all children stopped and `eg4-refresh-report.timer` returned to its prior
-active state. The minimal identity correction is validated, so the relaunch
-must use a new capture identifier rather than reuse the failed directory.
+The corrected relaunch passed `startup_verified`. Privileged operator checks
+confirm EG4, ESP32, and SolarAssistant are running with growing isolated
+outputs and no recent errors. The live processes use implementation commit
+`6b734306c6f414c6413f7c6e86e9d443e3fe49e2`; later documentation commits do
+not change that live checkpoint. An unprivileged status check can falsely show
+the child processes as `not-running` when process inspection is restricted.
 
 ## Scope
 
-1. Use compact read-only status checks; do not stream or rewrite evidence.
-2. At terminal state, verify each source's completion, prior-unit restoration,
-   metadata, hashes, parse integrity, cadence, gaps, and source errors.
-3. Preserve all complete or partial evidence and append-only manifests.
-4. Perform bounded offline correlation across the common UTC window and compare
-   raw/current/conservative ESP32 context.
-5. State source gaps, alternative explanations, and confidence without claiming
-   causation or retiring `esp32-frequency-v1`.
+1. Use only compact, read-only monitoring. Avoid rebooting the VM or changing
+   the supervisor, relevant services, timers, collectors, or tmux sessions.
+2. Intervene only for documented stop conditions: a source stops, output growth
+   stalls or becomes excessive, errors or rapid reconnects persist, timestamps
+   become implausible, free space approaches the threshold, or the supervisor
+   exits early or reports failure/interruption.
+3. Treat nighttime zero AC-couple production, unchanged EG4 bytes between its
+   15-minute polls, recovered short reconnects, and cloud-driven production
+   variation as expected context rather than automatic stop conditions.
+4. After the planned end, verify the transient supervisor and all source
+   processes ended, prior services/timers were restored exactly, and the
+   append-only manifest has the correct terminal and restoration records.
+5. Preserve every evidence file unchanged. Record required sizes, counts,
+   timestamps, gaps, parse integrity, and checksums.
+6. Prepare a bounded three-source correlation work unit comparing the native
+   sources and raw/current/conservative ESP32 context. Do not claim causation
+   or retire `esp32-frequency-v1`.
 
 ## Runtime boundary
 
-Use strict read-only, bounded offline access. Do not access credentials,
-tokens, protected collector or monitor logs, device controls, services, or
-unrelated files. Do not restart or modify the SolarAssistant monitor, EG4
-workflow, installed ESP32 collector, evidence, database, permissions, or
-runtime. Repository source changes remain limited to the implementation scope.
+While the capture is active, do not scan evidence, query devices, access
+credentials, or alter output, databases, permissions, services, collectors,
+monitors, or runtime. The existing SolarAssistant monitor and portal preview
+tmux processes are not duplicate collectors and must remain untouched.
 
 ## Following task
 
@@ -50,6 +58,6 @@ decision after every production acceptance gate passes.
 
 ## Success
 
-The capture ends cleanly, prior units are restored exactly, immutable source
-evidence and hashes are preserved, correlation findings are reproducible, and
-uncertainty is explicit.
+The capture reaches a verified terminal state, prior units are restored exactly,
+immutable source evidence and hashes are preserved, and the next bounded
+analysis can proceed with explicit uncertainty.

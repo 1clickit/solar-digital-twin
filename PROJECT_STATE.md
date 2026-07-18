@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Corrected the coordinated SolarAssistant runtime identity after a preserved failed startup
+Active coordinated 24-hour ESP32, EG4, and SolarAssistant forensic capture
 
 Next Task:
-Relaunch with a new capture identifier, verify, then monitor and analyze the coordinated 24-hour ESP32, EG4, and SolarAssistant capture.
+Allow the active capture to finish automatically, then verify completion and restoration, preserve evidence, and prepare bounded three-source analysis.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,6 +19,28 @@ solardt
 main
 
 ## Current Status
+- Coordinated capture `solar-forensic-20260718T062127Z` is active under transient
+  supervisor `solar-coordinated-solar-forensic-20260718T062127Z.service`
+- The live capture is running implementation commit
+  `6b734306c6f414c6413f7c6e86e9d443e3fe49e2`; later repository-only
+  documentation commits do not change the code revision used by its processes
+- Startup was verified at approximately `2026-07-18T06:21:27Z`
+  (`2026-07-18 01:21:27 CDT`), and automatic completion is planned for
+  `2026-07-19T06:21:27.571Z` (`2026-07-19 01:21:27 CDT`)
+- The append-only coordinated manifest reports `startup_verified`; privileged
+  operator verification confirms EG4, ESP32, and SolarAssistant are running,
+  all expected isolated outputs are growing, and no recent error is reported
+- Initial verification found approximately 65.5 GB free. Nighttime zero
+  production is intentional control context, not by itself a fault
+- `esp32-frequency-v1` remains the current policy. The separate
+  `esp32-conservative-v1` output is an explicit canary evaluation only
+- Unprivileged compact status can incorrectly report child processes as
+  `not-running` when process inspection is restricted; use operator-privileged
+  status for process-state conclusions. The visible `runuser` wrapper and its
+  Python child are one collector, not duplicate collectors
+- Do not disturb the active supervisor, collectors, relevant services, or VM
+  except for a documented stop condition. Automatic completion and exact
+  prior-unit restoration remain expected but are not yet verified
 - Repository health check script operational
 - status.sh runs repository health check script at startup
 - AI engineering framework MVP boundary design documented

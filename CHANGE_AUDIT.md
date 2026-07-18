@@ -243,3 +243,38 @@ or runtime change.
 - **Limitations:** No device endpoint, live collector, or new capture was used.
   A new uniquely identified coordinated capture still requires launch and
   startup verification.
+
+## 2026-07-18T06:38:42Z — Active coordinated capture documentation
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Record the verified startup and current state of the active
+  coordinated 24-hour three-source forensic capture.
+- **Affected:** `PROJECT_STATE.md`, `NEXT_TASK.md`, and this audit record.
+- **Change and reason:** Recorded active capture
+  `solar-forensic-20260718T062127Z`, its live implementation checkpoint
+  `6b734306c6f414c6413f7c6e86e9d443e3fe49e2`, successful three-source
+  `startup_verified` state, isolated growing outputs, no recent errors,
+  approximately 65.5 GB initial free space, and the planned automatic end at
+  `2026-07-19T06:21:27.571Z`. The next task now protects the active run and
+  defines completion, restoration, preservation, and analysis preparation.
+- **Untouched:** Source and tests, collector processes and configuration,
+  devices, credentials, services, timers, tmux sessions, permissions,
+  databases, existing evidence, and production retention defaults. This was a
+  documentation-only work unit with no device-control action or evidence
+  rewrite.
+- **Validation:** Privileged operator verification established that the
+  supervisor and all three collectors were running with growing outputs and no
+  recent errors. Documentation/index checks, `git diff --check`, repository
+  health check, and documentation-only scope review were performed.
+- **Recovery:** Revert the related normal Git documentation commit. The active
+  capture continues from its recorded implementation commit independently of
+  the repository documentation checkpoint.
+- **Archive or backup:** Git history preserves prior documentation; active
+  evidence and append-only runtime provenance remain isolated outside Git.
+- **Related commit and push:** The commit containing this entry, titled
+  `Document active coordinated capture`; normal milestone push planned after
+  validation.
+- **Limitations:** Capture completion, terminal manifest state, and automatic
+  prior-service restoration are expected but not yet verified. Unprivileged
+  process inspection can falsely report coordinated children as not running;
+  operator-privileged verification controls process-state conclusions.
