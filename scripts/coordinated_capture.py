@@ -180,6 +180,27 @@ def run_as(user: str, command: list[str], group: str | None = None) -> list[str]
     return [*prefix, "--", *command]
 
 
+def solarassistant_command(
+    password_file: Path, output_dir: Path, duration: float
+) -> list[str]:
+    return run_as(
+        "solardt-sa",
+        [
+            "/opt/solar-digital-twin/.venv/bin/python",
+            "-m",
+            "solar_digital_twin.collectors.solarassistant",
+            "--password-file",
+            str(password_file),
+            "--output-dir",
+            str(output_dir),
+            "--interval",
+            "10",
+            "--duration",
+            str(duration),
+        ],
+    )
+
+
 @dataclass
 class Child:
     source: str
@@ -386,22 +407,10 @@ def run_live(args: argparse.Namespace) -> int:
                 str(args.eg4_interval),
             ],
         )
-        solar_command = run_as(
-            "solardt-sa",
-            [
-                "/opt/solar-digital-twin/.venv/bin/python",
-                "-m",
-                "solar_digital_twin.collectors.solarassistant",
-                "--password-file",
-                str(args.solarassistant_password_file),
-                "--output-dir",
-                str(source_dirs["solarassistant"]),
-                "--interval",
-                "10",
-                "--duration",
-                str(args.duration),
-            ],
-            group="chris",
+        solar_command = solarassistant_command(
+            args.solarassistant_password_file,
+            source_dirs["solarassistant"],
+            args.duration,
         )
         esp32_command = run_as(
             "chris",

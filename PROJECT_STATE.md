@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Prepared the isolated 24-hour three-source forensic capture for authorized live launch
+Corrected the coordinated SolarAssistant runtime identity after a preserved failed startup
 
 Next Task:
-Monitor, complete, preserve, and analyze the coordinated 24-hour ESP32, EG4, and SolarAssistant capture.
+Relaunch with a new capture identifier, verify, then monitor and analyze the coordinated 24-hour ESP32, EG4, and SolarAssistant capture.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -376,6 +376,13 @@ main
   with an authorized 24-hour common interval covering nighttime, sunrise,
   daytime, sunset, and post-sunset context. Capture completion and analysis
   remain the next work unit; cloud cover remains an alternative explanation
+- The first coordinated startup (`solar-forensic-20260718T055952Z`) failed
+  safely because its SolarAssistant child was forced to primary group `chris`
+  and therefore could not read the protected `root:solardt-sa` credential.
+  Automatic cleanup stopped all three children, preserved the failed run and
+  append-only manifest, and restored `eg4-refresh-report.timer` to its prior
+  active state. The coordinator now launches SolarAssistant with the normal
+  `solardt-sa` identity; the next launch must use a new capture identifier
 - Commit `b88941d` is pushed to `origin/main`; `main` was clean and synchronized
   before the governance reset
 

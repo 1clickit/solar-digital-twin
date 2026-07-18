@@ -11,6 +11,55 @@ from scripts import coordinated_capture as capture
 
 
 class CoordinatedCaptureTests(unittest.TestCase):
+    def test_run_as_uses_target_users_normal_group_identity_by_default(self):
+        command = capture.run_as("solardt-sa", ["synthetic-command"])
+
+        self.assertEqual(
+            command,
+            [
+                "/usr/sbin/runuser",
+                "--preserve-environment",
+                "-u",
+                "solardt-sa",
+                "--",
+                "synthetic-command",
+            ],
+        )
+        self.assertNotIn("-g", command)
+
+    def test_run_as_retains_explicit_group_support(self):
+        command = capture.run_as(
+            "synthetic-user", ["synthetic-command"], group="synthetic-group"
+        )
+
+        self.assertEqual(
+            command,
+            [
+                "/usr/sbin/runuser",
+                "--preserve-environment",
+                "-u",
+                "synthetic-user",
+                "-g",
+                "synthetic-group",
+                "--",
+                "synthetic-command",
+            ],
+        )
+
+    def test_solarassistant_launch_uses_normal_service_identity(self):
+        command = capture.solarassistant_command(
+            Path("/synthetic/password"), Path("/synthetic/output"), 60
+        )
+
+        self.assertEqual(command[:4], [
+            "/usr/sbin/runuser",
+            "--preserve-environment",
+            "-u",
+            "solardt-sa",
+        ])
+        self.assertNotIn("-g", command)
+        self.assertIn("solar_digital_twin.collectors.solarassistant", command)
+
     def test_capture_identifier_uses_canonical_utc_shape(self):
         value = capture.datetime(2026, 7, 18, 12, 34, 56, tzinfo=capture.timezone.utc)
         self.assertEqual(

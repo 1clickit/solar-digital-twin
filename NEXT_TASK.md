@@ -2,9 +2,10 @@
 
 ## Objective
 
-Monitor, complete, preserve, and analyze the coordinated approximately 24-hour
-ESP32, EG4, and SolarAssistant forensic capture. Verify automatic termination
-and exact prior-service restoration before offline analysis.
+Launch a new uniquely identified coordinated approximately 24-hour ESP32, EG4,
+and SolarAssistant forensic capture, verify all three sources start, then
+monitor, complete, preserve, and analyze it. Verify automatic termination and
+exact prior-service restoration before offline analysis.
 
 ## Context
 
@@ -13,6 +14,14 @@ ESP32-only canary. `docs/COORDINATED_FORENSIC_CAPTURE.md` defines isolated
 native outputs, append-only common provenance, competing-writer handling,
 automatic stop/restoration, monitoring, and evidence-preservation boundaries.
 The current ESP32 policy remains the production default.
+
+The first live startup attempt, `solar-forensic-20260718T055952Z`, aborted
+cleanly because the coordinator forced the SolarAssistant child into group
+`chris`, which removed its normal `solardt-sa` group access to the protected
+password file. Partial evidence and the append-only manifest remain preserved;
+all children stopped and `eg4-refresh-report.timer` returned to its prior
+active state. The minimal identity correction is validated, so the relaunch
+must use a new capture identifier rather than reuse the failed directory.
 
 ## Scope
 

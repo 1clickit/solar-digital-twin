@@ -52,6 +52,13 @@ also use exclusive creation.
   reads the existing protected password file without exposing it, uses the
   normal 10-second interval, and writes to its isolated source directory.
 
+The SolarAssistant child must use the normal `solardt-sa` user and group
+identity. Do not force group `chris`: doing so removes the service identity's
+group access to its protected credential. The preserved first startup attempt,
+`solar-forensic-20260718T055952Z`, demonstrated this failure mode and then
+cleanly stopped all children and restored the prior EG4 timer. Relaunch only
+with a new capture identifier after the corrected identity path validates.
+
 The coordinator reads the existing EG4 environment file only in the privileged
 live process and passes its two required values through a child environment,
 never through arguments, logs, manifests, reports, or Git. No credential is

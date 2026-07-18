@@ -211,3 +211,35 @@ or runtime change.
   completion/analysis is a separate next work unit. Runtime identifiers,
   actual times, source starts, warnings, and restoration are recorded in the
   append-only coordinated manifest.
+
+## 2026-07-18T06:12:39Z — Coordinated SolarAssistant identity correction
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Correct the confirmed SolarAssistant identity defect that caused
+  the first coordinated-capture startup to abort.
+- **Affected:** `scripts/coordinated_capture.py`, focused coordinated-capture
+  tests, the coordinated runbook, project state, next task, and this audit
+  record.
+- **Change and reason:** Removed the forced `chris` group from the
+  SolarAssistant child command so `runuser` preserves the normal `solardt-sa`
+  account identity and its protected credential access. Added regression tests
+  for default and explicit-group command construction and for the live
+  SolarAssistant command. Recorded the failed startup and required unique-ID
+  relaunch.
+- **Untouched:** Credential contents, ownership, mode, and location; devices,
+  services, collectors at runtime, existing evidence, databases, permissions,
+  production defaults, and physical operation. No live capture was launched.
+- **Validation:** Focused and full synthetic tests, Python compilation,
+  documentation/index checks, `git diff --check`, repository health check, and
+  a non-secret service-identity readability/nonempty metadata check.
+- **Recovery:** Revert the related normal Git commit. The failed capture and
+  append-only manifest remain preserved at their unique coordinated-capture
+  location; no evidence rollback or deletion applies.
+- **Archive or backup:** Git preserves the prior tracked implementation. The
+  failed run remains preserved outside Git.
+- **Related commit and push:** The commit containing this entry, titled
+  `Fix coordinated SolarAssistant identity`; normal milestone push planned
+  after validation.
+- **Limitations:** No device endpoint, live collector, or new capture was used.
+  A new uniquely identified coordinated capture still requires launch and
+  startup verification.
