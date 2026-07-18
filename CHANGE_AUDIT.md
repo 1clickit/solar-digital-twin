@@ -311,3 +311,37 @@ or runtime change.
 - **Limitations:** This clarification grants no action beyond an explicitly
   authorized bounded work unit and does not bypass platform security controls.
   Session/activity history is not claimed as permanent evidence.
+
+## 2026-07-18T20:53:35Z — Home Assistant and irradiance planning
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Preserve future reciprocal Home Assistant telemetry, local EG4
+  assessment, RS-485 topology review, and on-site irradiance/temperature
+  measurement plans without displacing the active coordinated capture.
+- **Affected:** New Home Assistant interoperability and irradiance measurement
+  plans, Engineering Bible principles, project index, backlog cross-references,
+  and this audit record.
+- **Change and reason:** Defined allowlisted LAN-only read-only exchange in both
+  directions, stable schema and lineage/loop protections, practical credential
+  boundaries, a controlled `joyfulhouse/eg4_web_monitor` candidate pilot, a
+  mandatory bus-ownership review before any second RS-485 master, and safe
+  calibrated plane-of-array irradiance/temperature evidence. Recorded operator
+  questions and the future sequence after capture completion and first
+  analysis.
+- **Untouched:** Active capture task/state, source and tests, Home Assistant and
+  devices, credentials, networking, RS-485 wiring, services/processes/timers,
+  evidence, databases/manifests, collectors/retention, permissions, and runtime.
+- **Validation:** Active-task preservation review, no-control and provenance
+  boundary searches, documentation/index checks, `git diff --check`, repository
+  health check, and documentation-only scope review.
+- **Recovery:** Revert the related normal Git documentation commit. Prior
+  tracked documentation remains recoverable through Git history.
+- **Archive or backup:** Git history preserves prior documentation; no unique
+  operational artifact was replaced.
+- **Related commit and push:** The commit containing this entry is titled
+  `Plan Home Assistant telemetry interoperability`; normal push planned after
+  validation.
+- **Limitations:** No transport, integration, sensor, topology, or production
+  source is selected or validated. The EG4 candidate remains control-capable
+  software under a proposed read-only pilot policy, and irradiance remains a
+  future diagnostic source rather than an alpha blocker.

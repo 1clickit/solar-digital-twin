@@ -103,6 +103,14 @@ docs/COORDINATED_FORENSIC_CAPTURE.md
     Operational runbook for an isolated 24-hour ESP32, EG4, and SolarAssistant
     capture with append-only provenance and exact service restoration.
 
+docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md
+    Future reciprocal read-only HA telemetry, local EG4 candidate assessment,
+    lineage protection, security boundaries, and RS-485 topology review.
+
+docs/IRRADIANCE_MEASUREMENT_PLAN.md
+    Future on-site plane-of-array irradiance and temperature measurement,
+    calibration, safety, provenance, and expanded-capture plan.
+
 docs/TELEMETRY_SOURCE_ROLES.md
     Agreed authority, comparison, forensic, and display roles for telemetry sources.
 

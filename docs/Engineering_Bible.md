@@ -35,6 +35,12 @@ awareness, historical review, and evidence-based forensic investigation.
 Home Assistant may later provide complementary convenience, status, and alerts,
 but it is not an authoritative data store.
 
+Future Home Assistant interoperability begins as allowlisted, LAN-only,
+reciprocal read-only telemetry. Source lineage must prevent circular imports or
+copied values from being counted as independent evidence, and control-capable
+integrations remain constrained by separate authorization. See
+`docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md`.
+
 ## Operational Completion Baseline
 
 The project reaches an operationally complete baseline when it provides a
@@ -125,6 +131,12 @@ testing, and troubleshooting purpose-built diagnostic hardware when provided
 with clear instructions. This capability should be used to reduce unnecessary
 expense while never substituting improvised equipment for required safety,
 isolation, accuracy, or professional electrical work.
+
+On-site plane-of-array irradiance and module/reference-cell temperature are
+future diagnostic options for separating environmental variation from system
+behavior. They must use UTC chronology, raw provenance, reproducible
+calibration, safe installation, and cautious non-causal interpretation as
+defined in `docs/IRRADIANCE_MEASUREMENT_PLAN.md`.
 
 ## Current Architecture
 

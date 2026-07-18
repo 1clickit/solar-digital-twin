@@ -16,7 +16,10 @@ deferred until explicitly promoted and approved.
 - Integrate trusted JK BMS and ESP32 data into the primary engineering portal.
 
 ### Home Assistant Integration
-- Add complementary convenience, status, and alerts without replacing the engineering portal or authoritative evidence and history.
+- Follow `docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md` after the active capture
+  and first analysis: inventory HA/topology, assess the local EG4 candidate,
+  validate imported telemetry, then design a LAN-only read-only export without
+  replacing authoritative evidence/history or enabling control.
 
 ### Portal Improvements
 - Add a future secured `Refresh data now` workflow so F5 or an explicit portal control can request one bounded EG4 collection, report, and portal-generation cycle before displaying newly generated data. Prevent overlapping jobs, rapid repeated requests, uncontrolled command execution, and credential exposure; report in-progress, success, failure, and last-completed status clearly.
@@ -26,6 +29,9 @@ deferred until explicitly promoted and approved.
 - Home Assistant collector
 - Weather collector
 - Utility collector, if useful later
+- On-site plane-of-array irradiance and module/reference-cell temperature under
+  `docs/IRRADIANCE_MEASUREMENT_PLAN.md` after separate design, safety, and
+  installation authorization.
 
 ### AC-Couple Forensic Investigation
 - Develop an AC-Couple Microinverter Dropout Signature Review.
