@@ -2,68 +2,49 @@
 
 ## Objective
 
-Perform the bounded three-source offline analysis of verified coordinated
-capture `solar-forensic-20260718T062127Z`. Keep the prepared EG4 local-dongle
-path subordinate to this evidence milestone.
+Review the completed coordinated three-source findings with Chris and decide
+whether the evidence is sufficient or one narrowly targeted follow-up
+measurement is justified. Do not activate a capture or measurement during the
+review.
 
 ## Context
 
-The capture used implementation commit
-`6b734306c6f414c6413f7c6e86e9d443e3fe49e2` and was intentionally stopped
-through its transient coordinated service after approximately 21 hours 15
-minutes. It had covered nighttime battery discharge, sunrise, the complete
-daytime production and charging cycle, sunset, and return to nighttime.
+The authoritative result is `docs/COORDINATED_CAPTURE_CORRELATION.md`, with the
+compact event/control table at
+`docs/capture_analyses/solar-forensic-20260718T062127Z-events.tsv`.
 
-The final manifest reported `capture_terminal`, state `interruption`, reason
-`signal`, and `restoration_success: true`. All three children received normal
-SIGTERM shutdowns. `eg4-refresh-report.timer` was restored; the coordinated
-unit is inactive, the refresh timer and local portal are active/enabled, and the
-static refresh service is normally inactive between timer runs. This controlled
-interruption is not a capture failure.
+The primary detector found five zero-output and two partial-collapse events.
+ESP32 power corroborates real aggregate AC-couple loss/rejoin, but ordinary
+controls show the same small frequency excursions and rolling frequency-event
+text. No availability transition occurred. Two events have larger near-anchor
+voltage excursions. Trusted battery context makes charge/SOC constraints
+plausible for several events but not sufficient to explain all of them.
 
-The isolated evidence remains at
-`/var/lib/solar-digital-twin/coordinated/solar-forensic-20260718T062127Z`.
-The immutable inventory and native-format review passed with the documented
-qualification that the ESP32-specific manifest has a start record but no
-terminal record. The common manifest records its controlled SIGTERM, all ESP32
-streams end cleanly, and the complete source inventory was hash-stable before
-and after inspection. Exact results and identities are in
-`docs/COORDINATED_CAPTURE_INTEGRITY.md` and
-`docs/capture_inventories/solar-forensic-20260718T062127Z-inventory.tsv`.
+The evidence cannot distinguish cloud/irradiance variation, inverter or
+battery-control behavior, electrical interaction, and microinverter
+dropout/rejoin. It cannot identify an individual microinverter. Correlation
+does not establish causation.
 
 ## Scope
 
-1. Preserve the verified evidence and its recorded identities unchanged.
-2. Carry the ESP32 source-local terminal-manifest qualification into every
-   derived result without treating the intentional coordinated stop as failure.
-3. Perform reproducible three-source correlation using native EG4,
-   SolarAssistant, and ESP32 evidence plus raw/current/conservative ESP32
-   context.
-4. Prioritize the largest production collapses and keep cloud cover, load,
-   battery constraints, aggregation, source gaps, and electrical/control
-   behavior as explicit alternatives. Do not claim unsupported causation.
-5. Keep `esp32-frequency-v1` as production and
-   `esp32-conservative-v1` as canary-only.
-6. After analysis, obtain owner review before deciding whether a targeted
-   follow-up capture or the prepared local-dongle measurement is justified.
+1. Review the seven event summaries, three controls, fixed sensitivity result,
+   evidence limitations, and owner questions.
+2. Decide whether the result is already sufficient for the next owner decision.
+3. If more evidence is necessary, select only one smallest useful next step:
+   a targeted synchronized capture that adds an independent discriminator, a
+   separately gated local-dongle one-shot measurement only if it exposes useful
+   new control state safely, or no additional measurement.
+4. Keep Home Assistant, MQTT, policy promotion/retirement, and unrelated portal
+   work outside this decision.
 
 ## Runtime boundary
 
-Use only approved read-only evidence and strict read-only database paths. Do
-not query devices, access credentials, or alter evidence, databases,
-permissions, services, collectors, monitors, or runtime. The existing
-SolarAssistant monitor and portal preview remain outside this task.
-
-## Following task
-
-After evidence analysis, decide whether another capture or a narrowly targeted
-measurement is needed. `docs/EG4_LOCAL_DONGLE_INVESTIGATION.md` prepares one
-possible read-only path but authorizes no connection. Home Assistant export,
-MQTT migration, irradiance measurement, and retention-policy retirement remain
-separately reviewed later work.
+This is an owner-review task. It authorizes no device query, LAN request,
+credential access, service/runtime action, capture, firmware/configuration
+change, local-dongle contact, or physical-system manipulation.
 
 ## Success
 
-Immutable source identities and hashes are preserved, integrity and coverage
-are documented, the first bounded analysis is reproducible, and any follow-up
-measurement is chosen with explicit uncertainty and owner review.
+Chris receives the evidence-backed conclusion and uncertainties, and explicitly
+chooses whether the evidence is sufficient or which single targeted measurement
+is justified. Any selected operational step receives a new bounded work unit.

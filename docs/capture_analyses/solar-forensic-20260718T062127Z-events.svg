@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="652" viewBox="0 0 1200 652">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:system-ui,sans-serif;fill:#17202a}.title{font-size:22px;font-weight:700}.sub{font-size:13px;fill:#52606d}.label{font-size:13px}.value{font-size:12px;fill:#334e68}.grid{stroke:#d9e2ec;stroke-width:1}.path{stroke:#486581;stroke-width:2;fill:none}.point{stroke:#ffffff;stroke-width:1.5}.control{fill:#829ab1}</style>
+<text class="title" x="32" y="35">Coordinated capture correlation overview</text>
+<text class="sub" x="32" y="59">EG4 baseline → nadir → recovery; points are observed samples, not interpolated transition times</text>
+<line class="grid" x1="255.0" y1="78" x2="255.0" y2="628"/>
+<text class="sub" text-anchor="middle" x="255.0" y="75">0.0 kW</text>
+<line class="grid" x1="470.0" y1="78" x2="470.0" y2="628"/>
+<text class="sub" text-anchor="middle" x="470.0" y="75">1.0 kW</text>
+<line class="grid" x1="685.0" y1="78" x2="685.0" y2="628"/>
+<text class="sub" text-anchor="middle" x="685.0" y="75">2.0 kW</text>
+<line class="grid" x1="900.0" y1="78" x2="900.0" y2="628"/>
+<text class="sub" text-anchor="middle" x="900.0" y="75">3.0 kW</text>
+<line class="grid" x1="1115.0" y1="78" x2="1115.0" y2="628"/>
+<text class="sub" text-anchor="middle" x="1115.0" y="75">4.0 kW</text>
+<text class="label" x="32" y="109">event-01  14:26:55  zero_output</text>
+<polyline class="path" points="1115.0,104.0 255.0,104.0 1034.1,104.0"/>
+<circle class="point" cx="1115.0" cy="104.0" r="6" fill="#2f855a"/>
+<circle class="point" cx="255.0" cy="104.0" r="6" fill="#c53030"/>
+<circle class="point" cx="1034.1" cy="104.0" r="6" fill="#2b6cb0"/>
+<text class="value" x="255" y="124">4018 → 0 → 3640 W</text>
+<text class="label" x="32" y="163">event-02  12:26:26  zero_output</text>
+<polyline class="path" points="1080.5,158.0 255.0,158.0 963.2,158.0"/>
+<circle class="point" cx="1080.5" cy="158.0" r="6" fill="#2f855a"/>
+<circle class="point" cx="255.0" cy="158.0" r="6" fill="#c53030"/>
+<circle class="point" cx="963.2" cy="158.0" r="6" fill="#2b6cb0"/>
+<text class="value" x="255" y="178">3857 → 0 → 3309 W</text>
+<text class="label" x="32" y="217">event-03  15:15:07  zero_output</text>
+<polyline class="path" points="1046.1,212.0 255.0,212.0 959.8,212.0"/>
+<circle class="point" cx="1046.1" cy="212.0" r="6" fill="#2f855a"/>
+<circle class="point" cx="255.0" cy="212.0" r="6" fill="#c53030"/>
+<circle class="point" cx="959.8" cy="212.0" r="6" fill="#2b6cb0"/>
+<text class="value" x="255" y="232">3696 → 0 → 3293 W</text>
+<text class="label" x="32" y="271">event-04  15:35:14  zero_output</text>
+<polyline class="path" points="919.2,266.0 255.0,266.0 941.2,266.0"/>
+<circle class="point" cx="919.2" cy="266.0" r="6" fill="#2f855a"/>
+<circle class="point" cx="255.0" cy="266.0" r="6" fill="#c53030"/>
+<circle class="point" cx="941.2" cy="266.0" r="6" fill="#2b6cb0"/>
+<text class="value" x="255" y="286">3103 → 0 → 3206 W</text>
+<text class="label" x="32" y="325">event-05  16:15:23  zero_output</text>
+<polyline class="path" points="912.9,320.0 255.0,320.0 816.6,320.0"/>
+<circle class="point" cx="912.9" cy="320.0" r="6" fill="#2f855a"/>
+<circle class="point" cx="255.0" cy="320.0" r="6" fill="#c53030"/>
+<circle class="point" cx="816.6" cy="320.0" r="6" fill="#2b6cb0"/>
+<text class="value" x="255" y="340">3074 → 0 → 2624 W</text>
+<text class="label" x="32" y="379">event-06  12:02:19  partial_collapse</text>
+<polyline class="path" points="1083.3,374.0 399.7,374.0 957.7,374.0"/>
+<circle class="point" cx="1083.3" cy="374.0" r="6" fill="#2f855a"/>
+<circle class="point" cx="399.7" cy="374.0" r="6" fill="#c53030"/>
+<circle class="point" cx="957.7" cy="374.0" r="6" fill="#2b6cb0"/>
+<text class="value" x="255" y="394">3870 → 676 → 3283 W</text>
+<text class="label" x="32" y="433">event-07  08:41:29  partial_collapse</text>
+<polyline class="path" points="490.4,428.0 378.1,428.0 462.0,428.0"/>
+<circle class="point" cx="490.4" cy="428.0" r="6" fill="#2f855a"/>
+<circle class="point" cx="378.1" cy="428.0" r="6" fill="#c53030"/>
+<circle class="point" cx="462.0" cy="428.0" r="6" fill="#2b6cb0"/>
+<text class="value" x="255" y="448">1100 → 575 → 967 W</text>
+<text class="label" x="32" y="487">control-strong  14:10:51  stable_strong_production</text>
+<circle class="control" cx="255.0" cy="482.0" r="6"/>
+<text class="value" x="269" y="487">comparison window (no candidate)</text>
+<text class="label" x="32" y="541">control-gradual  10:46:00  gradual_variation</text>
+<circle class="control" cx="255.0" cy="536.0" r="6"/>
+<text class="value" x="269" y="541">comparison window (no candidate)</text>
+<text class="label" x="32" y="595">control-night  01:23:36  nighttime_near_zero</text>
+<circle class="control" cx="255.0" cy="590.0" r="6"/>
+<text class="value" x="269" y="595">comparison window (no candidate)</text>
+</svg>

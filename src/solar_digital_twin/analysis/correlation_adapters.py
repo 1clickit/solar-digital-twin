@@ -82,7 +82,9 @@ def _readonly_connection(path: Path) -> sqlite3.Connection:
     if not path.is_file():
         raise AdapterError("EG4 database input does not exist or is not a file")
     try:
-        connection = sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+        connection = sqlite3.connect(
+            f"{path.resolve().as_uri()}?mode=ro&immutable=1", uri=True
+        )
         connection.execute("PRAGMA query_only = ON")
         return connection
     except sqlite3.Error as exc:

@@ -4,6 +4,10 @@
 
 This document records the bounded investigation, implemented analyzer and
 adapters, completed real-evidence compatibility dry run, and reporting plan.
+The first coordinated real-capture result is complete in
+`docs/COORDINATED_CAPTURE_CORRELATION.md`: seven primary candidates, three
+controls, fixed sensitivity analysis, and raw/current/conservative preservation
+comparison. Correlation did not establish causation.
 Future work remains read-only and bounded unless a risk-classified operation is
 explicitly authorized under `CONTRIBUTING.md`.
 

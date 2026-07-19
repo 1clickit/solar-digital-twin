@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Coordinated-capture integrity verification and three-source analysis
+Owner review of coordinated-capture findings and follow-up measurement decision
 
 Next Task:
-Perform bounded three-source offline analysis of the integrity-verified coordinated capture.
+Review the seven correlated production-collapse candidates and decide whether one targeted follow-up measurement is justified.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -48,7 +48,26 @@ main
   passed. The ESP32-specific manifest lacks a terminal record, but the common
   manifest records its controlled SIGTERM and every ESP32 stream ends cleanly;
   this is a documented provenance qualification, not evidence invalidation.
-  Three-source analysis is the primary next milestone
+- The first reproducible three-source analysis is complete. The primary
+  detector found seven candidates: five zero-output events and two partial
+  collapses. All seven classifications and three deterministic controls were
+  preserved by raw, current-retained, and conservative-canary ESP32 streams
+- The five zero-output events remain under the fixed strict sensitivity set;
+  both partial events are threshold-sensitive, and the loose set adds one
+  candidate not promoted into the primary result
+- ESP32 power corroborates real aggregate loss/rejoin, but frequency behavior
+  is non-discriminating because the same excursions and rolling forensic text
+  appear in controls. No ESP32 availability transition occurred. Events 01 and
+  03 have larger near-anchor voltage excursions than controls
+- Trusted JK BMS context shows four zero-output events at 99% combined SOC and
+  several charging-to-discharging reversals, but another zero-output event at
+  88% SOC weakens a simple full-battery-only explanation. Battery reversal may
+  also be a consequence of lost solar production
+- Aggregate evidence cannot distinguish cloud/irradiance variation, inverter
+  or battery-control behavior, electrical interaction, and microinverter
+  dropout/rejoin, nor can it identify an individual microinverter. Owner review
+  must decide whether a targeted measurement adds enough independent evidence
+  to justify its cost and risk
 - `esp32-frequency-v1` remains the current policy. The separate
   `esp32-conservative-v1` output is an explicit canary evaluation only
 - Home Assistant is a separate VM on the Proxmox host at static

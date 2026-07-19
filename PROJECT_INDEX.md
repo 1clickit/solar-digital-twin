@@ -107,6 +107,13 @@ docs/COORDINATED_CAPTURE_INTEGRITY.md
     Immutable inventory, native-format integrity, coverage, cadence, source
     identity, and qualified-pass result for the closed coordinated capture.
 
+docs/COORDINATED_CAPTURE_CORRELATION.md
+    First reproducible real-capture three-source correlation, controls,
+    retention comparison, sensitivity review, conclusions, and owner questions.
+
+docs/capture_analyses/solar-forensic-20260718T062127Z-events.tsv
+    Deterministic compact table for seven selected events and three controls.
+
 docs/capture_inventories/solar-forensic-20260718T062127Z-inventory.tsv
     Relative path, byte size, nanosecond modification time, and SHA-256 identity
     for every file in the closed coordinated capture.
@@ -181,6 +188,10 @@ scripts/coordinated_capture.py
 scripts/analyze_esp32_retention.py
     Streaming offline raw/retained ESP32 assessment and deterministic candidate
     replay utility.
+
+scripts/analyze_coordinated_capture.py
+    Explicit-path, identity-gated, bounded-memory real coordinated-capture
+    runner with deterministic controls, sensitivity sets, and derived outputs.
 
 src/solar_digital_twin/analysis/forensic_correlation.py
     Pure offline three-source timestamp alignment and conservative synthetic

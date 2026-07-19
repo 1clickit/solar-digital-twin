@@ -457,3 +457,112 @@ or runtime change.
   `Correct coordinated inventory path`; no push is authorized.
 - **Limitations:** This correction changes only tracked repository placement;
   it adds no new source verification or analysis conclusion.
+
+## 2026-07-19T05:28:42Z — Coordinated three-source correlation analysis
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Complete the first reproducible, bounded offline correlation of
+  integrity-verified capture `solar-forensic-20260718T062127Z` using EG4,
+  high-resolution ESP32, and trusted SolarAssistant/JK BMS telemetry.
+- **Files changed:** Added `scripts/analyze_coordinated_capture.py`, its focused
+  tests, `docs/COORDINATED_CAPTURE_CORRELATION.md`, and the compact event TSV;
+  strengthened the adapter's SQLite read-only URI; reconciled project state,
+  next task, index, and relevant capture/correlation documentation; appended
+  this audit entry.
+- **Evidence read:** Exactly the six inventory-recorded primary artifacts under
+  `/var/lib/solar-digital-twin/coordinated/solar-forensic-20260718T062127Z`:
+  `eg4/eg4_capture.sqlite`; the raw, `esp32-frequency-v1`, and
+  `esp32-conservative-v1` ESP32 NDJSON files; and the raw and retained
+  SolarAssistant NDJSON files. No evidence was copied or written.
+- **Exact identities:** EG4 SHA-256 `153070c4a8488d9b3c8719be68f2aedbf065ab25b84df7adafb71d3692975fb8`,
+  647168 bytes, mtime_ns 1784431424329281543; ESP32 raw
+  `a3e720b1027ecf2927f1d98cf6cc113faebfc560cea5e7a6dadbd3b40d90122b`,
+  275220446 bytes, 1784432180722722866; current retained
+  `9e288bd184154cc6aa90823a5a6075260250fac03e89d3a43ee4b76149e8be5c`,
+  266259706 bytes, 1784432180722722866; conservative retained
+  `c81a3841291f91c6f32436bc05a88d3155debfb249c7776795c8ae650a9e8aa7`,
+  63972840 bytes, 1784432174673015267; SolarAssistant raw
+  `e4c1b1bbb3e288f139dc3bb9979f17adf59493851e347b588b950176f3d76e4e`,
+  70969608 bytes, 1784432171335176595; SolarAssistant retained
+  `aa6e87f22d9d79b2ad9bf29d3367552ac399e956bd2c26acc8d18ec9ffaf2048`,
+  1556735 bytes, 1784432171334176643. Every size, mtime, and digest matched
+  before and after analysis.
+- **Analysis parameters:** Primary documented configuration: 1000 W minimum
+  baseline, 500 W absolute drop, 40% fractional drop, two plateau samples,
+  80% recovery, 100 W zero-output threshold, 900-second search window,
+  600/420-second acceptable runtime/day gaps, and 15/2/600/420-second
+  SolarAssistant/ESP32/runtime/day alignment tolerances. Fixed sensitivity used
+  strict 1500/750/45%/85% and loose 750/350/25%/75% baseline/drop/fraction/
+  recovery values with all other parameters unchanged.
+- **Results:** Seven primary candidates were detailed with three deterministic
+  controls. The five zero-output candidates were stable across all parameter
+  sets; the two partial collapses were threshold-sensitive, and loose settings
+  added one candidate. Aggregate loss/rejoin is supported, while cloud/solar
+  variability, battery/inverter control, electrical behavior, and aggregate
+  microinverter dropout/rejoin cannot be distinguished causally. No unique
+  coincident frequency, voltage, availability, temperature, or imbalance
+  disturbance was established. Trusted battery telemetry showed context and
+  some flow transitions, not a consistent exclusive constraint signature.
+- **Retention comparison:** Raw, `esp32-frequency-v1`, and canary
+  `esp32-conservative-v1` preserved the event/control classifications and
+  critical bounded context. This is supporting evidence only and changes no
+  retention-policy status.
+- **Validation:** 51 focused runner/analyzer/adapter/coordinated-capture tests
+  and all 188 repository tests passed; changed Python compiled; deterministic
+  real reruns produced byte-identical JSON and TSV; output hashes were
+  `5c92a3bf3a28de985c684728e754f75277d89eac1a2c62b576dc72fbe0f66d7f`
+  and `756eb803b6e171f186fd366b50c581cb354ebc77cbba6ef784721ede98b6b9b5`;
+  `git diff --check` and repository health passed.
+- **Untouched:** Evidence, devices, credentials, operational databases,
+  services, processes, collectors, timers, runtime, permissions, users/groups,
+  networking, Home Assistant, MQTT, EG4 dongle/cloud, SolarAssistant/ESP32
+  endpoints, firmware, and retention production state.
+- **Reproducibility and recovery:** The report records the exact explicit-path
+  command and UTC bounds. Revert the normal Git commit to recover repository
+  state; evidence requires no rollback and remained immutable.
+- **Related commit and push:** The commit containing this entry is titled
+  `Analyze coordinated three-source evidence`; normal non-force push is
+  authorized after final validation.
+- **Limitations:** Coarse EG4 cadence and aggregation, receipt-time latency,
+  sparse runtime context, calculated rather than independently observed active
+  microinverter count, missing irradiance, and incomplete ESP32 source-local
+  terminal provenance constrain interpretation. The common manifest records
+  controlled SIGTERM and all ESP32 streams end cleanly. Owner review is required
+  before any separately gated follow-up measurement.
+
+## 2026-07-19T05:40:01Z — Correlation worktree reconciliation and SVG restoration
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Reconcile the in-progress three-source analysis after a duplicate
+  Codex writer was terminated, restore the intended deterministic SVG output,
+  and revalidate the complete work unit before commit and push.
+- **Affected:** `scripts/analyze_coordinated_capture.py`, its focused tests,
+  `docs/COORDINATED_CAPTURE_CORRELATION.md`, new deterministic event overview
+  `docs/capture_analyses/solar-forensic-20260718T062127Z-events.svg`, and this
+  append-only reconciliation entry.
+- **Change and reason:** Re-reviewed all staged and untracked work without
+  resetting or discarding it. Confirmed that the concurrent edit had omitted
+  the intended required `--svg-output` behavior. Restored distinct-path and
+  evidence-boundary validation, dependency-free deterministic SVG generation,
+  byte-comparison tests, and an explanation limiting screenshot interpretation
+  to observed event magnitude and recovery rather than causation.
+- **Real rerun:** Two complete runs again produced seven candidates and three
+  controls with matching pre/post identities for all six pinned evidence files.
+  JSON, TSV, and SVG were byte-identical between runs. SHA-256 identities were
+  JSON `5c92a3bf3a28de985c684728e754f75277d89eac1a2c62b576dc72fbe0f66d7f`,
+  TSV `756eb803b6e171f186fd366b50c581cb354ebc77cbba6ef784721ede98b6b9b5`,
+  and SVG `a9ced67f7a32612bf2cb196fb3326c1bd8dd6c69cdb186720d3442042df8b167`.
+- **Validation:** 51 focused tests passed; all 188 repository tests passed
+  (the five localhost HTTP tests used the execution environment's narrowly
+  approved unittest permission after sandbox socket denial); changed Python
+  compiled; `git diff --check` and repository health passed.
+- **Untouched:** All raw evidence and operational databases; devices,
+  credentials, services, processes, timers, collectors, runtime, permissions,
+  networking, Home Assistant, MQTT, firmware, and retention production state.
+- **Recovery:** Revert the normal correlation commit. All derived outputs are
+  reproducible from immutable inputs; evidence requires no rollback.
+- **Related commit and push:** Included in `Analyze coordinated three-source
+  evidence`; normal non-force push authorized after final validation.
+- **Limitations:** The SVG is a derived overview of EG4 observations and adds no
+  new measurement or causal evidence. The limitations in the preceding work-unit
+  entry remain unchanged.

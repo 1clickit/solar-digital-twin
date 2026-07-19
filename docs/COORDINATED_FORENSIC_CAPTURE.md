@@ -17,8 +17,9 @@ Post-closure verification found the coordinated transient unit inactive,
 recent error, approximately 7.06 MB EG4, 605 MB ESP32, and 72.5 MB
 SolarAssistant evidence, with approximately 64.8 GB free. The immutable
 inventory and integrity review are complete in
-`docs/COORDINATED_CAPTURE_INTEGRITY.md`; bounded three-source analysis remains
-outstanding. All evidence is immutable.
+`docs/COORDINATED_CAPTURE_INTEGRITY.md`; bounded three-source analysis is
+complete in `docs/COORDINATED_CAPTURE_CORRELATION.md`. All evidence is
+immutable.
 
 The operational milestone was one isolated approximately 24-hour maximum
 read-only capture spanning ESP32, EG4, and SolarAssistant. It was designed to
