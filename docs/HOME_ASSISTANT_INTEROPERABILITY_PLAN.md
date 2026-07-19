@@ -2,16 +2,47 @@
 
 ## Status and boundary
 
-This is a future assessment and design plan. The current coordinated capture,
-its completion review, evidence inventory, and first three-source analysis
-remain the active work. No Home Assistant installation, connection, credential,
-collector, export, device query, network change, or control action is approved
-by this document.
+This remains a future design plan. The coordinated capture is intentionally
+closed with successful restoration; its immutable inventory, integrity review,
+and first three-source analysis remain active. No Home Assistant connection,
+credential, collector, export, device query, network change, broker migration,
+or control action is approved by this document.
 
 The initial architecture is reciprocal **read-only telemetry exchange** on the
 trusted LAN. It is not an equipment-control interface. Home Assistant remains a
 complementary display and telemetry source; Solar Digital Twin preserves source
 identity, evidence, provenance, and engineering authority.
+
+## Verified discovery checkpoint
+
+- Home Assistant is a separate VM on the same Proxmox host as `solardt`, with
+  static IPv4 `192.168.3.15/24`, gateway/DNS `192.168.3.1`, and IPv6 disabled.
+  Its malformed prior static profile was repaired via temporary DHCP before
+  assigning `.15`. `solardt` is `.11`, SolarAssistant `.12`, and the ESP32
+  forensic logger `.13`. Reverify HA versions before compatibility-sensitive
+  work.
+- SolarAssistant connects directly to both JK BMS units through RS-485, not to
+  the EG4 inverter, and remains trusted battery authority.
+- HA MQTT was corrected from stale broker `.231` to SolarAssistant
+  `192.168.3.12:1883`. It remains MQTT 3.1.1 because the broker did not support
+  the requested MQTT 5 migration. The HA Mosquitto add-on was installed, but
+  `.15:1883` was closed at discovery and it was not the active LAN broker.
+- EG4 Web Monitor was functioning with approximately 3 devices and 115
+  entities. It used the EG4 cloud account and `Manage Local Devices` showed
+  none. Its path is `inverter -> EG4 cloud -> EG4 Web Monitor -> HA`,
+  overlapping the solardt cloud source rather than adding independent physical
+  evidence. Its writable entities remain unauthorized.
+- HA directly integrates `EG4 Forensic Probe v3` at `.13`, with approximately
+  21 entities. An older frequency dashboard contains stale/missing references.
+  Do not remove it until firmware/API reboot behavior and the preferred `ESP32
+  -> solardt -> selected read-only HA exports` path are proven.
+- The existing EG4 dongle was observed at `192.168.3.20:8000`, MAC
+  `d8:3b:da:21:92:c8`. It remains attached and may continue cloud reporting.
+  The prepared path is `dongle -> solardt -> selected read-only HA exports`,
+  not direct HA polling. See `docs/EG4_LOCAL_DONGLE_INVESTIGATION.md`.
+
+Device/entity counts are observations, not invariants. MQTT architecture
+remains open; migration requires rollback and circular-ingestion protection.
 
 ## Direction A — Solar Digital Twin reads Home Assistant
 
@@ -89,9 +120,9 @@ and focused validation. Record that effective-authority limitation explicitly.
 
 ## `joyfulhouse/eg4_web_monitor` candidate pilot
 
-`joyfulhouse/eg4_web_monitor` is the leading candidate for a controlled local
-EG4 telemetry pilot in Home Assistant. It is not approved for installation and
-is not an authoritative forensic source. Before any pilot, assess:
+`joyfulhouse/eg4_web_monitor` is installed and currently provides cloud data;
+it is not an authoritative independent forensic source. Public-source local
+dongle research is recorded separately. Before any local pilot, assess:
 
 - compatibility with Chris's exact Home Assistant release, EG4 model,
   firmware, and existing communications topology;
@@ -103,8 +134,8 @@ is not an authoritative forensic source. Before any pilot, assess:
 - unavailable entities, update regressions, disconnect recovery, and gaps; and
 - agreement and latency versus EG4 cloud and SolarAssistant observations.
 
-Prefer an initial local-only assessment without additional EG4 cloud
-credentials if the topology review supports it.
+Prefer a purpose-built, technically read-only solardt assessment rather than
+adding the dongle as a second HA poller, if later owner review supports it.
 
 The integration can expose writable inverter controls. Hiding or disabling
 writable entities does not make its underlying implementation intrinsically
@@ -132,16 +163,14 @@ with normalized export, one shared read-only gateway, a purpose-built Solar
 Digital Twin collector, or passive observation if electrically and technically
 justified. Do not select among them before inspection.
 
-## Questions for Chris before implementation
+## Remaining questions before implementation
 
-- What Home Assistant version and host are current?
-- Is `joyfulhouse/eg4_web_monitor` installed, disabled, or removed, and how was
-  it previously configured?
-- Which EG4 entities exist in HA, and what currently sources each one?
-- How does SolarAssistant currently connect to HA?
-- What exact EG4 ports and communications wiring are in use?
-- What is the stock dongle state, and is any USB/RS-485 adapter present?
-- Is MQTT currently available?
+- What exact Home Assistant version is current at compatibility review time?
+- What exact EG4 inverter/dongle firmware and serial identifiers apply?
+- Can the dongle's single TCP slot coexist safely with cloud traffic?
+- Which HA entities should remain after the future solardt export is proven?
+- Should HA Mosquitto later become primary, and what bridge/rollback design
+  prevents circular SolarAssistant and solardt ingestion?
 - Which Solar Digital Twin metrics should HA display, and at what acceptable
   update cadence?
 - What roof-array orientations and safe irradiance-sensor mounting locations
@@ -151,11 +180,12 @@ Do not infer answers from old configuration or entity names.
 
 ## Future work sequence
 
-1. Complete and verify the active coordinated capture.
-2. Preserve and inventory its evidence.
-3. Perform the first three-source analysis.
-4. Inventory Home Assistant, entities, versions, and communications topology.
-5. Assess `joyfulhouse/eg4_web_monitor` in a bounded non-production pilot.
+1. Preserve, inventory, hash, and validate the closed coordinated capture.
+2. Perform the first three-source analysis.
+3. Review the prepared HA/MQTT/dongle discovery and reverify versions.
+4. If justified, authorize one minimal read-only dongle transaction under
+   `docs/EG4_LOCAL_DONGLE_INVESTIGATION.md`.
+5. Validate local dongle telemetry against established cloud evidence.
 6. Validate HA-provided EG4 telemetry against established sources.
 7. Design and validate Solar Digital Twin's read-only HA export.
 8. Design and validate on-site irradiance and temperature logging under

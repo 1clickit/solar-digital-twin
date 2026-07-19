@@ -2,8 +2,25 @@
 
 ## Status and purpose
 
-The approved next operational milestone is one isolated approximately 24-hour
-read-only capture spanning ESP32, EG4, and SolarAssistant. It is designed to
+Capture `solar-forensic-20260718T062127Z` is closed. It was intentionally
+stopped through its coordinated transient service after approximately 21 hours
+15 minutes, after covering nighttime battery discharge, sunrise, the complete
+daytime production/charging cycle, sunset, and return to nighttime. The final
+manifest reported `capture_terminal`, state `interruption`, reason `signal`,
+normal SIGTERM shutdown of all three children, and
+`restoration_success: true`. This controlled interruption is not a failure.
+
+Post-closure verification found the coordinated transient unit inactive,
+`eg4-refresh-report.timer` active/enabled,
+`eg4-refresh-report.service` inactive/static as normal between timer runs, and
+`eg4-local-portal.service` active/enabled. Compact observations reported no
+recent error, approximately 7.06 MB EG4, 605 MB ESP32, and 72.5 MB
+SolarAssistant evidence, with approximately 64.8 GB free. Exact inventory,
+hashes, parse/newline integrity, counts, cadence/gaps, reconnects, and analysis
+remain outstanding. All evidence is immutable.
+
+The operational milestone was one isolated approximately 24-hour maximum
+read-only capture spanning ESP32, EG4, and SolarAssistant. It was designed to
 cover nighttime baseline, sunrise, daytime production, sunset, and post-sunset
 battery/load behavior on one UTC timeline. Correlation can strengthen or
 weaken hypotheses, but cloud cover, load changes, battery constraints,
@@ -164,7 +181,7 @@ restoration occurs before the planned end, or device operation appears affected.
 
 ## Completion and analysis
 
-At automatic completion, verify terminal/restoration manifest records, prior
+After automatic or controlled completion, verify terminal/restoration manifest records, prior
 unit states, filenames, times, sizes, hashes, newline/parse integrity,
 timestamps, cadence, gaps, approved entities, and source errors. Preserve all
 outputs. Then perform bounded offline three-source correlation and raw/current/

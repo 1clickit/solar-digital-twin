@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Active coordinated 24-hour ESP32, EG4, and SolarAssistant forensic capture
+Coordinated-capture integrity verification and three-source analysis
 
 Next Task:
-Allow the active capture to finish automatically, then verify completion and restoration, preserve evidence, and prepare bounded three-source analysis.
+Inventory and hash the closed coordinated capture, validate integrity and coverage, then perform bounded three-source offline analysis.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,28 +19,61 @@ solardt
 main
 
 ## Current Status
-- Coordinated capture `solar-forensic-20260718T062127Z` is active under transient
-  supervisor `solar-coordinated-solar-forensic-20260718T062127Z.service`
-- The live capture is running implementation commit
+- Coordinated capture `solar-forensic-20260718T062127Z` was intentionally
+  stopped through transient supervisor
+  `solar-coordinated-solar-forensic-20260718T062127Z.service` after
+  approximately 21 hours 15 minutes, after observing nighttime discharge,
+  sunrise, the complete daytime production/charging cycle, sunset, and return
+  to nighttime
+- The capture used implementation commit
   `6b734306c6f414c6413f7c6e86e9d443e3fe49e2`; later repository-only
-  documentation commits do not change the code revision used by its processes
+  documentation commits did not change the code revision used by its processes
 - Startup was verified at approximately `2026-07-18T06:21:27Z`
-  (`2026-07-18 01:21:27 CDT`), and automatic completion is planned for
+  (`2026-07-18 01:21:27 CDT`), and automatic completion had been planned for
   `2026-07-19T06:21:27.571Z` (`2026-07-19 01:21:27 CDT`)
-- The append-only coordinated manifest reports `startup_verified`; privileged
-  operator verification confirms EG4, ESP32, and SolarAssistant are running,
-  all expected isolated outputs are growing, and no recent error is reported
-- Initial verification found approximately 65.5 GB free. Nighttime zero
-  production is intentional control context, not by itself a fault
+- Final compact observation reported `capture_terminal`, no recent error,
+  approximately 7.06 MB EG4, 605 MB ESP32, and 72.5 MB SolarAssistant evidence,
+  with approximately 64.8 GB free
+- Final manifest observations record normal SIGTERM shutdown for all three
+  children, terminal state `interruption`, reason `signal`, and
+  `restoration_success: true`. This intentional controlled stop is not a
+  capture failure
+- Post-closure unit verification found the coordinated transient unit inactive,
+  `eg4-refresh-report.timer` active/enabled,
+  `eg4-refresh-report.service` inactive/static as normal between timer runs,
+  and `eg4-local-portal.service` active/enabled
+- Raw evidence is immutable. Exact inventories, hashes, parse/newline checks,
+  record counts, timestamp coverage, cadence/gaps, reconnect review, and
+  three-source analysis remain outstanding and are the primary next milestone
 - `esp32-frequency-v1` remains the current policy. The separate
   `esp32-conservative-v1` output is an explicit canary evaluation only
-- Unprivileged compact status can incorrectly report child processes as
-  `not-running` when process inspection is restricted; use operator-privileged
-  status for process-state conclusions. The visible `runuser` wrapper and its
-  Python child are one collector, not duplicate collectors
-- Do not disturb the active supervisor, collectors, relevant services, or VM
-  except for a documented stop condition. Automatic completion and exact
-  prior-unit restoration remain expected but are not yet verified
+- Home Assistant is a separate VM on the Proxmox host at static
+  `192.168.3.15/24`; gateway/DNS are `192.168.3.1`, IPv6 is disabled, and its
+  malformed prior static profile was repaired through temporary DHCP before
+  assigning `.15`. Reverify versions before compatibility-sensitive work
+- SolarAssistant remains at `192.168.3.12`, connects directly to both JK BMS
+  units over RS-485, is not connected to the EG4 inverter, and remains the
+  trusted battery source
+- Home Assistant MQTT was corrected from stale broker `192.168.3.231` to the
+  SolarAssistant broker `192.168.3.12:1883`; MQTT remains 3.1.1 because that
+  broker did not support the requested MQTT 5 migration. HA's Mosquitto add-on
+  was installed but port 1883 on `.15` was closed and it was not the active LAN
+  broker at discovery. No broker migration is selected
+- HA EG4 Web Monitor was functioning with approximately 3 devices/115 entities
+  through the EG4 cloud account; `Manage Local Devices` showed none. It is a
+  second presentation of the same upstream cloud source as the solardt EG4
+  collector, not independent evidence, and its writable controls remain
+  unauthorized
+- HA directly integrates `EG4 Forensic Probe v3` at `192.168.3.13`, with
+  approximately 21 entities; an old frequency dashboard has stale/missing
+  references. Do not remove it until reboot behavior and the preferred
+  `ESP32 -> solardt -> selected read-only HA exports` path are proven
+- The existing EG4 Wi-Fi dongle was observed at `192.168.3.20:8000`, MAC
+  `d8:3b:da:21:92:c8`. Public-source research is documented in
+  `docs/EG4_LOCAL_DONGLE_INVESTIGATION.md`; no LAN request was sent. The
+  prepared `dongle -> solardt -> HA` path remains separately gated after
+  capture analysis because the protocol is control-capable and single-client
+  coexistence is unresolved
 - Repository health check script operational
 - status.sh runs repository health check script at startup
 - AI engineering framework MVP boundary design documented
@@ -396,8 +429,9 @@ main
   `esp32-frequency-v1` behavior remains the production default
 - The coordinated milestone supersedes the earlier 12-hour ESP32-only canary
   with an authorized 24-hour common interval covering nighttime, sunrise,
-  daytime, sunset, and post-sunset context. Capture completion and analysis
-  remain the next work unit; cloud cover remains an alternative explanation
+  daytime, sunset, and post-sunset context. Controlled closure and restoration
+  are verified; immutable inventory and analysis remain the next work unit,
+  and cloud cover remains an alternative explanation
 - The first coordinated startup (`solar-forensic-20260718T055952Z`) failed
   safely because its SolarAssistant child was forced to primary group `chris`
   and therefore could not read the protected `root:solardt-sa` credential.

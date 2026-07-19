@@ -41,6 +41,19 @@ The ESP32 forensic logger is an electrical and AC-couple evidence source.
 
 It is not a battery SOC authority.
 
+## EG4 transport lineage
+
+EG4 cloud data in the solardt collector and HA EG4 Web Monitor are two
+presentations of the same upstream cloud/inverter source, not independent
+physical corroboration. Future local Wi-Fi-dongle data would be another
+transport from that same inverter and must remain labeled `EG4 local Wi-Fi
+dongle`.
+
+Home Assistant currently reads the ESP32 directly. If selected Solar Digital
+Twin metrics are later exported to HA, those exported copies must retain origin
+and transformation lineage and must never be re-ingested or counted as a new
+independent source.
+
 ## Display Principles
 
 - never silently merge or substitute values from different sources

@@ -2,62 +2,67 @@
 
 ## Objective
 
-Allow active coordinated capture `solar-forensic-20260718T062127Z` to continue
-without interference through its planned automatic end at
-`2026-07-19T06:21:27.571Z`, then verify completion and restoration, preserve
-the evidence unchanged, and prepare the bounded three-source analysis work
-unit.
+Verify the immutable evidence from intentionally interrupted coordinated
+capture `solar-forensic-20260718T062127Z`, then perform the bounded three-source
+offline analysis. Keep the prepared EG4 local-dongle path subordinate to this
+evidence milestone.
 
 ## Context
 
-Chris authorized one common 24-hour interval in place of the earlier 12-hour
-ESP32-only canary. `docs/COORDINATED_FORENSIC_CAPTURE.md` defines isolated
-native outputs, append-only common provenance, competing-writer handling,
-automatic stop/restoration, monitoring, and evidence-preservation boundaries.
-The current ESP32 policy remains the production default.
+The capture used implementation commit
+`6b734306c6f414c6413f7c6e86e9d443e3fe49e2` and was intentionally stopped
+through its transient coordinated service after approximately 21 hours 15
+minutes. It had covered nighttime battery discharge, sunrise, the complete
+daytime production and charging cycle, sunset, and return to nighttime.
 
-The corrected relaunch passed `startup_verified`. Privileged operator checks
-confirm EG4, ESP32, and SolarAssistant are running with growing isolated
-outputs and no recent errors. The live processes use implementation commit
-`6b734306c6f414c6413f7c6e86e9d443e3fe49e2`; later documentation commits do
-not change that live checkpoint. An unprivileged status check can falsely show
-the child processes as `not-running` when process inspection is restricted.
+The final manifest reported `capture_terminal`, state `interruption`, reason
+`signal`, and `restoration_success: true`. All three children received normal
+SIGTERM shutdowns. `eg4-refresh-report.timer` was restored; the coordinated
+unit is inactive, the refresh timer and local portal are active/enabled, and the
+static refresh service is normally inactive between timer runs. This controlled
+interruption is not a capture failure.
+
+The isolated evidence remains at
+`/var/lib/solar-digital-twin/coordinated/solar-forensic-20260718T062127Z`.
+Observed compact totals were approximately 7.06 MB EG4, 605 MB ESP32, and 72.5
+MB SolarAssistant, with approximately 64.8 GB free. Those operational
+observations are not substitutes for the pending immutable inventory.
 
 ## Scope
 
-1. Use only compact, read-only monitoring. Avoid rebooting the VM or changing
-   the supervisor, relevant services, timers, collectors, or tmux sessions.
-2. Intervene only for documented stop conditions: a source stops, output growth
-   stalls or becomes excessive, errors or rapid reconnects persist, timestamps
-   become implausible, free space approaches the threshold, or the supervisor
-   exits early or reports failure/interruption.
-3. Treat nighttime zero AC-couple production, unchanged EG4 bytes between its
-   15-minute polls, recovered short reconnects, and cloud-driven production
-   variation as expected context rather than automatic stop conditions.
-4. After the planned end, verify the transient supervisor and all source
-   processes ended, prior services/timers were restored exactly, and the
-   append-only manifest has the correct terminal and restoration records.
-5. Preserve every evidence file unchanged. Record required sizes, counts,
-   timestamps, gaps, parse integrity, and checksums.
-6. Prepare a bounded three-source correlation work unit comparing the native
-   sources and raw/current/conservative ESP32 context. Do not claim causation
-   or retire `esp32-frequency-v1`.
+1. Preserve every evidence file unchanged. Record paths, sizes, counts,
+   timestamps, gaps, parse/newline integrity, and SHA-256 identities.
+2. Reconcile manifest chronology, terminal/source states, artifact inventory,
+   reconnects, coverage, and stable pre/post hashes using bounded read-only
+   methods.
+3. Perform reproducible three-source correlation using native EG4,
+   SolarAssistant, and ESP32 evidence plus raw/current/conservative ESP32
+   context.
+4. Prioritize the largest production collapses and keep cloud cover, load,
+   battery constraints, aggregation, source gaps, and electrical/control
+   behavior as explicit alternatives. Do not claim unsupported causation.
+5. Keep `esp32-frequency-v1` as production and
+   `esp32-conservative-v1` as canary-only.
+6. After analysis, obtain owner review before deciding whether a targeted
+   follow-up capture or the prepared local-dongle measurement is justified.
 
 ## Runtime boundary
 
-While the capture is active, do not scan evidence, query devices, access
-credentials, or alter output, databases, permissions, services, collectors,
-monitors, or runtime. The existing SolarAssistant monitor and portal preview
-tmux processes are not duplicate collectors and must remain untouched.
+Use only approved read-only evidence and strict read-only database paths. Do
+not query devices, access credentials, or alter evidence, databases,
+permissions, services, collectors, monitors, or runtime. The existing
+SolarAssistant monitor and portal preview remain outside this task.
 
 ## Following task
 
 After evidence analysis, decide whether another capture or a narrowly targeted
-measurement is needed. Policy retirement remains a later owner-reviewed
-decision after every production acceptance gate passes.
+measurement is needed. `docs/EG4_LOCAL_DONGLE_INVESTIGATION.md` prepares one
+possible read-only path but authorizes no connection. Home Assistant export,
+MQTT migration, irradiance measurement, and retention-policy retirement remain
+separately reviewed later work.
 
 ## Success
 
-The capture reaches a verified terminal state, prior units are restored exactly,
-immutable source evidence and hashes are preserved, and the next bounded
-analysis can proceed with explicit uncertainty.
+Immutable source identities and hashes are preserved, integrity and coverage
+are documented, the first bounded analysis is reproducible, and any follow-up
+measurement is chosen with explicit uncertainty and owner review.

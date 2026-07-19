@@ -107,6 +107,11 @@ docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md
     Future reciprocal read-only HA telemetry, local EG4 candidate assessment,
     lineage protection, security boundaries, and RS-485 topology review.
 
+docs/EG4_LOCAL_DONGLE_INVESTIGATION.md
+    Pinned public-source protocol research, read/write boundary, provenance,
+    coexistence risks, and separately gated one-shot plan for the existing EG4
+    Wi-Fi dongle.
+
 docs/IRRADIANCE_MEASUREMENT_PLAN.md
     Future on-site plane-of-array irradiance and temperature measurement,
     calibration, safety, provenance, and expanded-capture plan.

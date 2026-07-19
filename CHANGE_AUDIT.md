@@ -345,3 +345,45 @@ or runtime change.
   source is selected or validated. The EG4 candidate remains control-capable
   software under a proposed read-only pilot policy, and irradiance remains a
   future diagnostic source rather than an alpha blocker.
+
+## 2026-07-19T04:01:48Z — Capture closure and EG4 dongle investigation
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Reconcile authoritative state after the intentional coordinated
+  capture stop and Home Assistant discovery, and prepare a public-source-only,
+  strictly read-only future EG4 Wi-Fi-dongle measurement path without
+  displacing evidence analysis.
+- **Affected:** `PROJECT_STATE.md`, `NEXT_TASK.md`, `PROJECT_INDEX.md`, the
+  coordinated-capture and Home Assistant plans, telemetry source roles, new
+  `docs/EG4_LOCAL_DONGLE_INVESTIGATION.md`, and this append-only entry.
+- **Change and reason:** Recorded controlled terminal state `interruption` /
+  `signal`, normal child shutdown, successful unit restoration, immutable
+  evidence and outstanding integrity/analysis work; recorded verified HA,
+  MQTT, EG4-cloud, ESPHome, and dongle topology. Pinned public research found a
+  proprietary LuxPower envelope carrying Modbus functions, an explicit
+  read/write boundary, source-code/default polling discrepancy, conservative
+  read blocks, and unresolved single-client/cloud coexistence risk.
+- **Public checkpoints:** `joyfulhouse/eg4_web_monitor`
+  `485bc613448d57917c6e4d01e42f128aa4ecbbb3` and its declared minimum
+  `pylxpweb>=0.9.39b3`; `pylxpweb` tag `v0.9.39b3` commit
+  `889f1ba2d55d23efe2e5fdaa0dbdc50c4adc35ab` was inspected as that minimum.
+- **Untouched:** No LAN solar device, Home Assistant, EG4 cloud endpoint,
+  credential, runtime process/service/timer, collector, evidence, manifest,
+  operational database, permission, network, MQTT broker, firmware, or
+  production retention behavior was accessed or changed. Public clones existed
+  only under `/tmp`; no upstream source was vendored.
+- **Validation:** Pinned-source file/commit review, provenance and read/write
+  boundary review, stale-state/contradiction searches, documentation checks,
+  `git diff --check`, and repository health check.
+- **Recovery:** Revert the related normal Git documentation commit. Prior
+  tracked documentation remains recoverable in Git history; no runtime or
+  evidence rollback is applicable.
+- **Archive or backup:** Git history preserves prior documentation. Temporary
+  public research clones are non-evidence working material under `/tmp`.
+- **Related commit and push:** The commit containing this entry is titled
+  `Document capture closure and EG4 dongle investigation`; normal push planned
+  after validation.
+- **Limitations:** No exact live request is authorized or ready. Exact device
+  serials, dongle firmware, port-8000 protocol acceptance, and safe coexistence
+  with cloud traffic remain unresolved. Capture inventory and three-source
+  analysis remain first priority.
