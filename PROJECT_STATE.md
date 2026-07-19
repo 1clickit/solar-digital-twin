@@ -4,7 +4,7 @@ Current Milestone:
 Coordinated-capture integrity verification and three-source analysis
 
 Next Task:
-Inventory and hash the closed coordinated capture, validate integrity and coverage, then perform bounded three-source offline analysis.
+Perform bounded three-source offline analysis of the integrity-verified coordinated capture.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -42,9 +42,13 @@ main
   `eg4-refresh-report.timer` active/enabled,
   `eg4-refresh-report.service` inactive/static as normal between timer runs,
   and `eg4-local-portal.service` active/enabled
-- Raw evidence is immutable. Exact inventories, hashes, parse/newline checks,
-  record counts, timestamp coverage, cadence/gaps, reconnect review, and
-  three-source analysis remain outstanding and are the primary next milestone
+- Raw evidence is immutable. The exact 444-file inventory, stable pre/post
+  hashes, native parse/newline checks, record counts, timestamp coverage,
+  cadence/gaps, reconnect review, and SQLite/artifact integrity verification
+  passed. The ESP32-specific manifest lacks a terminal record, but the common
+  manifest records its controlled SIGTERM and every ESP32 stream ends cleanly;
+  this is a documented provenance qualification, not evidence invalidation.
+  Three-source analysis is the primary next milestone
 - `esp32-frequency-v1` remains the current policy. The separate
   `esp32-conservative-v1` output is an explicit canary evaluation only
 - Home Assistant is a separate VM on the Proxmox host at static

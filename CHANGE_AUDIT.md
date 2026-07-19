@@ -387,3 +387,45 @@ or runtime change.
   serials, dongle firmware, port-8000 protocol acceptance, and safe coexistence
   with cloud traffic remain unresolved. Capture inventory and three-source
   analysis remain first priority.
+
+## 2026-07-19T04:29:36Z — Coordinated capture integrity verification
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Inventory, hash, and validate the closed coordinated capture
+  before three-source offline analysis.
+- **Affected:** New integrity report and tracked 444-file identity inventory;
+  coordinated runbook, project state, next task, project index, and this
+  append-only audit record.
+- **Change and reason:** Recorded a qualified integrity pass after bounded
+  read-only verification of manifest chronology, file identities, native parse
+  and newline integrity, timestamps, cadence/gaps, source coverage, EG4 SQLite
+  integrity and stored artifact hashes, approved ESP32 entities, and exact
+  retained-stream subsequences. Documented that the ESP32-specific manifest
+  lacks a terminal record while the common manifest records its controlled
+  SIGTERM and all ESP32 evidence streams end cleanly.
+- **Evidence identity:** 444 files / 685,044,693 bytes. Inventory TSV SHA-256
+  `4a26541c296957ed1a84dafd0ce95c62d06540802ab9c5876c0adbf50393b529`;
+  sorted absolute-path SHA-256 snapshot identity
+  `1add9b983da00d9996996ca21848d18965246e6dc34eace61d8ba76133b03a1c`.
+- **Untouched:** All evidence and operational databases; devices, credentials,
+  permissions, services, processes, timers, collectors, monitors, portal,
+  network, firmware, and production retention behavior.
+- **Validation:** Stable matching pre/post 444-file SHA-256 inventories; zero
+  malformed or backward NDJSON records; complete final newlines; all 425 EG4
+  JSON files valid; SQLite immutable read-only integrity `ok`; all 340 stored
+  EG4 artifact hashes matched; both ESP32 retained streams were ordered
+  exact-byte raw subsequences; documentation checks, focused/full tests,
+  `git diff --check`, and repository health check.
+- **Recovery:** Revert the related normal Git commit. The generated inventory
+  and report are reproducible from immutable sources; no evidence rollback
+  applies.
+- **Archive or backup:** The isolated evidence remains preserved at its
+  original `/var/lib` path. Git preserves the tracked derived inventory and
+  report.
+- **Related commit and push:** The commit containing this entry is titled
+  `Verify coordinated capture integrity`; push is not authorized in this work
+  unit.
+- **Limitations:** Source-local ESP32 terminal provenance is incomplete.
+  Approximately 15-minute EG4 cadence limits event timing. Integrity does not
+  establish equipment causation or promote `esp32-conservative-v1`; bounded
+  three-source analysis and owner review remain next.

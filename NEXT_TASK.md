@@ -2,10 +2,9 @@
 
 ## Objective
 
-Verify the immutable evidence from intentionally interrupted coordinated
-capture `solar-forensic-20260718T062127Z`, then perform the bounded three-source
-offline analysis. Keep the prepared EG4 local-dongle path subordinate to this
-evidence milestone.
+Perform the bounded three-source offline analysis of verified coordinated
+capture `solar-forensic-20260718T062127Z`. Keep the prepared EG4 local-dongle
+path subordinate to this evidence milestone.
 
 ## Context
 
@@ -24,17 +23,19 @@ interruption is not a capture failure.
 
 The isolated evidence remains at
 `/var/lib/solar-digital-twin/coordinated/solar-forensic-20260718T062127Z`.
-Observed compact totals were approximately 7.06 MB EG4, 605 MB ESP32, and 72.5
-MB SolarAssistant, with approximately 64.8 GB free. Those operational
-observations are not substitutes for the pending immutable inventory.
+The immutable inventory and native-format review passed with the documented
+qualification that the ESP32-specific manifest has a start record but no
+terminal record. The common manifest records its controlled SIGTERM, all ESP32
+streams end cleanly, and the complete source inventory was hash-stable before
+and after inspection. Exact results and identities are in
+`docs/COORDINATED_CAPTURE_INTEGRITY.md` and
+`reports/solar-forensic-20260718T062127Z-inventory.tsv`.
 
 ## Scope
 
-1. Preserve every evidence file unchanged. Record paths, sizes, counts,
-   timestamps, gaps, parse/newline integrity, and SHA-256 identities.
-2. Reconcile manifest chronology, terminal/source states, artifact inventory,
-   reconnects, coverage, and stable pre/post hashes using bounded read-only
-   methods.
+1. Preserve the verified evidence and its recorded identities unchanged.
+2. Carry the ESP32 source-local terminal-manifest qualification into every
+   derived result without treating the intentional coordinated stop as failure.
 3. Perform reproducible three-source correlation using native EG4,
    SolarAssistant, and ESP32 evidence plus raw/current/conservative ESP32
    context.

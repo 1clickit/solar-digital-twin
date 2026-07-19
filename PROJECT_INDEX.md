@@ -103,6 +103,14 @@ docs/COORDINATED_FORENSIC_CAPTURE.md
     Operational runbook for an isolated 24-hour ESP32, EG4, and SolarAssistant
     capture with append-only provenance and exact service restoration.
 
+docs/COORDINATED_CAPTURE_INTEGRITY.md
+    Immutable inventory, native-format integrity, coverage, cadence, source
+    identity, and qualified-pass result for the closed coordinated capture.
+
+reports/solar-forensic-20260718T062127Z-inventory.tsv
+    Relative path, byte size, nanosecond modification time, and SHA-256 identity
+    for every file in the closed coordinated capture.
+
 docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md
     Future reciprocal read-only HA telemetry, local EG4 candidate assessment,
     lineage protection, security boundaries, and RS-485 topology review.
