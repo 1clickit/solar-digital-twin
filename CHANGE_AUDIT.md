@@ -429,3 +429,31 @@ or runtime change.
   Approximately 15-minute EG4 cadence limits event timing. Integrity does not
   establish equipment causation or promote `esp32-conservative-v1`; bounded
   three-source analysis and owner review remain next.
+
+## 2026-07-19T04:33:30Z — Integrity inventory tracked-path correction
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Correct the tracked location of the generated immutable identity
+  inventory after the post-commit repository health check rejected a tracked
+  file beneath ignored `reports/`.
+- **Affected:** Inventory path, its documentation/index references, and this
+  append-only correction entry.
+- **Change and reason:** Moved the unchanged inventory from `reports/` to
+  `docs/capture_inventories/` so generated operational reports and raw evidence
+  directories remain wholly ignored while this durable evidence-identity
+  record remains tracked. Its content and SHA-256 are unchanged.
+- **Untouched:** Capture evidence, inventory contents and identity, analysis
+  conclusions, devices, credentials, permissions, runtime, services,
+  collectors, databases, and production policy.
+- **Validation:** Inventory SHA-256 remains
+  `4a26541c296957ed1a84dafd0ce95c62d06540802ab9c5876c0adbf50393b529`;
+  focused/full tests from the original verification remain applicable;
+  `git diff --check` and repository health check passed after relocation.
+- **Recovery:** Revert this normal correction commit and the preceding
+  integrity commit together if the entire checkpoint must be removed. Do not
+  move the file back beneath ignored `reports/` without changing the health
+  policy intentionally.
+- **Related commit and push:** The commit containing this entry is titled
+  `Correct coordinated inventory path`; no push is authorized.
+- **Limitations:** This correction changes only tracked repository placement;
+  it adds no new source verification or analysis conclusion.

@@ -107,7 +107,7 @@ docs/COORDINATED_CAPTURE_INTEGRITY.md
     Immutable inventory, native-format integrity, coverage, cadence, source
     identity, and qualified-pass result for the closed coordinated capture.
 
-reports/solar-forensic-20260718T062127Z-inventory.tsv
+docs/capture_inventories/solar-forensic-20260718T062127Z-inventory.tsv
     Relative path, byte size, nanosecond modification time, and SHA-256 identity
     for every file in the closed coordinated capture.
 

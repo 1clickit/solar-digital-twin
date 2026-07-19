@@ -29,7 +29,7 @@ terminal record. The common manifest records its controlled SIGTERM, all ESP32
 streams end cleanly, and the complete source inventory was hash-stable before
 and after inspection. Exact results and identities are in
 `docs/COORDINATED_CAPTURE_INTEGRITY.md` and
-`reports/solar-forensic-20260718T062127Z-inventory.tsv`.
+`docs/capture_inventories/solar-forensic-20260718T062127Z-inventory.tsv`.
 
 ## Scope
 

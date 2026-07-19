@@ -22,7 +22,7 @@ telemetry. Later analysis must retain this qualification.
 The isolated source is
 `/var/lib/solar-digital-twin/coordinated/solar-forensic-20260718T062127Z`.
 The tracked inventory is
-`reports/solar-forensic-20260718T062127Z-inventory.tsv`; it records the relative
+`docs/capture_inventories/solar-forensic-20260718T062127Z-inventory.tsv`; it records the relative
 path, byte size, nanosecond modification time, and SHA-256 for every file.
 
 - Inventory: 444 files and 685,044,693 bytes.
