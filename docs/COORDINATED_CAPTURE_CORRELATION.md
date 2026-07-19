@@ -112,6 +112,23 @@ remain in the table and narrative below. A screenshot of this SVG therefore
 supports quick comparison of event magnitude and recovery only, and must not be
 read as evidence of cause or per-microinverter behavior.
 
+### Battery-cell review addendum
+
+The follow-up read-only SolarAssistant review is preserved at
+`docs/capture_analyses/solar-forensic-20260718T062127Z-battery-cell-review.md`.
+At event anchors, Battery 1 cell spread was 2–10 mV and Battery 2 was 1–8 mV;
+capture-wide maxima were 24 mV and 19 mV respectively. Highest reported cell
+voltages were 3.501 V for Battery 1 and 3.494 V for Battery 2. There is no
+positive evidence of JK cell-overvoltage protection.
+
+SolarAssistant did not export charge/discharge MOS, balancing,
+alarm/protection, individual-cell, or charge-limit topics, so an unobserved
+transient cannot be absolutely excluded. Within that limitation, existing
+telemetry does not support JK BMS protection as the cause of any event and
+cannot support it as a common explanation for all seven. The
+`total/battery_voltage` value near 55.8 V is the representative parallel-bank
+voltage, not a summed voltage.
+
 ## Event results
 
 Times below are observed EG4 samples in CDT on July 18, 2026. “Drop” is the

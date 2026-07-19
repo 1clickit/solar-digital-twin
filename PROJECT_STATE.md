@@ -63,11 +63,18 @@ main
   several charging-to-discharging reversals, but another zero-output event at
   88% SOC weakens a simple full-battery-only explanation. Battery reversal may
   also be a consequence of lost solar production
+- A detailed read-only Battery 1/Battery 2 review found event-anchor cell
+  spreads of 2–10/1–8 mV, capture maxima of 24/19 mV, and highest reported
+  cells of 3.501/3.494 V. No positive JK cell-overvoltage signature was found.
+  Missing MOS, balancing, protection/alarm, individual-cell, and charge-limit
+  topics prevent absolute exclusion of an unobserved transient, but existing
+  telemetry poorly supports JK protection for any event and does not support it
+  as a common explanation for all seven
 - Aggregate evidence cannot distinguish cloud/irradiance variation, inverter
-  or battery-control behavior, electrical interaction, and microinverter
-  dropout/rejoin, nor can it identify an individual microinverter. Owner review
-  must decide whether a targeted measurement adds enough independent evidence
-  to justify its cost and risk
+  AC-couple control behavior, microinverter response, irradiance variation, or
+  a sub-second AC disturbance, nor can it identify an individual microinverter.
+  Owner review must decide whether a targeted measurement adds enough
+  independent evidence to justify its cost and risk
 - `esp32-frequency-v1` remains the current policy. The separate
   `esp32-conservative-v1` output is an explicit canary evaluation only
 - Home Assistant is a separate VM on the Proxmox host at static

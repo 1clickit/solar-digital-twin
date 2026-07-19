@@ -11,7 +11,9 @@ review.
 
 The authoritative result is `docs/COORDINATED_CAPTURE_CORRELATION.md`, with the
 compact event/control table at
-`docs/capture_analyses/solar-forensic-20260718T062127Z-events.tsv`.
+`docs/capture_analyses/solar-forensic-20260718T062127Z-events.tsv` and the
+detailed battery review at
+`docs/capture_analyses/solar-forensic-20260718T062127Z-battery-cell-review.md`.
 
 The primary detector found five zero-output and two partial-collapse events.
 ESP32 power corroborates real aggregate AC-couple loss/rejoin, but ordinary
@@ -20,10 +22,16 @@ text. No availability transition occurred. Two events have larger near-anchor
 voltage excursions. Trusted battery context makes charge/SOC constraints
 plausible for several events but not sufficient to explain all of them.
 
-The evidence cannot distinguish cloud/irradiance variation, inverter or
-battery-control behavior, electrical interaction, and microinverter
-dropout/rejoin. It cannot identify an individual microinverter. Correlation
-does not establish causation.
+The follow-up cell review found only small event-anchor imbalance and no
+positive JK overvoltage-protection signature. Because SolarAssistant did not
+export MOS/protection state, an unobserved transient cannot be absolutely
+excluded, but JK BMS protection is poorly supported for any event and is not a
+supported common explanation for all seven.
+
+The remaining investigation centers on EG4 AC-couple control, microinverter
+response, independent irradiance, or a sub-second AC disturbance. The evidence
+cannot distinguish these possibilities or identify an individual
+microinverter. Correlation does not establish causation.
 
 ## Scope
 

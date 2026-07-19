@@ -114,6 +114,11 @@ docs/COORDINATED_CAPTURE_CORRELATION.md
 docs/capture_analyses/solar-forensic-20260718T062127Z-events.tsv
     Deterministic compact table for seven selected events and three controls.
 
+docs/capture_analyses/solar-forensic-20260718T062127Z-battery-cell-review.md
+    Detailed read-only Battery 1/Battery 2 cell, pack, temperature, and topic-
+    coverage review at the seven event anchors and three controls, including
+    capture-wide extrema and immutable evidence identities.
+
 docs/capture_inventories/solar-forensic-20260718T062127Z-inventory.tsv
     Relative path, byte size, nanosecond modification time, and SHA-256 identity
     for every file in the closed coordinated capture.

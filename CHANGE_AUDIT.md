@@ -566,3 +566,46 @@ or runtime change.
 - **Limitations:** The SVG is a derived overview of EG4 observations and adds no
   new measurement or causal evidence. The limitations in the preceding work-unit
   entry remain unchanged.
+
+## 2026-07-19T06:34:06Z — Preserve coordinated battery-cell review
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Preserve the completed temporary read-only SolarAssistant
+  battery-cell review as durable project evidence and reconcile the owner-review
+  state without authorizing a new measurement.
+- **Source and destination:** Copied the exact regular file
+  `/tmp/solar-forensic-20260718T062127Z-battery-cell-review.md` to
+  `docs/capture_analyses/solar-forensic-20260718T062127Z-battery-cell-review.md`.
+  Both were 49,471 bytes with SHA-256
+  `7572ba7422b9c89bd754b79db9f5507e0152e3bb1ff77efbe619f84a971af289`.
+- **Read-only evidence review:** Streamed 305,172 raw SolarAssistant records
+  across 42 discovered topics and inspected the 5,951-record, 12-topic retained
+  file. The review used actual topic names and captured offsets for before,
+  nearest, and after observations at seven event anchors and three controls.
+- **Evidence identities:** Raw evidence matched before and after: 70,969,608
+  bytes, mtime_ns 1784432171335176595, SHA-256
+  `e4c1b1bbb3e288f139dc3bb9979f17adf59493851e347b588b950176f3d76e4e`.
+  Retained evidence matched before and after: 1,556,735 bytes, mtime_ns
+  1784432171334176643, SHA-256
+  `aa6e87f22d9d79b2ad9bf29d3367552ac399e956bd2c26acc8d18ec9ffaf2048`.
+- **Findings preserved:** Event-anchor spread was 2–10 mV for Battery 1 and
+  1–8 mV for Battery 2; capture maxima were 24/19 mV and highest reported cells
+  were 3.501/3.494 V. No positive JK overvoltage-protection evidence was found.
+  Missing MOS/protection and related topics limit absolute exclusion, but the
+  available evidence does not support JK protection for any event or all seven.
+- **Affected:** Permanent detailed report, coordinated correlation report,
+  project index, project state, next task, and this append-only audit entry.
+- **Untouched:** Raw and retained evidence, operational databases, devices,
+  services, runtime, collectors, timers, networking, credentials, firmware,
+  permissions, Home Assistant, MQTT, and production retention behavior.
+- **Validation:** Exact source/destination byte and SHA-256 comparison; complete
+  diff review; documentation/index checks; `git diff --check`; repository
+  health check; clean post-commit worktree and exact commit-file review planned.
+- **Recovery:** Revert the normal local preservation commit. Source evidence
+  requires no rollback; Git will preserve the detailed derived report.
+- **Related commit and push:** The commit containing this entry is titled
+  `Preserve coordinated battery cell review`. Push is explicitly not authorized
+  in this work unit.
+- **Limitations:** Missing exported MOS, balancing, protection/alarm,
+  individual-cell, and charge-limit topics mean an unobserved transient cannot
+  be absolutely excluded. No new measurement is authorized.
