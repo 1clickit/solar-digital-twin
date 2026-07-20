@@ -188,6 +188,10 @@ fabricated percentage as trustworthy.
 
 ## Complete Source-Data Tabs
 
+Production binding must consume the accepted version of
+`TELEMETRY_OBSERVATION_CONTRACT.md`; the prototype does not define an
+observation schema.
+
 **Overview is curated; device tabs are complete.** The far-right tabs are
 `EG4`, `SA` (with `SolarAssistant` as the panel heading), `ESP32`, and `Volcast`.
 They are currently functional synthetic layouts, not live integrations.

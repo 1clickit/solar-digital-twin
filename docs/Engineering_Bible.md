@@ -39,7 +39,10 @@ Future Home Assistant interoperability begins as allowlisted, LAN-only,
 reciprocal read-only telemetry. Source lineage must prevent circular imports or
 copied values from being counted as independent evidence, and control-capable
 integrations remain constrained by separate authorization. See
-`docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md`.
+`docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md`. The proposed canonical
+observation and provenance semantics are centralized in
+`docs/TELEMETRY_OBSERVATION_CONTRACT.md`, pending independent review and owner
+acceptance.
 
 ## Operational Completion Baseline
 

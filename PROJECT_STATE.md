@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Common telemetry and provenance contract planning
+Telemetry observation contract independent review
 
 Next Task:
-Define the common telemetry observation, lineage, timestamp, freshness, and normalization contract.
+Independently review and accept or correct the proposed telemetry observation and provenance contract.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,6 +19,18 @@ solardt
 main
 
 ## Current Status
+- The proposed common telemetry observation and provenance contract is complete
+  in `docs/TELEMETRY_OBSERVATION_CONTRACT.md`. It defines source-preserving
+  identity, separate time and state axes, freshness evaluation, non-destructive
+  normalization, acyclic derivation lineage, Home Assistant loop prevention,
+  adapter responsibilities, acceptance gates, compatibility risks, and phased
+  implementation boundaries. It remains pending independent ChatGPT review and
+  owner acceptance; no adapter, schema, portal, Home Assistant, collector,
+  retention, runtime, evidence, device, or network implementation occurred
+- After contract acceptance, separately plan source adapters and select the
+  first bounded offline implementation slice. Persistent or long-duration
+  ESP32 operation remains an unmade owner decision, with no timer or automatic
+  operation authorized
 - ESP32 repository runtime/security hardening is implemented and offline-tested.
   The collector now rejects redirects and environment proxies, classifies HTTP
   failures, validates SSE media type, bounds raw SSE lines at 1 MiB before JSON
@@ -574,10 +586,11 @@ Refresh command:
 
 ## Current Restrictions
 
-- The next task requires a new bounded administrator authorization. This state
-  document does not authorize installation, user/group or permission changes,
-  daemon reload, unit copying, service action, live contact, firmware change,
-  capture, credential, evidence, database, or network change
+- The next task is repository review and owner acceptance only. This state
+  document does not authorize adapter implementation, installation, user/group
+  or permission changes, daemon reload, unit copying, service action, live
+  contact, firmware change, capture, credential, evidence, database/schema,
+  portal, Home Assistant, or network change
 - Do not change EG4 collector behavior, SQLite schema, Home Assistant
   integration, production retention policy, or other collectors without a new
   bounded work unit

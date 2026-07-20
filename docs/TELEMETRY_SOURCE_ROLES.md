@@ -4,6 +4,11 @@
 
 Initial source-role decisions agreed during read-only discovery.
 
+The proposed canonical representation of these roles alongside observation,
+timestamp, freshness, quality, and lineage semantics is
+`TELEMETRY_OBSERVATION_CONTRACT.md`, pending independent review and owner
+acceptance. This document remains the authority for source-role decisions.
+
 ## Battery Authority
 
 SolarAssistant data from the two JK BMS devices is the trusted battery source.

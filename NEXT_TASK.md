@@ -2,9 +2,9 @@
 
 ## Objective
 
-Define a common telemetry observation, provenance, source-lineage, timestamp,
-freshness, availability, and normalization contract before production multi-
-source portal binding or reciprocal Home Assistant integration.
+Independently review and accept or correct the proposed telemetry observation and provenance contract.
+
+The proposed contract is `docs/TELEMETRY_OBSERVATION_CONTRACT.md`.
 
 ## Accepted repository baseline
 
@@ -17,23 +17,20 @@ The unit remains static/inactive with no timer or automatic activation.
 
 ## Scope
 
-A bounded repository design work unit should:
+A bounded review should confirm that the contract:
 
-1. inventory existing EG4, SolarAssistant, ESP32, and relevant Home Assistant
-   observation and timestamp semantics from authoritative documentation;
-2. define canonical measurement identity, source, source lineage, transport,
-   receipt time, source time, units, availability, freshness, quality, and
-   normalization fields without silently merging incompatible sources;
-3. define how copied or exported values retain origin and avoid circular or
-   double-counted evidence;
-4. define source-specific adapters and acceptance gates before SQLite, portal,
-   or Home Assistant production binding; and
-5. keep `solardt` authoritative for aggregation and provenance while planning
-   selected read-only exports to Home Assistant.
+1. accurately reflects current EG4, SolarAssistant, ESP32, Home Assistant,
+   portal, and correlation semantics;
+2. preserves raw values, native identities, timestamps, source roles, and
+   evidence lineage without silent merging or substitution;
+3. defines implementable state, timestamp, freshness, normalization,
+   derivation, and feedback-loop rules;
+4. keeps `solardt` authoritative and Home Assistant complementary; and
+5. separates adapter, storage, portal, export, and persistent-runtime work.
 
 ## Protected boundary
 
-This document authorizes no implementation by itself. It does not authorize
+The proposed contract authorizes no implementation by itself. Review does not authorize
 runtime or service action, live contact, capture, evidence reads or changes,
 database/schema migration, portal binding, Home Assistant integration,
 credential, firmware/ESPHome, network, retention-policy, or persistent ESP32
@@ -41,15 +38,15 @@ operation. Those remain separately bounded decisions.
 
 ## Success
 
-A reviewed contract defines explicit source and lineage semantics, compatible
-timestamp/freshness/availability rules, normalization boundaries, adapter
-responsibilities, and acceptance gates without changing production systems or
-weakening raw-evidence authority.
+Independent ChatGPT review and explicit owner acceptance, or a bounded list of
+required corrections, is recorded. Acceptance must not silently authorize
+implementation.
 
 ## Architectural sequence after hardening
 
-After the contract is accepted, separately plan source adapters and production
-binding. `solardt` remains the authoritative aggregation and provenance layer;
+After acceptance, separately plan source adapters and select the first bounded
+offline implementation slice; production binding remains later. `solardt`
+remains the authoritative aggregation and provenance layer;
 Home Assistant should eventually receive selected ESP32 forensic-frequency and
 related metrics from `solardt` rather than become duplicate direct ingestion
 once the exported path passes lineage, freshness, availability, restart, and

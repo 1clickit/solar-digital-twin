@@ -933,3 +933,45 @@ or runtime change.
   source-lineage, timestamp, freshness, availability, and normalization contract
   before production multi-source portal binding or reciprocal Home Assistant
   integration. Persistent ESP32 operation remains an unmade owner decision.
+
+## 2026-07-20T23:30:43Z — Define telemetry observation contract
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  architecture and contract-design authorization.
+- **Purpose:** Define one source-preserving common observation and provenance
+  contract before adapters, normalized storage, portal binding, Home Assistant
+  export, or any persistent ESP32 decision.
+- **Affected:** New `docs/TELEMETRY_OBSERVATION_CONTRACT.md`; directly related
+  project state, next task, index, Engineering Bible, source-role, Home
+  Assistant interoperability, portal-design, and this append-only audit record.
+- **Contract decisions:** Established stable metric versus observation identity;
+  preserved root source, device, native metric, transport, evidence, and raw
+  value/unit; separated source, receipt, observation, change, and derivation
+  times; separated availability, validity, capability, and evaluated freshness;
+  required non-destructive versioned normalization; required acyclic bounded
+  parent lineage; prevented reflected Home Assistant exports from re-entering
+  as independent evidence; and defined source-adapter acceptance gates.
+- **Current semantics:** Inventoried distinct EG4 runtime/energy/day timestamp
+  behavior, SolarAssistant response-level receipt time and battery scopes,
+  ESP32 receipt-time SSE and policy-selected stream provenance, HA polling
+  versus source-update cadence and unresolved hybrid lineage, current portal
+  freshness, and offline `TimedRecord` limitations.
+- **Untouched:** Source and test code; collectors and retention; schemas and
+  databases; portal implementation/output; Home Assistant; runtime, installed
+  paths, services, timers, processes, identities, permissions, credentials,
+  evidence, reports, devices, ESPHome/firmware, packages, networking, and
+  deployment. Persistent ESP32 operation remains undecided.
+- **Validation:** Documentation/reference/terminology review, exact scope and
+  artifact review, `git diff --check`, repository health check, shell syntax,
+  Python compilation, and all 218 offline tests passed before publication.
+- **Recovery:** Revert the single normal Git commit containing this entry;
+  prior documents remain in normal Git history and no operational rollback is
+  applicable.
+- **Related commit and push:** The commit containing this entry is planned as
+  `Define telemetry observation contract`; one normal fast-forward push to the
+  expected `origin/main` is authorized after safeguards pass.
+- **Limitations and review:** The contract is a published design proposal
+  pending independent ChatGPT review and owner acceptance. Observation-ID
+  generation, lineage digest format, storage layout, HA transport/attribute
+  limits, historical backfill, adapter implementation order, and persistent
+  ESP32 operation remain deferred.

@@ -83,6 +83,11 @@ docs/Engineering_Bible.md
     Solar Digital Twin mission and design authority, including cost discipline
     and custom diagnostic equipment capability and safety guidance.
 
+docs/TELEMETRY_OBSERVATION_CONTRACT.md
+    Proposed single authoritative common telemetry observation, provenance,
+    timestamp, state, freshness, normalization, derived-lineage, and adapter
+    contract; pending independent review and owner acceptance.
+
 docs/EG4_LOCAL_PORTAL.md
     Current EG4 portal operations and the primary engineering-interface plan.
 
