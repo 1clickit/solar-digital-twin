@@ -20,12 +20,15 @@ main
 
 ## Current Status
 - The proposed common telemetry observation and provenance contract is complete
-  in `docs/TELEMETRY_OBSERVATION_CONTRACT.md`. It defines source-preserving
+  and revised after independent review in
+  `docs/TELEMETRY_OBSERVATION_CONTRACT.md`. The six review findings concerning
+  record applicability, derived time, identity/lineage, dual classification,
+  unit provenance, and enum evolution are resolved. It defines source-preserving
   identity, separate time and state axes, freshness evaluation, non-destructive
   normalization, acyclic derivation lineage, Home Assistant loop prevention,
   adapter responsibilities, acceptance gates, compatibility risks, and phased
-  implementation boundaries. It remains pending independent ChatGPT review and
-  owner acceptance; no adapter, schema, portal, Home Assistant, collector,
+  implementation boundaries. The revision remains pending final independent
+  ChatGPT review and explicit owner acceptance; no adapter, schema, portal, Home Assistant, collector,
   retention, runtime, evidence, device, or network implementation occurred
 - After contract acceptance, separately plan source adapters and select the
   first bounded offline implementation slice. Persistent or long-duration

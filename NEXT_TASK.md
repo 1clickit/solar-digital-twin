@@ -4,7 +4,9 @@
 
 Independently review and accept or correct the proposed telemetry observation and provenance contract.
 
-The proposed contract is `docs/TELEMETRY_OBSERVATION_CONTRACT.md`.
+The revised contract is `docs/TELEMETRY_OBSERVATION_CONTRACT.md`; six findings
+from the first independent review have been corrected. Final independent review
+and explicit owner acceptance remain required.
 
 ## Accepted repository baseline
 

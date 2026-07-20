@@ -975,3 +975,38 @@ or runtime change.
   generation, lineage digest format, storage layout, HA transport/attribute
   limits, historical backfill, adapter implementation order, and persistent
   ESP32 operation remain deferred.
+
+## 2026-07-20T23:45:25Z — Clarify telemetry observation contract
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  correction authorization following independent ChatGPT review.
+- **Purpose:** Resolve six narrow internal inconsistencies without changing the
+  accepted architecture or authorizing implementation.
+- **Affected:** `docs/TELEMETRY_OBSERVATION_CONTRACT.md`, `PROJECT_STATE.md`,
+  `NEXT_TASK.md`, and this append-only audit entry.
+- **Corrections:** Added record-profile applicability and scoped status;
+  explicit derivation, window, and anchor times; a root-source metric-ID rule
+  plus minimal machine-readable lineage hops; independent source-nature and
+  result-nature classification; explicit raw-unit basis and versioned mapping;
+  and fail-safe enum/version evolution rules. Synthetic examples now exercise
+  point and window derivations, an anchored AC-couple event, source-supplied and
+  adapter-specified units, corrected HA hybrid identity, and structured export
+  lineage.
+- **Review state:** The six findings are resolved, but the revised contract
+  remains pending final independent ChatGPT review and explicit owner
+  acceptance. No implementation is authorized by publication.
+- **Untouched:** Source/test/schema/collector/retention/reporting/portal code;
+  runtime, services, devices, Home Assistant, databases, evidence, credentials,
+  firmware/ESPHome, networking, packages, installation, deployment, identities,
+  permissions, and the parked `solardt` reboot/recovery procedure.
+- **Validation:** Contract consistency searches, JSON parsing of all 12 worked
+  examples, exact documentation scope, `git diff --check`, repository health,
+  shell syntax, Python compilation, and all 218 offline tests passed.
+- **Recovery:** Revert the single normal documentation commit. No operational
+  rollback applies.
+- **Related commit and push:** Planned subject `Clarify telemetry observation
+  contract`; one normal fast-forward push to expected `origin/main` is
+  authorized after safeguards pass.
+- **Deferred:** Observation-ID generation, storage schema, lineage digest,
+  adapter order, HA transport/attribute limits, backfill, portal/export work,
+  persistent ESP32 operation, and reboot/recovery remain separate decisions.

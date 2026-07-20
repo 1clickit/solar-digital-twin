@@ -55,21 +55,29 @@ allowed. Required fields may contain null only where explicitly stated.
 | Field | Type and presence | Meaning, source, and invariant | Example |
 |---|---|---|---|
 | `contract_version` | string, required, non-null | exact contract used to produce the record | `solar-digital-twin.telemetry-observation.v1` |
-| `record_kind` | enum, required | `observation`, `source_status`, or `rejection` | `observation` |
-| `observation_id` | string, conditionally required | globally unique semantic record reference; required for persisted observations and parent references; never a storage surrogate | `obs:sha256:<digest>` |
-| `metric_id` | string, required for observations/status | stable canonical metric identity, distinct from an occurrence | `solarassistant.jk_bms.combined.state_of_charge` |
-| `source.system` | string, required | root reporting system, not merely the last transport | `solarassistant` |
-| `source.device` | string, required | stable non-secret device/scope identity | `jk_bms_bank` |
-| `source.metric_id` | string, required for observations | exact native identifier, unmodified | `total/battery_state_of_charge` |
-| `source.role` | enum, required | `authority`, `comparison`, `forensic`, `display`, or `derived`; role is policy, not quality | `authority` |
+| `record_kind` | enum, required | `observation`, `status`, or `rejection`; unknown values fail safely | `observation` |
+| `observation.product_kind` | enum or null, conditionally required | required for observations: `root`, `normalized`, or `derived`; null for status/rejection | `root` |
+| `record_id` | string, required for persisted records | globally unique semantic record reference for any persisted observation, status, or rejection; never a storage surrogate | `record:sha256:<digest>` |
+| `observation_id` | string or null, conditionally required | stable occurrence reference for observations and parent references; null for status/rejection | `obs:sha256:<digest>` |
+| `metric_id` | string or null, conditionally required | required for every observation and metric-scoped status; null for source/device status and source-native-independent rejections | `solarassistant.jk_bms.combined.state_of_charge` |
+| `status.scope` | enum or null, conditionally required | required for status records: `source`, `device`, or `metric`; null otherwise | `source` |
+| `status.state` | string(enum) or null, conditionally required | required for status records; scope-specific state such as `reachable`, `unreachable`, `available`, `unavailable`, `missing`, or `unsupported`; null otherwise | `unreachable` |
+| `source.system` | string, required | root physical/reporting source, not merely the acquisition component | `solarassistant` |
+| `source.device` | string or null, conditionally required | required for observations and device/metric status; null for source status when no device is implicated | `jk_bms_bank` |
+| `source.metric_id` | string or null, conditionally required | exact native identifier for root/normalized observations and metric status; null for native-source-independent derived observations, source/device status, and rejection before identity is established | `total/battery_state_of_charge` |
+| `source.role` | enum, required except early rejection | `authority`, `comparison`, `forensic`, `display`, `derived`, or `operational`; status uses `operational`; role is policy, not quality | `authority` |
 | `source.transport` | string, required | acquisition path/protocol, kept separate from root source | `solarassistant_rest_v1` |
-| `source.lineage` | array of lineage hops, required | ordered root-to-current systems/transports; unresolved hops are labeled, never guessed | `["eg4","ha_eg4_web_monitor_hybrid","home_assistant"]` |
+| `source.lineage` | array of lineage-hop objects, required | ordered root-to-current path using the hop schema below; never free-form strings | `[{"system":"eg4","instance":"inverter_demo","role":"root","reference":"serial:demo","transformation_id":null,"unresolved":false}]` |
 | `time.source_at` | UTC timestamp or null, required | source-provided event/measurement time after explicit interpretation; null when absent/unusable | `2026-01-15T18:00:00.000Z` |
 | `time.source_at_raw` | string or null, required | original source timestamp text before normalization | `2026-01-15 12:00:00` |
 | `time.source_changed_at` | UTC timestamp or null, optional | source's last-change time when semantically distinct | `2026-01-15T17:59:30.000Z` |
-| `time.received_at` | UTC timestamp, required | time `solardt` accepted the source response/event | `2026-01-15T18:00:01.123Z` |
+| `time.received_at` | UTC timestamp, required | for source data/status, when `solardt` accepted the input; for derivations, when the producer accepted the complete parent set; for rejections, when the rejected input/condition was detected | `2026-01-15T18:00:01.123Z` |
 | `time.observed_at` | UTC timestamp, required | selected correlation time; equals source time only when its semantics are established, otherwise receipt time | `2026-01-15T18:00:01.123Z` |
-| `time.basis` | enum, required | `source_event`, `source_changed`, `solardt_receipt`, or `derived_window` | `solardt_receipt` |
+| `time.basis` | enum, required | `source_event`, `source_changed`, `solardt_receipt`, `derived_anchor`, `derived_window`, or `status_detection`; unknown values fail safely | `solardt_receipt` |
+| `time.derived_at` | UTC timestamp or null, conditionally required | required for derived observations; producer completion time; null otherwise | `2026-01-15T18:00:04.000Z` |
+| `time.window_start` | UTC timestamp or null, conditionally required | required with `derived_window`; inclusive parent-selection start; null for point derivations | `2026-01-15T17:55:00.000Z` |
+| `time.window_end` | UTC timestamp or null, conditionally required | required with `derived_window`; inclusive/exclusive rule is specified by transformation version; null for point derivations | `2026-01-15T18:00:00.000Z` |
+| `time.anchor_at` | UTC timestamp or null, conditionally required | required with `derived_anchor` and for anchored events; the explicit comparison/event anchor | `2026-01-15T18:00:00.000Z` |
 | `time.source_timezone` | IANA zone, `UTC`, or null, required | interpretation applied to naive source text; null if no source time | `America/Chicago` |
 | `time.precision` | enum, required | `day`, `second`, `millisecond`, or `unknown`; does not claim accuracy | `millisecond` |
 | `time.clock_quality` | enum, required | `trusted`, `synchronized`, `unknown`, `uncertain`, or `invalid` | `unknown` |
@@ -82,7 +90,10 @@ allowed. Required fields may contain null only where explicitly stated.
 | `value.normalized` | JSON scalar or null, required | deterministic normalized value; null when none is valid | `0.0512` |
 | `value.raw_unit` | string or null, required | source unit exactly as supplied or documented; null means absent/unknown | `V` |
 | `value.canonical_unit` | string or null, required | unit of normalized value; null when not applicable/unknown | `kV` |
-| `value.classification` | enum, required | `measured`, `source_estimated`, `source_calculated`, `normalized`, `derived`, `aggregated`, `inferred`, or `state` | `measured` |
+| `value.source_nature` | enum or null, conditionally required | required for root/normalized observations: `measured`, `source_estimated`, `source_calculated`, or `state`; derived observations use null because their nature is recorded by `value.result_nature` | `source_estimated` |
+| `value.result_nature` | enum, required for observations | `source_value`, `normalized_source_value`, `derived`, `aggregated`, or `inferred`; independent of source nature | `normalized_source_value` |
+| `value.raw_unit_basis` | enum, required for observations | `source_supplied`, `adapter_specified`, `absent`, or `not_applicable`; unknown values fail safely | `source_supplied` |
+| `value.raw_unit_mapping` | object or null, conditionally required | required when basis is `adapter_specified`; mapping ID and version establishing dimension/unit | `{'id':'eg4.runtime.v_bat','version':'1'}` |
 | `availability` | enum, required | `available`, `unavailable`, `unknown`, or `not_observed` | `available` |
 | `validity` | enum, required | `valid`, `invalid`, or `rejected` | `valid` |
 | `capability` | enum, required | `supported`, `unsupported`, or `unknown` | `supported` |
@@ -99,6 +110,55 @@ allowed. Required fields may contain null only where explicitly stated.
 | `retention.policy_id` | string or null, required | policy selecting this copy; null when no selective policy applies | `esp32-frequency-v1` |
 | `diagnostics.reason_codes` | array of strings, required | stable payload-free reasons for abnormal/status/rejection records | `[]` |
 
+### Record-profile applicability
+
+The table below controls the general envelope table when its generic wording is
+insufficient. `R` means required and non-null, `C` conditionally required as
+described, `O` optional, `N` required but permitted null, and `P` prohibited.
+Every persisted record requires `contract_version`, `record_kind`, `record_id`,
+`source.system`, `source.lineage`, `time.received_at`, `producer`, `evidence`
+(permitted null only as already specified), and `diagnostics.reason_codes`.
+
+| Field or coherent field group | Root observation | Normalized observation | Derived observation | Source status | Device status | Metric status | Rejection |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `contract_version`, `record_kind`, `record_id` | R | R | R | R | R | R | R |
+| `observation.product_kind` | R=`root` | R=`normalized` | R=`derived` | P | P | P | P |
+| `observation_id` | R | R | R | P | P | P | P |
+| `metric_id` | R | R | R | N | N | R | C |
+| `status.scope` | P | P | P | R=`source` | R=`device` | R=`metric` | P |
+| `status.state` | P | P | P | R | R | R | P |
+| `source.system`, `source.lineage` | R | R | R=`solardt`/R | R | R | R | R |
+| `source.device` | R | R | C | N | R | R | C |
+| `source.metric_id` | R | R | N | N | N | R | C |
+| `source.role`, `source.transport` | R | R | R | R | R | R | C |
+| source timestamp fields | N/C | N/C | N | N | N | N | C |
+| derived/window/anchor fields | P | P | C | P | P | P | P |
+| `time.observed_at`/`time.basis` | R | R | R | R | R | R | R |
+| `time.source_timezone`, precision, clock quality/uncertainty | R/N | R/N | R/N | R/N | R/N | R/N | C |
+| `sequence.ingest`; `sequence.source` | R/O | R/O | R/O | R/O | R/O | R/O | R/O |
+| `value.*`, availability, validity, capability, quality | R | R | R | P | P | P | C |
+| transformation | N | R | R | P | P | P | C |
+| `parents` | R empty | R source parent | R nonempty | P | P | P | C |
+| retention fields | R | R | R | P | P | P | C |
+| producer, evidence, diagnostics | R | R | R | R | R | R | R |
+
+For source/device status, `time.observed_at` is the detection time,
+`time.basis=status_detection`, and `status.state` carries the scoped condition;
+one source transport outage therefore creates one source-scoped status record
+rather than fabricated per-metric observations.
+A rejection has `metric_id`/native identity only when those were safely
+established before rejection. A persisted rejection receives `record_id` but
+never `observation_id`. A native-source-independent derived metric has
+`source.system=solardt`, null `source.metric_id`, a required canonical
+`metric_id`, and nonempty parents that preserve every root source.
+
+For a derived point record, `derived_at` and `anchor_at` are required while
+window fields are null. For an unanchored window record, `derived_at`,
+`window_start`, and `window_end` are required and `anchor_at` is null. For an
+anchored event window, all four are required. All non-derived records prohibit
+these fields. `window_start` must not follow `window_end`; an anchor, when
+present, must lie within the method's declared relationship to the window.
+
 Freshness is an evaluation, not an immutable property of the observation. A
 consumer attaches or computes a projection containing `evaluated_at`,
 `policy_id`, `state`, and `age_seconds`; it must not rewrite the envelope.
@@ -107,7 +167,7 @@ consumer attaches or computes a projection containing `evaluated_at`,
 
 Metric IDs use lowercase dot-separated components:
 
-`<root-source>.<transport-or-product>.<device-scope>.<semantic-metric>`
+`<root-source>.<acquisition-path>.<device-scope>.<semantic-metric>`
 
 Components must be mapped in a versioned adapter registry, not generated from
 display labels. They remain stable across restarts and files, preserve the
@@ -123,13 +183,44 @@ Representative synthetic IDs:
 - `eg4.cloud.inverter_demo.estimated_state_of_charge`
 - `eg4.cloud.inverter_demo.ac_couple_power`
 - `esp32.esphome.forensic_probe.generator_frequency`
-- `home_assistant.eg4_web_monitor_hybrid.inverter_demo.radiator_1_temperature`
+- `eg4.ha_web_monitor_hybrid.inverter_demo.radiator_1_temperature`
 - `solardt.derived.battery.soc_disagreement_sa_minus_eg4`
 
 The source-native topic, entity ID, field name, endpoint/table, serial/device
 identity, and transport remain independent fields. Direct EG4 cloud, EG4 via
 HA hybrid mode, and a future local-dongle route are different metric streams
 even when their semantic metric names match.
+
+The first component is always the root physical/reporting source. The second
+identifies the acquisition path, so `eg4.cloud...`,
+`eg4.ha_web_monitor_hybrid...`, and `eg4.local_dongle...` remain distinct
+without treating HA as independent physical evidence. For a genuinely
+HA-native entity, the root may be `home_assistant`. `source.metric_id` retains
+the exact native metric at the root when available; an HA entity ID used to
+transport another source is retained as the relevant lineage-hop reference.
+
+### Minimal lineage-hop schema
+
+Every `source.lineage` entry is an object with these fields:
+
+| Hop field | Presence | Meaning |
+|---|---|---|
+| `system` | required string | component/system at this hop, such as `eg4`, `home_assistant`, or `solardt` |
+| `instance` | string or null, required | stable non-secret device or service instance when known |
+| `role` | required enum | `root`, `transport`, `transformation`, or `display_export` |
+| `reference` | string or null, required | native entity, canonical observation, export, or transformation reference relevant to this hop |
+| `transformation_id` | string or null, required | versioned transformation/export identity when the hop transforms or exports |
+| `unresolved` | required boolean | true when the upstream path or identity at this hop is not proven |
+
+The array order is root-to-current. The first hop must agree with
+`source.system`; subsequent transport hops preserve acquisition identity
+without changing the root. Duplicate detection compares root reference,
+canonical/native metric identity, observation/source time, and known export or
+transformation references. Export IDs and observation references allow
+reflected-copy detection. Cycle detection rejects a prospective hop whose
+reference already occurs in its ancestor path. HA hybrid mode uses an
+`unresolved=true` transport hop rather than guessing cloud/local/cache lineage.
+This small structure is provenance, not a general distributed-tracing system.
 
 ## 5. Observation-state semantics
 
@@ -145,10 +236,10 @@ State uses independent axes; a single overloaded status is prohibited.
 | stale | otherwise valid observation exceeds a named freshness policy at evaluation time | original remains valid and immutable; display/export must disclose stale; derivations require an explicit stale-parent policy |
 | invalid | received value/timestamp cannot satisfy semantic/type/range rules | rejection/status record with safe reason and evidence reference; raw evidence remains; no normalized value |
 | rejected | adapter refuses an input for allowlist, schema, destination, lineage, or policy reasons | `rejection` record where durable diagnostics are required; never becomes an observation |
-| estimated | source itself estimates the quantity | valid observation classified `source_estimated`; never promoted to measured |
-| normalized | deterministic unit/name representation of a source observation | same observation lineage with raw fields preserved and transform recorded |
-| calculated | source reports a calculation rather than a direct sensor measurement | classified `source_calculated` |
-| derived | `solardt` combines/transforms one or more parent observations | new observation ID and metric ID with parents/method/version |
+| estimated | source itself estimates the quantity | `value.source_nature=source_estimated`; normalization does not erase it |
+| normalized | deterministic unit/name representation of a source observation | `value.result_nature=normalized_source_value`, while source nature and raw fields remain |
+| calculated | source reports a calculation rather than a direct sensor measurement | `value.source_nature=source_calculated` |
+| derived | `solardt` combines/transforms one or more parent observations | source nature is null; result nature is `derived`, `aggregated`, or `inferred` |
 | unsupported | capability is absent for this device/integration/version | source-status/capability record; may appear in complete source view; no invented value |
 
 Numeric zero, boolean false, an empty but source-valid string, missing, explicit
@@ -181,9 +272,14 @@ be default calculation inputs or normal numeric HA exports.
 9. Raw evidence order is immutable. `sequence.ingest` breaks equal-time ties.
    Normalized queries may order by observation time then ingestion sequence,
    but must expose disagreements between source and receipt order.
-10. Derived time is explicit: point comparisons use a documented anchor;
-    windows use `derived_window` plus start/end and `derived_at`. Derivation
-    time never replaces parent times.
+10. Derived time is explicit. A point comparison uses
+    `time.basis=derived_anchor`, `time.anchor_at`, and the same
+    `time.observed_at`; a window uses `time.basis=derived_window`, explicit
+    start/end, and a documented anchor only when the event/method has one.
+    `time.derived_at` records completion. `time.received_at` records when the
+    producer accepted its complete parent set and may equal but does not replace
+    `derived_at`. Derived records order by `observed_at`, then `derived_at`, then
+    `sequence.ingest`; parent and raw-file order remain independently preserved.
 
 ## 7. Freshness
 
@@ -224,9 +320,12 @@ selection; it does not mean unavailable or physically unchanged.
 ## 9. Quality and authority
 
 Use the categorical `quality.categories` and stable reason codes; do not invent
-confidence percentages. Direct source measurement, source estimate, source
-calculation, normalization, derivation, unresolved lineage, clock uncertainty,
-and invalid/rejected data are distinct. Source authority answers which source
+confidence percentages. `value.source_nature` records what the source value is;
+`value.result_nature` records the product emitted by `solardt`;
+`transformation` records how it was produced. Quality categories echo material
+facts (`direct`, `source_estimate`, `source_calculation`, `normalized`,
+`derived`, `lineage_uncertain`, `clock_uncertain`, `invalid`, or `rejected`)
+without replacing those structural fields. Source authority answers which source
 the project trusts for a role; quality describes a particular record;
 availability and freshness describe other axes. Thus SolarAssistant/JK BMS may
 be SOC authority while a particular record is stale, and EG4 SOC may be valid
@@ -235,10 +334,16 @@ and fresh while remaining a comparison estimate.
 ## 10. Normalization boundaries
 
 Normalization is non-destructive and versioned. It must preserve raw value,
-raw unit, native ID, source identity, and all times. It adds rather than
+raw unit and its basis, native ID, source identity, and all times. It adds rather than
 replaces canonical value/unit. Conversions must be deterministic and
-dimension-compatible; missing units produce no conversion unless an adapter's
-versioned source specification establishes the unit. Unitless values are
+dimension-compatible. A source-supplied unit is preserved verbatim with
+`raw_unit_basis=source_supplied`. A unit established from documented field
+semantics uses `adapter_specified` and requires `raw_unit_mapping.id/version`;
+it must not be represented as transmitted source metadata. Missing/unknown
+units use `absent` and cannot be guessed or normalized until dimensional
+meaning is established. Changing an adapter-specified unit or scaling mapping
+requires version review. Existing EG4 unit-bearing column names and scaling
+rules are compatibility inputs, not rewritten evidence. Unitless values are
 explicitly `1`. Sign conventions must be documented before conversion.
 Display rounding never changes stored values, and normalized precision never
 claims greater source accuracy.
@@ -254,8 +359,9 @@ derived observation.
 ## 11. Derived observations and lineage
 
 A derived record requires a stable derived metric ID, unique observation ID,
-method ID/version, producer version, derivation time, input window when used,
-classification, and parent lineage. Direct derivations list parent observation
+method ID/version, producer version, `time.derived_at`, explicit anchor and/or
+input-window fields as required by its time basis,
+result nature, and parent lineage. Direct derivations list parent observation
 IDs plus source/metric IDs. Large aggregates may use a bounded selector with
 metric IDs, UTC window, evidence/capture references, ordering rule, filter,
 input count, and an optional deterministic digest instead of embedding every
@@ -393,14 +499,24 @@ evidence is never rewritten.
 
 ## 16. Versioning
 
-Version 1 is `solar-digital-twin.telemetry-observation.v1`. Adding optional
-fields or enum values that old consumers are required to ignore is backward
-compatible. Removing/renaming fields, changing meanings, identity rules, time
-selection, or unit semantics requires a new major version. Metric renames use
-versioned aliases and deprecation periods. Adapter and transformation versions
-are independent fields. Historical records keep their original contract
-version. Consumers must accept explicitly supported versions and quarantine or
-reject unsupported future major versions without partial reinterpretation.
+Version 1 is `solar-digital-twin.telemetry-observation.v1`. Adding an optional
+field is backward-compatible only when old consumers safely ignore it. Adding
+an enum value is backward-compatible only when that specific field documents
+unknown-value handling and older consumers preserve it or fail safely. New
+values in safety, state, identity, `record_kind`, `status.scope`, time-basis,
+availability, validity, or capability enums normally require a new major
+version unless every affected consumer has explicitly declared safe unknown-
+value behavior. Consumers must never map an unknown enum to the nearest known
+value; they quarantine, reject, or expose it as unknown according to the
+field's policy. A producer must not emit a new semantic value to a consumer
+that has not declared support where unsafe behavior could result.
+
+Removing/renaming fields, changing meanings, identity rules, time selection,
+or unit semantics requires a new major version. Metric renames use versioned
+aliases and deprecation periods. Adapter and transformation versions are
+independent fields. Historical records keep their original contract version.
+Consumers accept explicitly supported versions and quarantine or reject
+unsupported future major versions without partial reinterpretation.
 
 ## 17. Synthetic worked examples
 
@@ -408,16 +524,18 @@ Examples omit unchanged required fields only for readability; implementation
 fixtures must include the complete envelope.
 
 ```json
-{"case":"trusted SOC","metric_id":"solarassistant.jk_bms.combined.state_of_charge","source":{"system":"solarassistant","device":"jk_bms_bank","metric_id":"total/battery_state_of_charge","role":"authority","transport":"solarassistant_rest_v1","lineage":["solarassistant"]},"time":{"source_at":null,"received_at":"2026-01-15T18:00:01.123Z","observed_at":"2026-01-15T18:00:01.123Z","basis":"solardt_receipt"},"value":{"raw_present":true,"raw":82,"normalized":82,"raw_unit":"%","canonical_unit":"%","classification":"measured"}}
-{"case":"ESP32 frequency","metric_id":"esp32.esphome.forensic_probe.generator_frequency","source":{"system":"esp32_esphome","device":"forensic_probe","metric_id":"sensor-01_gen_frequency","role":"forensic","transport":"http_sse","lineage":["esp32_esphome"]},"time":{"source_at":null,"received_at":"2026-01-15T18:00:02.004Z","observed_at":"2026-01-15T18:00:02.004Z","basis":"solardt_receipt"},"value":{"raw_present":true,"raw":60.01,"normalized":60.01,"raw_unit":"Hz","canonical_unit":"Hz","classification":"measured"}}
-{"case":"EG4 estimated SOC","metric_id":"eg4.cloud.inverter_demo.estimated_state_of_charge","time":{"source_at":"2026-01-15T18:00:00.000Z","received_at":"2026-01-15T18:00:03.000Z","observed_at":"2026-01-15T18:00:00.000Z","basis":"source_event"},"value":{"raw_present":true,"raw":57,"normalized":57,"raw_unit":"%","canonical_unit":"%","classification":"source_estimated"},"quality":{"categories":["source_estimate"],"reasons":[]}}
-{"case":"HA hybrid temperature","metric_id":"home_assistant.eg4_web_monitor_hybrid.inverter_demo.radiator_1_temperature","source":{"system":"eg4","device":"inverter_demo","metric_id":"sensor.demo_radiator_1_temperature","role":"comparison","transport":"home_assistant_rest","lineage":["eg4","eg4_web_monitor_hybrid_unresolved","home_assistant"]},"quality":{"categories":["lineage_uncertain"],"reasons":["hybrid_upstream_unresolved"]}}
-{"case":"W to kW","value":{"raw_present":true,"raw":3250,"normalized":3.25,"raw_unit":"W","canonical_unit":"kW","classification":"normalized"},"transformation":{"id":"unit.w_to_kw","version":"1","method":"divide_by_1000"}}
+{"case":"trusted SOC and source-supplied unit","metric_id":"solarassistant.jk_bms.combined.state_of_charge","source":{"system":"solarassistant","device":"jk_bms_bank","metric_id":"total/battery_state_of_charge","role":"authority","transport":"solarassistant_rest_v1","lineage":[{"system":"solarassistant","instance":"jk_bms_bank","role":"root","reference":"total/battery_state_of_charge","transformation_id":null,"unresolved":false}]},"time":{"source_at":null,"received_at":"2026-01-15T18:00:01.123Z","observed_at":"2026-01-15T18:00:01.123Z","basis":"solardt_receipt"},"value":{"raw_present":true,"raw":82,"normalized":82,"raw_unit":"%","raw_unit_basis":"source_supplied","raw_unit_mapping":null,"canonical_unit":"%","source_nature":"measured","result_nature":"source_value"}}
+{"case":"ESP32 frequency","metric_id":"esp32.esphome.forensic_probe.generator_frequency","source":{"system":"esp32","device":"forensic_probe","metric_id":"sensor-01_gen_frequency","role":"forensic","transport":"http_sse","lineage":[{"system":"esp32","instance":"forensic_probe","role":"root","reference":"sensor-01_gen_frequency","transformation_id":null,"unresolved":false}]},"time":{"source_at":null,"received_at":"2026-01-15T18:00:02.004Z","observed_at":"2026-01-15T18:00:02.004Z","basis":"solardt_receipt"},"value":{"raw_present":true,"raw":60.01,"normalized":60.01,"raw_unit":"Hz","raw_unit_basis":"adapter_specified","raw_unit_mapping":{"id":"esp32.entity.sensor-01_gen_frequency","version":"1"},"canonical_unit":"Hz","source_nature":"measured","result_nature":"normalized_source_value"}}
+{"case":"EG4 estimated SOC with adapter-specified unit","metric_id":"eg4.cloud.inverter_demo.estimated_state_of_charge","source":{"system":"eg4","lineage":[{"system":"eg4","instance":"inverter_demo","role":"root","reference":"runtime.soc","transformation_id":null,"unresolved":false}]},"time":{"source_at":"2026-01-15T18:00:00.000Z","received_at":"2026-01-15T18:00:03.000Z","observed_at":"2026-01-15T18:00:00.000Z","basis":"source_event"},"value":{"raw_present":true,"raw":57,"normalized":57,"raw_unit":"%","raw_unit_basis":"adapter_specified","raw_unit_mapping":{"id":"eg4.runtime.soc","version":"1"},"canonical_unit":"%","source_nature":"source_estimated","result_nature":"normalized_source_value"},"quality":{"categories":["source_estimate","normalized"],"reasons":[]}}
+{"case":"HA hybrid temperature","metric_id":"eg4.ha_web_monitor_hybrid.inverter_demo.radiator_1_temperature","source":{"system":"eg4","device":"inverter_demo","metric_id":"sensor.demo_radiator_1_temperature","role":"comparison","transport":"home_assistant_rest","lineage":[{"system":"eg4","instance":"inverter_demo","role":"root","reference":null,"transformation_id":null,"unresolved":true},{"system":"home_assistant","instance":"ha_primary","role":"transport","reference":"sensor.demo_radiator_1_temperature","transformation_id":"eg4_web_monitor_hybrid","unresolved":true}]},"quality":{"categories":["lineage_uncertain"],"reasons":["hybrid_upstream_unresolved"]}}
+{"case":"measured W normalized to kW","value":{"raw_present":true,"raw":3250,"normalized":3.25,"raw_unit":"W","raw_unit_basis":"source_supplied","raw_unit_mapping":null,"canonical_unit":"kW","source_nature":"measured","result_nature":"normalized_source_value"},"transformation":{"id":"unit.w_to_kw","version":"1","method":"divide_by_1000"}}
 {"case":"stale projection","freshness":{"evaluated_at":"2026-01-15T19:00:00.000Z","policy_id":"eg4.runtime.v1","state":"stale","age_seconds":3600}}
-{"case":"explicit unavailable","availability":"unavailable","validity":"valid","value":{"raw_present":true,"raw":"unavailable","normalized":null,"raw_unit":"Hz","canonical_unit":"Hz","classification":"state"},"diagnostics":{"reason_codes":["source_reported_unavailable"]}}
-{"case":"rejection","record_kind":"rejection","validity":"rejected","source":{"metric_id":"unexpected.entity"},"diagnostics":{"reason_codes":["source_metric_not_allowlisted"]},"value":{"raw_present":false,"raw":null,"normalized":null,"raw_type":"missing"}}
-{"case":"SOC disagreement","metric_id":"solardt.derived.battery.soc_disagreement_sa_minus_eg4","value":{"raw_present":false,"raw":null,"normalized":25,"raw_unit":null,"canonical_unit":"percentage_point","classification":"derived"},"transformation":{"id":"battery.soc_difference","version":"1","method":"trusted_sa_soc_minus_eg4_estimated_soc"},"parents":[{"observation_id":"obs:synthetic:sa"},{"observation_id":"obs:synthetic:eg4"}]}
-{"case":"HA export","metric_id":"esp32.esphome.forensic_probe.generator_frequency","export":{"origin_instance":"solardt","export_id":"export:synthetic:1","root_observation_id":"obs:synthetic:esp32","display_copy":true},"source":{"lineage":["esp32_esphome","solardt","home_assistant_display"]}}
+{"case":"explicit unavailable","availability":"unavailable","validity":"valid","value":{"raw_present":true,"raw":"unavailable","normalized":null,"raw_unit":"Hz","raw_unit_basis":"adapter_specified","raw_unit_mapping":{"id":"esp32.entity.sensor-01_gen_frequency","version":"1"},"canonical_unit":"Hz","source_nature":"state","result_nature":"source_value"},"diagnostics":{"reason_codes":["source_reported_unavailable"]}}
+{"case":"rejection","record_kind":"rejection","record_id":"record:synthetic:reject1","metric_id":null,"time":{"received_at":"2026-01-15T18:00:05.000Z","observed_at":"2026-01-15T18:00:05.000Z","basis":"status_detection"},"validity":"rejected","diagnostics":{"reason_codes":["source_metric_not_allowlisted"]}}
+{"case":"point SOC disagreement","metric_id":"solardt.derived.battery.soc_disagreement_sa_minus_eg4","source":{"system":"solardt","device":"solardt","metric_id":null,"lineage":[{"system":"solardt","instance":"solardt","role":"transformation","reference":"obs:synthetic:soc_difference","transformation_id":"battery.soc_difference.v1","unresolved":false}]},"time":{"received_at":"2026-01-15T18:00:04.000Z","observed_at":"2026-01-15T18:00:00.000Z","basis":"derived_anchor","derived_at":"2026-01-15T18:00:04.010Z","window_start":null,"window_end":null,"anchor_at":"2026-01-15T18:00:00.000Z"},"value":{"raw_present":false,"raw":null,"normalized":25,"raw_unit":null,"raw_unit_basis":"not_applicable","canonical_unit":"percentage_point","source_nature":null,"result_nature":"derived"},"transformation":{"id":"battery.soc_difference","version":"1","method":"trusted_sa_soc_minus_eg4_estimated_soc"},"parents":[{"observation_id":"obs:synthetic:sa"},{"observation_id":"obs:synthetic:eg4"}]}
+{"case":"windowed frequency range","metric_id":"solardt.derived.esp32.generator_frequency_range","time":{"received_at":"2026-01-15T18:05:01.000Z","observed_at":"2026-01-15T18:05:00.000Z","basis":"derived_window","derived_at":"2026-01-15T18:05:01.010Z","window_start":"2026-01-15T18:00:00.000Z","window_end":"2026-01-15T18:05:00.000Z","anchor_at":null},"value":{"source_nature":null,"result_nature":"aggregated"},"parents":[{"selector":{"metric_ids":["esp32.esphome.forensic_probe.generator_frequency"],"window_start":"2026-01-15T18:00:00.000Z","window_end":"2026-01-15T18:05:00.000Z","ordering":"observed_at_then_ingest","input_count":300}}]}
+{"case":"anchored AC-couple event","metric_id":"solardt.derived.events.ac_couple_collapse","time":{"received_at":"2026-01-15T18:01:02.000Z","observed_at":"2026-01-15T18:00:30.000Z","basis":"derived_window","derived_at":"2026-01-15T18:01:02.010Z","window_start":"2026-01-15T17:59:30.000Z","window_end":"2026-01-15T18:01:00.000Z","anchor_at":"2026-01-15T18:00:30.000Z"},"value":{"source_nature":null,"result_nature":"inferred"},"parents":[{"selector":{"metric_ids":["eg4.cloud.inverter_demo.ac_couple_power","esp32.esphome.forensic_probe.generator_frequency"],"window_start":"2026-01-15T17:59:30.000Z","window_end":"2026-01-15T18:01:00.000Z","input_count":95}}]}
+{"case":"HA export","metric_id":"esp32.esphome.forensic_probe.generator_frequency","export":{"origin_instance":"solardt","export_id":"export:synthetic:1","root_observation_id":"obs:synthetic:esp32","display_copy":true},"source":{"system":"esp32","lineage":[{"system":"esp32","instance":"forensic_probe","role":"root","reference":"sensor-01_gen_frequency","transformation_id":null,"unresolved":false},{"system":"solardt","instance":"solardt","role":"transformation","reference":"obs:synthetic:esp32","transformation_id":"export.v1","unresolved":false},{"system":"home_assistant","instance":"ha_primary","role":"display_export","reference":"export:synthetic:1","transformation_id":"export.v1","unresolved":false}]}}
 ```
 
 ## 18. Separated future milestones
