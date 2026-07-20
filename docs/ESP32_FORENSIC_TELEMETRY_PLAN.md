@@ -11,14 +11,42 @@ production policy remains unchanged; the implementation and canary design are
 in `docs/ESP32_RETENTION_PRODUCTION_PLAN.md`. The collector is
 `src/solar_digital_twin/collectors/esp32_sse.py`. Static runtime/security review
 and the separately gated hardening phases are defined in
-`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. Repository hardening is
-implemented and offline-tested; no installation, runtime action, or live
-compatibility verification has occurred.
+`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. Repository hardening,
+installation, metadata verification, and one finite installed-runtime live
+verification are complete. Persistent operation remains undecided.
 
 ## Collection Decision
 Use the read-only ESPHome HTTP server-sent-event stream at `http://192.168.3.13/events` from `solardt`.
 
 It has been verified over IPv4, exposes the required public entities, requires no ESP32 changes, and avoids adding a native-API client dependency. Console logs are unsuitable for continuous evidence collection.
+
+## Completed Installed-Runtime Passive Verification
+
+On July 20, 2026, the fixed endpoint returned HTTP `200`, exact
+`Content-Type: text/event-stream`, the unchanged final URL, and zero redirects.
+The unchanged installed launcher then ran once for 3,600 seconds through the
+static one-shot unit, producing capture prefix
+`esp32_sse_20260720_214207Z`. Raw, current-retained, and manifest sizes were
+12,983,085, 12,550,203, and 748 bytes; counts were 35,968 raw and 33,515
+retained.
+
+The two-record manifest closed cleanly for duration. Schema, fixed provenance,
+the complete 17-entity allowlist, nondecreasing UTC receipt timestamps,
+raw/current-retained byte identity and ordering, restrictive ownership/modes,
+and payload-free journal checks passed. The service returned static and
+inactive with no restart, timer, trigger, process, credential, or persistent
+activation. No conservative/canary output or device/firmware change occurred.
+
+## Project-controlled ESPHome boundary
+
+The forensic probe is project-controlled and was built collaboratively with
+ESPHome. Its firmware, entities, SSE behavior, authentication, and network
+configuration can be deliberately revised later. Passive collection must not
+silently weaken validation or change the device merely to make a verification
+pass. Any device or firmware change requires its own separately authorized,
+versioned ESPHome work unit; coordinated collector and ESPHome changes may be
+appropriate only after diagnosis. The completed verification required no such
+change.
 
 ## Timestamp Semantics
 SSE updates do not include a complete event timestamp. Stamp every accepted update on receipt using the synchronized `solardt` clock.
@@ -134,9 +162,8 @@ The versioned conservative writer and opt-in canary mode defined in
 `docs/ESP32_RETENTION_PRODUCTION_PLAN.md` are implemented and synthetically
 validated. The historical `esp32-frequency-v1` output remains the default;
 `esp32-conservative-v1` is dormant unless explicitly selected. The hardened
-runtime and dormant unit are now installed and metadata-verified under
-`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`; no live contact, capture, or
-production-default change occurred. The next step is a separately authorized
-short finite passive verification. It does not promote a retention policy or
-authorize persistent activation, firmware, network, database, or portal
-changes.
+runtime, dormant unit, and finite passive live verification are complete under
+`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`; no production-default change
+occurred. Persistent activation remains an unmade owner decision. The next
+milestone is the common telemetry/provenance contract; it does not authorize
+firmware, network, database, portal, or retention changes.

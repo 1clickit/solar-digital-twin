@@ -866,3 +866,70 @@ or runtime change.
   verification to record actual `Content-Type`, credentialless connectivity,
   output/provenance behavior, manifest closure, and clean stop. Persistent or
   long-duration operation remains a later owner decision.
+
+## 2026-07-20T22:59:04Z — Verify installed ESP32 runtime passively
+
+- **Actor:** Chris operated the `solardt` terminal under a ChatGPT-directed,
+  owner-authorized bounded passive verification; Codex synchronized this
+  durable record.
+- **Purpose:** Verify the installed credentialless ESP32 runtime against the
+  project-controlled passive SSE endpoint through one exact finite service run,
+  without persistent activation or device/configuration change.
+- **Compatibility probe:** A body-free Requests probe as `solardt-telemetry`
+  contacted only `http://192.168.3.13/events`. It returned HTTP `200`, exact
+  `Content-Type: text/event-stream`, the unchanged final URL, and zero redirects.
+  No body, SSE payload, alternate destination, proxy, or credential was printed
+  or retained.
+- **Finite run:** The installed static
+  `esp32-forensic-collector.service` started exactly once at 2026-07-20 16:42:07
+  America/Chicago using the unchanged 3,600-second launcher, `current` mode,
+  installed commit `7f2274b9011c4bb85f3099eb80c8bb86a21f0e04`, fixed evidence
+  path, and `solardt-telemetry` identity. It completed at 17:42:08 with
+  `Result=success`, main exit code/status 0/0, `NRestarts=0`, 9.599 seconds CPU,
+  40.9 MiB peak memory, and zero swap.
+- **Evidence:** Created exactly
+  `esp32_sse_20260720_214207Z.ndjson` (12,983,085 bytes),
+  `esp32_sse_20260720_214207Z_retained.ndjson` (12,550,203 bytes), and
+  `esp32_sse_20260720_214207Z_manifest.ndjson` (748 bytes), all
+  `solardt-telemetry:solardt-telemetry` mode `0640`. State/evidence directories
+  remained mode `0750`; reporter `chris` could read but not write, and the
+  service could not write installed code.
+- **Content validation:** The manifest had exactly one start and one clean
+  completion record with stop reason `duration`, installed collector version,
+  current mode, and matching counts of 35,968 raw and 33,515 retained records.
+  Every complete line parsed as JSON; expected schema, fixed source URL,
+  17-entity allowlist, valid nondecreasing UTC receipt time, and ordered byte-
+  identical retained subsequence checks passed. Policy remained
+  `esp32-frequency-v1`; no conservative/canary output appeared; journal
+  diagnostics remained payload-free.
+- **Post-run state:** Service returned static/inactive/dead with zero restarts,
+  processes, timers, triggers, activation paths, or credential paths. Installed
+  commit and `/opt/solar-digital-twin.backup.20260720T205254Z` remained intact;
+  repository `HEAD` and `origin/main` remained synchronized at
+  `049d1ecc721c9460b73d10549ba58e01a8b72a3a` with a clean tree.
+- **Operator observations:** The original shell retained stale supplementary-
+  group state after adding `chris`; a fresh plain SSH login inherited the group
+  and reporter checks passed without `newgrp`, permission, ACL, or group-design
+  changes. Some oversized pasted blocks were duplicated or malformed, and one
+  incomplete continuation was canceled with Ctrl+C. The systemd-supervised
+  collector was unaffected. These observations motivated the canonical compact
+  ChatGPT-authored command workflow now recorded in `CONTRIBUTING.md`.
+- **Device ownership boundary:** The ESPHome forensic probe is project-
+  controlled, but passive verification did not change it. Any coordinated
+  firmware, entity, SSE, authentication, or network change requires a separate
+  authorized and versioned ESPHome work unit.
+- **Untouched:** Device configuration and firmware; credentials; identities,
+  memberships, permissions, and ACLs; installed runtime and unit files; timers
+  and persistent activation; SolarAssistant monitor; Home Assistant; network;
+  databases; portal; retention code/default; and pre-existing evidence. No
+  duplicate collector or tmux supervisor was created.
+- **Recovery:** Preserve all three verification files as evidence. No runtime
+  rollback is required. Any evidence change, persistent ESP32 operation, device
+  change, or archive removal remains separately authorized.
+- **Related commit and push:** The documentation commit containing this entry is
+  titled `Record passive ESP32 runtime verification`; one normal fast-forward
+  push to `origin/main` is authorized after canonical safeguards pass.
+- **Next milestone:** Define the common telemetry observation, provenance,
+  source-lineage, timestamp, freshness, availability, and normalization contract
+  before production multi-source portal binding or reciprocal Home Assistant
+  integration. Persistent ESP32 operation remains an unmade owner decision.

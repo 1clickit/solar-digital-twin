@@ -96,6 +96,16 @@ depends on it. Avoid oversized logs, diffs, and heredocs. ChatGPT remains
 responsible for routine software-engineering judgment; do not transfer that
 burden to Chris.
 
+ChatGPT is the primary author and reviewer of commands Chris personally runs.
+Chris returns each observed result to ChatGPT and receives the next dependent
+step there. Codex may analyze or propose operational commands to ChatGPT, but
+does not maintain a parallel command-relay conversation with Chris unless
+ChatGPT explicitly delegates that role for a bounded work unit. Prefer compact
+commands because line wrapping, duplicated paste content, and surrounding
+prompt text can corrupt oversized terminal input. This presentation rule is
+separate from authorization: it does not divide one approved bounded operation
+into repeated approval gates or reduce repository-only Codex autonomy.
+
 ### Approved repository-only Codex work
 
 Codex operates under one complete bounded work unit at a time. Once Chris

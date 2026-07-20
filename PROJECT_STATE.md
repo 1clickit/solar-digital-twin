@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-ESP32 forensic-collector passive live-verification planning
+Common telemetry and provenance contract planning
 
 Next Task:
-Authorize one short finite passive ESP32 verification separately; no persistent operation.
+Define the common telemetry observation, lineage, timestamp, freshness, and normalization contract.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -32,12 +32,24 @@ main
   commit, code non-writability, and exact unit artifact. The unit is
   static/inactive/dead with no timer, trigger, activation symlink, or collector
   process; no credential, ESP32 evidence, device contact, start, or enablement
-  occurred
+  occurred during installation
 - The prior shared runtime is preserved at
   `/opt/solar-digital-twin.backup.20260720T205254Z`; rollback was not invoked.
   The fresh virtual environment installed successfully, with an unresolved
   maintenance warning that pinned `charset-normalizer==3.4.8` was yanked
   without a stated reason
+- The installed static service completed one authorized finite one-hour passive
+  verification on July 20, 2026 using the unchanged launcher and commit above.
+  The fixed endpoint returned HTTP `200`, zero redirects, and exact
+  `Content-Type: text/event-stream`. The run wrote 35,968 raw and 33,515
+  `esp32-frequency-v1` retained records plus a valid two-record manifest under
+  capture prefix `esp32_sse_20260720_214207Z`; schema, 17-entity allowlist,
+  fixed provenance, nondecreasing UTC timestamps, raw/retained ordering, file
+  ownership/modes, and payload-free journal validation passed
+- The finite run completed with `Result=success`, exit status 0, 9.599 seconds
+  CPU, 40.9 MiB peak memory, no swap, and zero restarts. The service returned
+  static/inactive/dead with no timer, trigger, process, credential path,
+  persistent activation, conservative output, or device/configuration change
 - The static ESP32 runtime/security review and implementation-ready plan are
   complete in `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. No collector,
   test, installer, unit, runtime, identity, permission, service, device,
@@ -46,8 +58,8 @@ main
   raw-before-retained ordering, per-retained-writer failure isolation,
   manifests, the default `esp32-frequency-v1` policy, redirect/proxy
   restrictions, content-type and input-size validation, and permanent/transient
-  failure classification. Actual device `Content-Type` and live compatibility
-  remain for the separately authorized passive phase
+  failure classification. Actual compatible `text/event-stream` response and
+  installed live behavior are now verified by the completed finite run
 - Owner review accepted the coordinated evidence as sufficient to establish
   repeated real aggregate AC-couple production collapse and recovery for the
   project's initial diagnostic baseline. No additional causal measurement is
@@ -55,10 +67,12 @@ main
 - Irradiance, local-dongle, sub-second disturbance, per-microinverter, and fan
   investigations remain decision-driven later possibilities, not active
   milestones
-- The next technical milestone is a separately authorized short, finite,
-  passive live verification. Persistent or long-duration operation remains a
-  later owner decision; the installed unit stays dormant until separately
-  authorized
+- The next technical milestone is a repository design for a common telemetry
+  observation, provenance, source-lineage, timestamp, freshness, availability,
+  and normalization contract before production multi-source portal binding or
+  reciprocal Home Assistant integration. Persistent or long-duration ESP32
+  operation remains an unmade owner decision; no timer or automatic operation
+  is authorized
 - Coordinated capture `solar-forensic-20260718T062127Z` was intentionally
   stopped through transient supervisor
   `solar-coordinated-solar-forensic-20260718T062127Z.service` after
@@ -215,6 +229,11 @@ main
 - EG4 and ESP32 forensic correlation design documented
 - ESPHome forensic logger config saved at `firmware/esphome/eg4_forensic_probe_v3.yaml`
 - ESPHome Wi-Fi secrets protected with `firmware/esphome/secrets.yaml` ignored by Git
+- The ESP32 forensic probe is project-controlled and was built collaboratively
+  with ESPHome. Firmware, entities, SSE behavior, authentication, and network
+  configuration may be deliberately revised only in a separately authorized,
+  versioned ESPHome work unit; the passive verification passed without any
+  device or firmware change
 - ESP32 forensic logger configured and OTA-updated for static IPv4 `192.168.3.13`
 - ESP32 forensic logger configured to prefer LAN NTP server `192.168.3.11`
 - ESP32 NTP requests to `solardt` verified with `chronyc clients`; forensic log uses the same Central-time basis

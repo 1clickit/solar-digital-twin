@@ -11,14 +11,14 @@ The repository contains the hardened collector, focused tests, a credentialless
 runtime installer, a fixed-provenance launcher, and a dormant systemd unit.
 Installation and metadata-only verification completed successfully on
 `solardt` from commit `7f2274b9011c4bb85f3099eb80c8bb86a21f0e04`.
-No service was started or enabled, no evidence was created, and no device was
-contacted.
+During installation, no service was started or enabled, no evidence was
+created, and no device was contacted.
 
 The future work is separated into four gates:
 
 1. repository-only implementation — **complete**;
 2. separately approved installation on `solardt` — **complete**;
-3. separately approved short passive live verification; and
+3. separately approved short passive live verification — **complete**; and
 4. a later owner decision for persistent or long-duration operation.
 
 Approval of one gate does not authorize another.
@@ -43,8 +43,29 @@ zero. No ESP32 credential path exists.
 
 The installed unit exactly matches the repository artifact and is
 `root:root 0644`, static, inactive, and dead. It has no timer, trigger,
-activation symlink, automatic start path, or collector process. Actual device
-`Content-Type` and live compatibility remain for the passive-verification gate.
+activation symlink, automatic start path, or collector process.
+
+## Passive live-verification result
+
+On July 20, 2026, a minimal header-only probe to the fixed credentialless URL
+returned HTTP `200`, exact `Content-Type: text/event-stream`, the unchanged
+final URL, and zero redirects without printing or retaining a body. The
+installed static service then ran exactly once through its unchanged 3,600-
+second `current` launcher as `solardt-telemetry`.
+
+Capture `esp32_sse_20260720_214207Z` completed successfully with 35,968 raw and
+33,515 `esp32-frequency-v1` retained records. Its manifest contained one start
+and one clean completion record with stop reason `duration` and installed
+collector version `7f2274b9011c4bb85f3099eb80c8bb86a21f0e04`. JSON/schema,
+fixed source URL, 17-entity allowlist, nondecreasing UTC receipt time,
+raw/retained byte identity and ordering, ownership/modes, and payload-free
+journal checks passed. No conservative or canary output was created.
+
+The service finished with result success, exit status 0, 9.599 seconds CPU,
+40.9 MiB peak memory, no swap, and zero restarts. It returned static,
+inactive, and dead with no timer, trigger, process, credential path, or
+automatic activation. No firmware, ESPHome, network, authentication, or device
+configuration changed. Evidence is preserved under the installed evidence path.
 
 ## Repository implementation result
 
@@ -76,8 +97,9 @@ explicitly accepts it after inspection. The unit has a fixed one-hour
 foreground invocation, `Restart=no`, no timer, and no `[Install]` target.
 
 The actual device `Content-Type`, installed account/path state, shared-runtime
-compatibility, and host resource headroom remain unverified until later
-authorized phases. No production resource limits were invented.
+compatibility, and one-hour resource behavior are verified as recorded above.
+No production resource limits were invented, and persistent operation remains
+an unmade owner decision.
 
 ## 1. Objective and non-objectives
 
@@ -344,14 +366,12 @@ The administrator-operated check, legacy-runtime inspection, archive-first
 installation, and metadata-only verification passed. The unit remained static
 and inactive and no device was contacted.
 
-### Passive verification
+### Passive verification — complete
 
-A later authorization may perform one short, finite, read-only connection to
-the ESP32. Verify fixed-destination connectivity, status/content-type
-compatibility, output ownership/modes, allowlist, timestamps, raw and current-
-retained writes, manifest start/terminal state, clean stop, payload-free logs,
-no credential use, and no device/configuration change. Preserve and inventory
-the resulting evidence; do not silently delete a failed partial run.
+The separately authorized header probe and exact one-hour installed service run
+passed fixed-destination, status/content-type, output, allowlist, timestamp,
+raw/current-retained, manifest, clean-stop, payload-free log, credentialless,
+and dormant-state gates. The resulting evidence is preserved.
 
 ### Persistent or long capture
 
@@ -445,9 +465,9 @@ and validate from synthetic fixtures before any later passive run.
 
 ## Remaining decisions and uncertainties
 
-- The passive phase must record the device's actual `Content-Type` parameters.
-- The implementation unit should confirm that 1 MiB safely exceeds legitimate
-  observed fixture/event size before fixing the bound.
-- Resource limits require measured Python/runtime and prior-capture headroom.
+- The 1 MiB input ceiling remains deliberately conservative; the passive run
+  validated ordinary device events but did not exercise near-limit input.
+- The one-hour run measured normal resource behavior, but any future persistent
+  limits still require owner review and appropriate headroom.
 - Any future shared telemetry source must be reclassified by maximum effective
   authority before joining `solardt-telemetry`.

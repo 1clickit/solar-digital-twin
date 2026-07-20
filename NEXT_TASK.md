@@ -2,67 +2,58 @@
 
 ## Objective
 
-Prepare and separately authorize one short, finite, passive live verification
-of the installed ESP32 forensic-collector runtime on `solardt`. This task
-definition does not authorize device contact or service activation.
+Define a common telemetry observation, provenance, source-lineage, timestamp,
+freshness, availability, and normalization contract before production multi-
+source portal binding or reciprocal Home Assistant integration.
 
 ## Accepted repository baseline
 
-The repository implementation in
-`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md` is complete and offline-tested.
-It includes hardened HTTP/SSE behavior, focused regression tests,
-`scripts/install_esp32_runtime.sh`, a fixed-provenance finite launcher, and a
-dormant `systemd/esp32-forensic-collector.service` with no timer or activation
-target. The current default remains `esp32-frequency-v1`.
-
-The runtime and dormant unit from commit
-`7f2274b9011c4bb85f3099eb80c8bb86a21f0e04` are installed and metadata-
-verified. `solardt-telemetry`, `/var/lib/solar-digital-twin/esp32`, reporter
-read-only access, the exact installed commit/unit, and static/inactive state
-passed verification. No credential or evidence file exists, no timer or
-automatic activation path exists, and no device was contacted. The actual
-ESP32 `Content-Type` and live compatibility remain unknown.
+Repository hardening, runtime installation, metadata verification, and one
+finite one-hour passive ESP32 live verification are complete. The actual fixed
+endpoint returned HTTP `200`, zero redirects, and `text/event-stream`; 35,968
+raw and 33,515 current-retained records passed schema, allowlist, provenance,
+UTC chronology, ordering, permission, manifest, and dormant-state validation.
+The unit remains static/inactive with no timer or automatic activation.
 
 ## Scope
 
-A new authorization should define one observed finite invocation and verify:
+A bounded repository design work unit should:
 
-1. installed commit and dormant pre-run state;
-2. fixed-destination connectivity and actual compatible SSE `Content-Type`;
-3. credentialless operation, approved allowlist, UTC receipt/provenance fields,
-   restrictive output ownership/modes, and raw/current-retained ordering;
-4. complete start/terminal manifest state, clean finite stop, payload-free
-   diagnostics, and preserved partial evidence on failure; and
-5. post-run inactive/static state with no timer or persistent operation.
-
-The resulting finite evidence must be inventoried and preserved even if live
-compatibility fails. Permanent HTTP/content-policy rejection must not be
-retried or worked around by weakening validation or changing the device.
+1. inventory existing EG4, SolarAssistant, ESP32, and relevant Home Assistant
+   observation and timestamp semantics from authoritative documentation;
+2. define canonical measurement identity, source, source lineage, transport,
+   receipt time, source time, units, availability, freshness, quality, and
+   normalization fields without silently merging incompatible sources;
+3. define how copied or exported values retain origin and avoid circular or
+   double-counted evidence;
+4. define source-specific adapters and acceptance gates before SQLite, portal,
+   or Home Assistant production binding; and
+5. keep `solardt` authoritative for aggregation and provenance while planning
+   selected read-only exports to Home Assistant.
 
 ## Protected boundary
 
-This document does not authorize root commands, user/group or permission
-changes, installation, daemon reload, unit changes, service start/enablement,
-live ESP32 contact, HTTP/SSE requests, capture, evidence creation, firmware,
-network, credential, Home Assistant, database, portal, or retention-policy
-changes. A new bounded owner authorization must explicitly cover the finite
-passive run and its evidence handling. Persistent or long-duration operation
-remains a later decision.
+This document authorizes no implementation by itself. It does not authorize
+runtime or service action, live contact, capture, evidence reads or changes,
+database/schema migration, portal binding, Home Assistant integration,
+credential, firmware/ESPHome, network, retention-policy, or persistent ESP32
+operation. Those remain separately bounded decisions.
 
 ## Success
 
-One finite credentialless run confirms actual compatible SSE response behavior,
-approved records/provenance, restrictive outputs, clean manifest closure, and
-safe stopping without device/configuration change. The unit returns inactive,
-no persistent activation is created, and all verification evidence is preserved.
+A reviewed contract defines explicit source and lineage semantics, compatible
+timestamp/freshness/availability rules, normalization boundaries, adapter
+responsibilities, and acceptance gates without changing production systems or
+weakening raw-evidence authority.
 
 ## Architectural sequence after hardening
 
-After installation and a separately authorized passive verification, define a
-common telemetry observation, provenance, source-lineage, timestamp, freshness,
-availability, and normalization contract before production multi-source portal
-binding or reciprocal Home Assistant integration. `solardt` remains the
-authoritative aggregation and provenance layer.
+After the contract is accepted, separately plan source adapters and production
+binding. `solardt` remains the authoritative aggregation and provenance layer;
+Home Assistant should eventually receive selected ESP32 forensic-frequency and
+related metrics from `solardt` rather than become duplicate direct ingestion
+once the exported path passes lineage, freshness, availability, restart, and
+interruption validation.
 
 ## Deferred Post-Project Investigations
 

@@ -27,6 +27,11 @@ not independently choose overall priorities or make consequential owner
 decisions about physical systems, spending, architecture, or security
 boundaries.
 
+For commands Chris must personally run, follow the canonical command-authoring
+and observed-result workflow in `CONTRIBUTING.md`. Codex may prepare operational
+commands for ChatGPT, but communicates them directly to Chris only when ChatGPT
+explicitly delegates that role for the bounded work unit.
+
 ## Bounded autonomy
 
 Once a bounded objective is authorized, Codex may proceed without duplicate
