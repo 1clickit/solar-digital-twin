@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Repository planning for ESP32 forensic-collector runtime and security hardening
+Repository-only ESP32 forensic-collector runtime and security hardening
 
 Next Task:
-Define and review one bounded repository-only ESP32 hardening work unit before implementation.
+Implement the reviewed ESP32 hardening plan in the repository without installation or live contact.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,6 +19,16 @@ solardt
 main
 
 ## Current Status
+- The static ESP32 runtime/security review and implementation-ready plan are
+  complete in `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. No collector,
+  test, installer, unit, runtime, identity, permission, service, device,
+  network, evidence, or retention behavior changed during planning
+- Source review confirmed that allowlisting, exclusive output creation,
+  raw-before-retained ordering, per-retained-writer failure isolation,
+  manifests, and the default `esp32-frequency-v1` policy are already protected.
+  HTTP redirect/proxy restrictions, content-type and input-size validation, and
+  permanent/transient failure classification remain implementation work;
+  installed identity state requires a later runtime verification
 - Owner review accepted the coordinated evidence as sufficient to establish
   repeated real aggregate AC-couple production collapse and recovery for the
   project's initial diagnostic baseline. No additional causal measurement is
@@ -28,8 +38,7 @@ main
   milestones
 - The next technical milestone is repository-only ESP32 forensic-collector
   runtime and security hardening. Repository implementation and later runtime
-  installation/live verification are separate bounded work units; neither is
-  authorized by the current planning task
+  installation/live verification remain separate bounded work units
 - Coordinated capture `solar-forensic-20260718T062127Z` was intentionally
   stopped through transient supervisor
   `solar-coordinated-solar-forensic-20260718T062127Z.service` after
@@ -526,9 +535,10 @@ Refresh command:
 
 ## Current Restrictions
 
-- The current planning task authorizes no ESP32 implementation, installation,
-  deployment, user/group or permission change, service action, live contact,
-  firmware change, capture, or network change
+- The next task is repository implementation only. It authorizes no
+  installation, deployment, user/group or permission change, service action,
+  live contact, firmware change, capture, credential, evidence, database, or
+  network change until a new bounded implementation work unit is approved
 - Do not change EG4 collector behavior, SQLite schema, Home Assistant
   integration, production retention policy, or other collectors without a new
   bounded work unit

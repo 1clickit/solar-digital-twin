@@ -19,6 +19,13 @@ availability transition occurred in the completed replay evidence; entry and
 restoration behavior therefore remains synthetically validated until observed
 in a future approved capture.
 
+Host runtime and HTTP/SSE hardening are separate from retention-policy design.
+`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md` preserves the current default
+and independent writers while planning destination, proxy, content-type,
+input-size, failure-classification, identity, file-mode, and dormant-service
+safeguards. That plan does not promote `esp32-conservative-v1` or authorize a
+new canary or capture.
+
 ## Decision and boundary
 
 The adopted conservative policy will be implemented as a versioned, opt-in

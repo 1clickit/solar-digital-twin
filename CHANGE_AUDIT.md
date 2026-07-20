@@ -708,3 +708,48 @@ or runtime change.
   candidates. It does not verify or implement ESP32 or SolarAssistant changes,
   automate safeguards in helper scripts, or authorize future implementation or
   runtime work.
+
+## 2026-07-20T19:51:24Z — Plan ESP32 collector runtime hardening
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Convert the accepted ESP32 hardening direction into an
+  implementation-ready repository plan while keeping repository implementation,
+  installation, passive live verification, and persistent operation as four
+  separately authorized phases.
+- **Static verification:** Current source and focused tests confirm the fixed
+  credentialless LAN HTTP endpoint and the absence of explicit redirect,
+  environment-proxy, content-type, input-size, and permanent/transient HTTP
+  handling. Allowlisting, exclusive output creation, raw-before-retained
+  ordering, retained-writer isolation, and the default `esp32-frequency-v1`
+  policy are already mitigated. Reconnect handling and logging are partially
+  supported; installed runtime identity remains a runtime-phase fact.
+- **Plan:** Added `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`, proposing the
+  shared credentialless `solardt-telemetry` identity, administrator-owned code
+  under `/opt/solar-digital-twin`, narrowly writable evidence under
+  `/var/lib/solar-digital-twin/esp32`, explicit HTTP/SSE safeguards, preserved
+  evidence semantics, a dormant service, an idempotent installer, acceptance
+  gates, and nondestructive recovery.
+- **Affected:** The new plan; `docs/ESP32_FORENSIC_TELEMETRY_PLAN.md`,
+  `docs/ESP32_RETENTION_PRODUCTION_PLAN.md`, `docs/SECURITY_MODEL.md`,
+  `PROJECT_INDEX.md`, `PROJECT_STATE.md`, `NEXT_TASK.md`, and this append-only
+  audit entry.
+- **Untouched:** Collector and retention source; tests; installers; systemd and
+  helper scripts; firmware; ESPHome; runtime files; identities; ownership,
+  permissions, ACLs, protected paths, services, processes, credentials,
+  networks, devices, Home Assistant, evidence, reports, databases, generated
+  artifacts, and retention behavior. No device was contacted and no capture
+  was started.
+- **Validation:** Complete source/test review and finding classification;
+  focused offline ESP32 tests; complete documentation diff and phase-boundary
+  review; sensitive-content, evidence, generated-artifact, and exact-file-scope
+  checks; `git diff --check`; repository health; exact staged-file review; and
+  remote/upstream/normal-fast-forward safeguards.
+- **Recovery:** Revert the single normal documentation commit. No runtime or
+  evidence rollback applies because this work only records a plan.
+- **Related commit and push:** The commit containing this entry is titled
+  `Plan ESP32 collector runtime hardening`; one normal fast-forward push to
+  `origin/main` is authorized after all safeguards pass.
+- **Limitations:** Actual installed identity, device response `Content-Type`,
+  an appropriate input ceiling, and production resource limits require later
+  focused implementation or separately approved runtime verification. The plan
+  does not authorize or perform those phases.

@@ -98,6 +98,11 @@ docs/EG4_FORENSIC_CORRELATION.md
 docs/ESP32_FORENSIC_TELEMETRY_PLAN.md
     Read-only ESPHome SSE collection and timestamp design.
 
+docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md
+    Static source/test findings and separately gated repository, installation,
+    passive-verification, and persistent-operation plan for a credentialless
+    unprivileged ESP32 collector runtime.
+
 docs/ESP32_RETENTION_ASSESSMENT.md
     Reproducible full-capture ESP32 retention measurements, candidate comparison, and policy recommendation.
 

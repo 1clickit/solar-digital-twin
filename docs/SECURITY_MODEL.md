@@ -106,7 +106,9 @@ reliable evidence proves technical read-only restriction.
 
 Preliminary classifications are:
 
-- ESP32 SSE telemetry: shared telemetry identity.
+- ESP32 SSE telemetry: shared credentialless telemetry identity. The planned
+  name is `solardt-telemetry`; it is not implemented or installed. See
+  `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`.
 - SolarAssistant: separate identity until the `admin` credential's effective authority is confirmed.
 - EG4 vendor access: separate identity unless a technically enforced read-only credential is identified.
 - Home Assistant: shared only with a verified restricted telemetry user or token; administrative tokens are excluded.

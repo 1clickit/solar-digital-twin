@@ -2,9 +2,10 @@
 
 ## Objective
 
-Define and review one bounded repository-only work unit for ESP32 forensic-
-collector runtime and security hardening. This planning task does not authorize
-implementation.
+Implement the reviewed ESP32 forensic-collector runtime and security hardening
+plan in one separately authorized repository-only work unit. The plan is
+`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`; this task definition does not
+itself begin implementation.
 
 ## Accepted baseline
 
@@ -16,37 +17,41 @@ investigations remain later decision-driven possibilities.
 
 ## Scope
 
-Prepare a future bounded authorization that may include:
+The future authorization should cover only the exact repository files and
+acceptance gates in sections 5–9 and 11–12 of the hardening plan. Expected work
+is:
 
-1. a dedicated unprivileged ESP32 telemetry runtime design with no credentials,
-   login shell, home directory, sudo, or device-control authority;
-2. administrator-owned deployed code and separately service-owned evidence
-   paths, without installing them in the repository implementation phase;
-3. explicit HTTP redirect and environment-proxy restrictions, response-type
-   validation, bounded SSE input lines, payload-free diagnostics, and clear
-   permanent-versus-temporary failure handling;
-4. predictable restrictive output modes while preserving the current raw
-   record format, allowlist, manifests, raw-before-retained ordering, retained-
-   writer isolation, and default `esp32-frequency-v1` policy;
-5. a reviewed dormant unit/launcher/installer design with nonprivileged checks,
-   metadata-only verification, rollback documentation, and focused tests; and
-6. an exact repository file scope, acceptance criteria, and validation plan.
+1. locally reverify current collector and focused-test behavior before editing;
+2. implement only the confirmed HTTP/SSE gaps: redirect rejection,
+   environment-proxy bypass, compatible content-type validation, a justified
+   line/event bound, permanent/transient failure classification, reliable
+   response closure, and payload-free diagnostics;
+3. preserve the existing URL, allowlist, record/timestamp schema, exclusive
+   creation, raw-first ordering, retained-writer isolation, manifests,
+   reconnect policy state, and default `esp32-frequency-v1` behavior;
+4. add focused collector regression tests;
+5. add a reviewed credentialless runtime installer with nonprivileged check,
+   install, and metadata-only verify designs, plus focused tests;
+6. add a dormant disabled/inactive systemd unit with no timer, no automatic
+   contact, restrictive identity/filesystem settings, and semantic tests; and
+7. update only directly related documentation, project state, index, and the
+   append-only audit.
 
-Static observations from the strategic review are candidates, not verified
-implementation requirements. The future implementation work must inspect the
-current local code and tests before adopting or correcting any candidate.
+The implementation must not adopt an unsupported static observation. Identity
+installation state and actual device `Content-Type` remain runtime-phase facts.
 
 ## Protected boundary
 
-This planning task authorizes no repository implementation, installation,
-deployment, user/group creation, ACL or permission change, service creation or
-activation, runtime action, live ESP32 contact, device query, firmware change,
-capture, credential access, network change, database migration, evidence
-change, or retention-policy promotion.
+This task definition requires a new bounded authorization before repository
+implementation begins. Even then, it must not authorize installation,
+deployment, package installation on the host, user/group creation, ACL or
+permission change, daemon reload, service start/enable, runtime action, live
+ESP32 contact, device query, firmware change, capture, credential access,
+network change, database migration, evidence change, portal work, or retention-
+policy promotion.
 
-Repository implementation requires a new bounded authorization. Runtime
-installation and a short passive live verification require a later, separate
-authorization after the repository implementation is committed and reviewed.
+Installation and short passive live verification require separate later
+authorizations after repository implementation is committed and reviewed.
 
 ## Architectural sequence after hardening
 
@@ -64,9 +69,10 @@ removed until a selected `solardt` export is implemented and validated.
 
 ## Success
 
-Chris receives one concise, locally grounded ESP32 repository-hardening work
-unit with exact scope, exclusions, tests, recovery, and a separate runtime-
-verification boundary, ready for explicit authorization.
+The repository contains tested collector safeguards, a reviewed installer and
+dormant unit, updated documentation and recovery, and proof that current
+evidence/retention semantics remain unchanged—without any installation,
+runtime action, or device contact.
 
 ## Deferred Post-Project Investigations
 
