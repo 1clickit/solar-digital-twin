@@ -49,11 +49,12 @@ major cost, or project direction.
 
 Codex performs bounded repository, testing, documentation, and offline-analysis
 work directed by the ChatGPT project lead. Within an authorized work unit it
-may inspect, edit, test, correct, validate, and create the validated local
-commit. It does not independently determine overall priorities or make owner
-decisions about the physical system, spending, architecture, security
-boundaries, or other consequential matters. It respects the scope and risk
-boundaries of every work unit and reports results for review.
+may complete the validated repository cycle defined in `CONTRIBUTING.md`
+without transferring routine engineering decisions back to Chris. It does not
+independently determine overall priorities or make owner decisions about the
+physical system, spending, architecture, security boundaries, or other
+consequential matters. It respects the scope and protected boundaries of every
+work unit and reports results for review.
 
 ## Team principles
 

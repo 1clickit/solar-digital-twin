@@ -2,60 +2,71 @@
 
 ## Objective
 
-Review the completed coordinated three-source findings with Chris and decide
-whether the evidence is sufficient or one narrowly targeted follow-up
-measurement is justified. Do not activate a capture or measurement during the
-review.
+Define and review one bounded repository-only work unit for ESP32 forensic-
+collector runtime and security hardening. This planning task does not authorize
+implementation.
 
-## Context
+## Accepted baseline
 
-The authoritative result is `docs/COORDINATED_CAPTURE_CORRELATION.md`, with the
-compact event/control table at
-`docs/capture_analyses/solar-forensic-20260718T062127Z-events.tsv` and the
-detailed battery review at
-`docs/capture_analyses/solar-forensic-20260718T062127Z-battery-cell-review.md`.
-
-The primary detector found five zero-output and two partial-collapse events.
-ESP32 power corroborates real aggregate AC-couple loss/rejoin, but ordinary
-controls show the same small frequency excursions and rolling frequency-event
-text. No availability transition occurred. Two events have larger near-anchor
-voltage excursions. Trusted battery context makes charge/SOC constraints
-plausible for several events but not sufficient to explain all of them.
-
-The follow-up cell review found only small event-anchor imbalance and no
-positive JK overvoltage-protection signature. Because SolarAssistant did not
-export MOS/protection state, an unobserved transient cannot be absolutely
-excluded, but JK BMS protection is poorly supported for any event and is not a
-supported common explanation for all seven.
-
-The remaining investigation centers on EG4 AC-couple control, microinverter
-response, independent irradiance, or a sub-second AC disturbance. The evidence
-cannot distinguish these possibilities or identify an individual
-microinverter. Correlation does not establish causation.
+The coordinated evidence is sufficient to establish repeated real aggregate
+AC-couple production collapse and recovery for the project's initial
+diagnostic baseline. No additional causal measurement is selected now.
+Irradiance, local-dongle, sub-second disturbance, per-microinverter, and fan
+investigations remain later decision-driven possibilities.
 
 ## Scope
 
-1. Review the seven event summaries, three controls, fixed sensitivity result,
-   evidence limitations, and owner questions.
-2. Decide whether the result is already sufficient for the next owner decision.
-3. If more evidence is necessary, select only one smallest useful next step:
-   a targeted synchronized capture that adds an independent discriminator, a
-   separately gated local-dongle one-shot measurement only if it exposes useful
-   new control state safely, or no additional measurement.
-4. Keep Home Assistant, MQTT, policy promotion/retirement, and unrelated portal
-   work outside this decision.
+Prepare a future bounded authorization that may include:
 
-## Runtime boundary
+1. a dedicated unprivileged ESP32 telemetry runtime design with no credentials,
+   login shell, home directory, sudo, or device-control authority;
+2. administrator-owned deployed code and separately service-owned evidence
+   paths, without installing them in the repository implementation phase;
+3. explicit HTTP redirect and environment-proxy restrictions, response-type
+   validation, bounded SSE input lines, payload-free diagnostics, and clear
+   permanent-versus-temporary failure handling;
+4. predictable restrictive output modes while preserving the current raw
+   record format, allowlist, manifests, raw-before-retained ordering, retained-
+   writer isolation, and default `esp32-frequency-v1` policy;
+5. a reviewed dormant unit/launcher/installer design with nonprivileged checks,
+   metadata-only verification, rollback documentation, and focused tests; and
+6. an exact repository file scope, acceptance criteria, and validation plan.
 
-This is an owner-review task. It authorizes no device query, LAN request,
-credential access, service/runtime action, capture, firmware/configuration
-change, local-dongle contact, or physical-system manipulation.
+Static observations from the strategic review are candidates, not verified
+implementation requirements. The future implementation work must inspect the
+current local code and tests before adopting or correcting any candidate.
+
+## Protected boundary
+
+This planning task authorizes no repository implementation, installation,
+deployment, user/group creation, ACL or permission change, service creation or
+activation, runtime action, live ESP32 contact, device query, firmware change,
+capture, credential access, network change, database migration, evidence
+change, or retention-policy promotion.
+
+Repository implementation requires a new bounded authorization. Runtime
+installation and a short passive live verification require a later, separate
+authorization after the repository implementation is committed and reviewed.
+
+## Architectural sequence after hardening
+
+After validated ESP32 repository and runtime phases, define a common telemetry
+observation, provenance, source-lineage, timestamp, freshness, availability,
+and normalization contract before production multi-source portal binding or
+reciprocal Home Assistant integration. `solardt` remains authoritative for
+aggregation and provenance; HA, direct EG4, EG4 cloud, SolarAssistant, and
+ESP32 measurements must remain separately identifiable.
+
+HA-derived EG4 provenance remains
+`Home Assistant → EG4 Web Monitor hybrid mode`; per-entity local-dongle versus
+cloud lineage remains unproven. Home Assistant's direct ESPHome path must not be
+removed until a selected `solardt` export is implemented and validated.
 
 ## Success
 
-Chris receives the evidence-backed conclusion and uncertainties, and explicitly
-chooses whether the evidence is sufficient or which single targeted measurement
-is justified. Any selected operational step receives a new bounded work unit.
+Chris receives one concise, locally grounded ESP32 repository-hardening work
+unit with exact scope, exclusions, tests, recovery, and a separate runtime-
+verification boundary, ready for explicit authorization.
 
 ## Deferred Post-Project Investigations
 

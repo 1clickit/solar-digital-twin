@@ -17,12 +17,14 @@ Before ending a work session, confirm:
 
 ## Repository
 
-- Intended files only were staged and committed.
+- Intended files only were staged, committed, and published when the approved
+  repository work unit included the canonical completion cycle.
 - `git status --short` was reviewed.
-- Clean milestone commits were pushed under project-lead direction and
-  local/remote synchronization was verified.
-- A local commit that is intentionally awaiting a milestone push is clearly
-  documented; it is not mislabeled as lost or incomplete work.
+- The automatic-publication safeguards and required completion report in
+  `CONTRIBUTING.md` were satisfied, or the exact stop condition was recorded.
+- Local/remote synchronization was verified after any push. A deliberately
+  narrower work unit that stopped after a local commit is documented clearly;
+  it is not mislabeled as lost or incomplete work.
 
 ## Knowledge transfer
 

@@ -9,17 +9,20 @@ deferred until explicitly promoted and approved.
 
 ### Collector Hardening and History
 - Implement approved SolarAssistant meaningful-change deadbands only after a longer evidence capture, renewed assessment, and project-owner approval.
-- After the current controlled approximately 24-hour SolarAssistant capture, inspect raw and retained evidence integrity and storage growth, then renew the deadband assessment. Preserve complete raw and separate retained evidence; document naturally absent operating conditions rather than manipulating equipment.
+- Renew SolarAssistant deadband analysis from the completed 24-hour evidence
+  only after a separate local-verification work unit confirms the static
+  collector observations and defines the analysis scope. Preserve complete raw
+  and separate retained evidence; do not manipulate equipment to create states.
 - Complete later SolarAssistant persistent-service work only after runtime installation, credential installation, manual live verification, evidence capture, and deadband review are separately approved.
 - Normalize SolarAssistant and ESP32 history into SQLite after standalone collectors are hardened.
 - Add rolling raw buffers and automatic pre-event, event, and post-event preservation.
 - Integrate trusted JK BMS and ESP32 data into the primary engineering portal.
 
 ### Home Assistant Integration
-- Follow `docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md` after the active capture
-  and first analysis: inventory HA/topology, assess the local EG4 candidate,
-  validate imported telemetry, then design a LAN-only read-only export without
-  replacing authoritative evidence/history or enabling control.
+- The bounded GET-only import method is validated in
+  `docs/EG4_HOME_ASSISTANT_TELEMETRY.md`. Production import/export remains
+  deferred until the common provenance contract exists; do not replace
+  authoritative evidence/history, enable control, or count copied data twice.
 
 ### Portal Improvements
 - Add a future secured `Refresh data now` workflow so F5 or an explicit portal control can request one bounded EG4 collection, report, and portal-generation cycle before displaying newly generated data. Prevent overlapping jobs, rapid repeated requests, uncontrolled command execution, and credential exposure; report in-progress, success, failure, and last-completed status clearly.
@@ -46,10 +49,10 @@ deferred until explicitly promoted and approved.
 
 See `docs/EG4_FORENSIC_CORRELATION.md` for the detailed design note.
 
-## Rules
-- One small, tested commit at a time.
-- Keep main clean.
-- Documentation is the source of truth.
+## Workflow
+
+`NEXT_TASK.md` defines current work. `CONTRIBUTING.md` is canonical for bounded
+workflow, approvals, protected boundaries, commits, and pushes.
 
 ## Future Workflow Improvements
 

@@ -43,9 +43,10 @@ host or system directly.
 3. Complete one bounded, risk-calibrated, tested objective.
 4. Update authoritative documentation and `CHANGE_AUDIT.md` for persistent
    changes.
-5. Create the validated local commit when authorized by the work unit.
-6. Push at a clean milestone under project-lead direction and verify sync.
-7. Leave enough documentation for a fresh session to continue safely.
+5. Complete any authorized commit, normal fast-forward publication, and
+   synchronization verification under the canonical safeguards in
+   `CONTRIBUTING.md`.
+6. Leave enough documentation for a fresh session to continue safely.
 
 ## Engineering philosophy
 

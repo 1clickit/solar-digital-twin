@@ -33,10 +33,10 @@ Once a bounded objective is authorized, Codex may proceed without duplicate
 confirmation through every explicitly included activity: inspection, in-scope
 edits, temporary non-evidence working files, tests and linters, defect
 correction, repository health checks, validation, directly related
-documentation, exact staging, an authorized local commit, and a normal push
-when expressly authorized. It must not ask again for an action already
-authorized within that work unit or make Chris routinely reconfirm technical
-decisions ChatGPT has already bounded.
+documentation, and the authorized repository completion cycle defined in
+`CONTRIBUTING.md`. It must not ask again for an action already authorized
+within that work unit or make Chris routinely reconfirm technical decisions
+ChatGPT has already bounded.
 
 Codex may perform ordinary read-only repository, non-secret telemetry,
 completed-evidence, report, metadata/hash, strict read-only database, approved
@@ -101,6 +101,6 @@ failure must stop safely rather than trigger account or device changes.
 Run relevant focused tests, `./scripts/repo_health_check.sh`, `git diff --check`,
 and `git status --short`. Before completion, append the persistent change to
 `CHANGE_AUDIT.md`, including validation and recovery information. Stage only
-validated in-scope files and create the local commit when the bounded work unit
-authorizes it. Push only at a clean milestone under the project lead's
-direction; never force-push under routine authority.
+validated in-scope files. Follow the canonical commit, normal-push safeguards,
+stop conditions, and completion-report requirements in `CONTRIBUTING.md`;
+never force-push under routine authority.

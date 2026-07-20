@@ -36,13 +36,23 @@ TEAM.md
     Chris, ChatGPT, and Codex roles and working relationship.
 
 CONTRIBUTING.md
-    Risk, approval, preservation, audit, Git, and engineering workflow policy.
+    Sole detailed canonical policy for workflow, risk and approval classes,
+    preservation, audit, bounded Codex completion, commits, pushes, protected
+    operational boundaries, and post-push verification.
 
 PROJECT_STATE.md
     Current engineering status.
 
 NEXT_TASK.md
     Exactly where development resumes.
+
+PROJECT_CONTEXT.md
+    Long-lived mission, architecture, and engineering principles; workflow
+    details defer to CONTRIBUTING.md.
+
+PROJECT_STATUS.md
+    Superseded early July 7 status pointer retained for historical navigation;
+    not current authority.
 
 BACKLOG.md
     Future work and deferred ideas.

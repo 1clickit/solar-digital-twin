@@ -63,9 +63,9 @@ SQLite is the primary engineering database.
 
 ## Engineering Practices
 
-One tested change at a time.
-
-One logical commit at a time.
+Use one bounded logical objective and one coherent validated commit at a time.
+`CONTRIBUTING.md` is canonical for workflow, approvals, protected boundaries,
+commits, and pushes.
 
 Document important decisions.
 
@@ -89,4 +89,3 @@ understandable months or years later.
 
 The objective is continuous knowledge capture
 through the repository.
-

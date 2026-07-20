@@ -654,3 +654,57 @@ or runtime change.
 - **Limitations:** Home Assistant polling cadence is not source cadence;
   per-entity local-dongle/cloud lineage remains unproven; no fan command, RPM,
   PWM/duty, current, or acoustic evidence was captured.
+
+## 2026-07-20T19:24:32Z — Consolidate workflow authority and project direction
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Reduce routine software relay burden by making one coherent
+  bounded repository workflow canonical, and record the owner-accepted
+  diagnostic baseline and next technical direction.
+- **Affected:** `CONTRIBUTING.md`, `START_HERE.md`, `AGENTS.md`, `TEAM.md`,
+  `SESSION_END.md`, `PROJECT_STATE.md`, `NEXT_TASK.md`, `PROJECT_CONTEXT.md`,
+  `BACKLOG.md`, `PROJECT_STATUS.md`, `PROJECT_INDEX.md`, and this append-only
+  audit entry. `AI_PROMPT.md` was reviewed and already provided the required
+  concise audience-specific behavior, so it was not changed.
+- **Authority change:** Explicit approval of a clearly bounded repository-only
+  work unit now authorizes uninterrupted inspection, in-scope edits,
+  correction, validation, directly related documentation, exact staging, one
+  normal local commit, one normal fast-forward push to expected `origin/main`,
+  and published-result verification when all canonical safeguards pass.
+  `CONTRIBUTING.md` is the sole detailed current authority.
+- **Supersession:** Active requirements for separate routine local-commit or
+  normal-push approval are superseded. Historical audit entries recording older
+  approval boundaries remain unchanged as historical evidence and are not
+  current authority. Destructive or exceptional Git operations remain gated.
+- **Repository/runtime separation:** Repository completion authority grants no
+  installation, deployment, runtime, service, timer, process, identity,
+  permission, credential, network, firmware, device, database-migration,
+  evidence, or physical-system authority.
+- **Strategic direction:** The coordinated evidence is accepted as sufficient
+  to establish repeated real aggregate AC-couple collapse and recovery for the
+  initial baseline; no additional causal measurement is selected. The next
+  task is planning a separately authorized repository-only ESP32 runtime and
+  security hardening work unit, followed later by separately approved runtime
+  verification and then a common telemetry/provenance contract.
+- **Historical preservation:** Prior audit entries were not edited.
+  `PROJECT_STATUS.md` now identifies its July 7 content as superseded and
+  points to current authority while preserving full history in Git.
+- **Untouched:** Source, tests, helper and runtime scripts, systemd files,
+  collectors, analyzers, portal code/prototype/output, firmware, evidence,
+  reports, databases, caches, backups, credentials, services, devices,
+  networking, users/groups, permissions, and all runtime state.
+- **Validation:** Complete diff and active-policy phrase review; current-state
+  and next-task consistency checks; exact changed/staged-file review;
+  sensitive-content, evidence, generated-artifact, and protected-path checks;
+  `git diff --check`; repository health check; remote/upstream/divergence and
+  normal-fast-forward verification; fetch-based post-push synchronization and
+  independent published-commit verification.
+- **Recovery:** Revert the single normal documentation commit. No operational
+  or evidence rollback applies because no protected boundary was crossed.
+- **Related commit and push:** The commit containing this entry is titled
+  `Consolidate workflow authority and project direction`; one normal
+  fast-forward push to `origin/main` is authorized after all safeguards pass.
+- **Limitations:** This work records static collector observations only as
+  candidates. It does not verify or implement ESP32 or SolarAssistant changes,
+  automate safeguards in helper scripts, or authorize future implementation or
+  runtime work.

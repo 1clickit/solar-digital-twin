@@ -43,7 +43,10 @@ ChatGPT classifies actions by actual risk and explains material risk plainly.
 After Chris authorizes a bounded objective, ChatGPT may direct Codex through
 the complete work cycle without repeated approval: authorized reads and
 telemetry inspection, in-scope edits, tests, corrections, validation, related
-documentation, exact staging, and the validated local commit.
+documentation, exact staging, one validated local commit, one normal
+fast-forward push to the expected `origin/main`, and published-result
+verification when the work unit is repository-only and every safeguard in the
+canonical workflow below passes.
 
 ### Standing read-only authority
 
@@ -86,26 +89,63 @@ and work Codex performs locally.
 
 ### Manual operation by Chris
 
-“One actionable step at a time” primarily governs commands or consequential
-actions Chris must personally perform. Give one clear actionable step, name the
-exact host and shell, and pause for the observed result when the next action
-depends on it. ChatGPT remains responsible for routine software-engineering
-judgment; do not transfer that burden to Chris.
+When Chris personally performs commands, give one manageable actionable step
+at a time, immediately name the exact host and shell, and use a compact
+executable command block. Pause for the observed result when the next action
+depends on it. Avoid oversized logs, diffs, and heredocs. ChatGPT remains
+responsible for routine software-engineering judgment; do not transfer that
+burden to Chris.
 
-### Complete bounded Codex work units
+### Approved repository-only Codex work
 
 Codex operates under one complete bounded work unit at a time. Once Chris
 authorizes it, Codex proceeds uninterrupted through every activity explicitly
-included in that unit. This may include authorized repository reads and
-inspection, in-scope edits, temporary non-evidence working files, tests,
-linters, repository health checks, validation, directly related documentation,
-staging only the approved files, a specifically authorized local commit, and a
-normal push when the work unit expressly authorizes it.
+included in that repository-only unit: inspection, in-scope tracked-file
+edits, correction of in-scope defects, relevant tests and validation, directly
+related documentation, exact staging of understood files, one normal local
+commit, one normal fast-forward push to the expected `origin/main`, and
+published-result verification. Approval of the bounded repository work unit
+includes these ordinary completion actions when every safeguard below passes;
+they do not require separate routine confirmation.
 
 Codex must not request repeated permission for an already-authorized activity.
 Chris should not be placed in a routine “press Y” role after ChatGPT has already
 classified the action, scope, and safeguards. This autonomy never expands the
-work unit or bypasses execution-environment security controls.
+approved purpose or files, transfers routine engineering decisions to Chris,
+or bypasses execution-environment security controls.
+
+### Repository and operational authority
+
+Repository authorization does not grant deployment or live-runtime authority.
+It does not authorize installation; runtime, service, timer, process,
+user/group, ACL, permission, or configuration changes; credential or protected
+file access; network or firmware changes; device control or queries; database
+migrations; evidence changes; destructive Git operations; or physical-system
+work. Those actions remain governed by their applicable one-approval or
+always-gated class and must be explicitly included in a separate bounded work
+unit.
+
+### Automatic publication safeguards
+
+Before the authorized normal commit and push, Codex must confirm that:
+
+- the work remains entirely within the approved purpose and file scope;
+- the starting working tree and every resulting change are understood;
+- all required validation passes;
+- only intended files are staged;
+- no credential, token, authorization header, protected path, or other
+  sensitive material is present;
+- no raw evidence, generated report or portal output, database, cache, backup,
+  or other unexpected artifact is included;
+- the expected remote remains `origin`, the target remains `origin/main`, and
+  the configured remote URL is unchanged and expected;
+- local and remote history have not unexpectedly diverged and the push is a
+  normal fast-forward; and
+- no protected operational action occurred.
+
+If any safeguard fails, Codex stops before commit or push and reports the exact
+condition. An explicitly narrower work unit may still direct Codex to stop
+with uncommitted changes or after the local commit.
 
 ### Escalation boundary
 
@@ -122,8 +162,8 @@ Codex stops and returns the exact condition when:
   handling;
 - raw evidence would be modified, deleted, normalized in place, or overwritten;
 - a database migration or destructive database operation is required;
-- an unapproved commit or push, or any amend, reset, rebase, merge, force-push,
-  destructive Git action, or history rewrite is required; or
+- an automatic-publication safeguard fails, or any amend, reset, rebase,
+  merge, force-push, destructive Git action, or history rewrite is required; or
 - continuing would otherwise become unsafe or materially ambiguous.
 
 Chris returns the exact stopped request and surrounding context to ChatGPT.
@@ -156,6 +196,14 @@ Interface and session history may be transient. It is not durable project
 evidence unless a documented retention mechanism preserves it. Git and the
 repository audit are the durable project records; evidence-specific provenance
 remains governed by its own immutable records.
+
+### Required completion report
+
+After an authorized normal push, Codex reports the full commit hash and
+subject; every included file; tests and validation; local `HEAD`;
+`origin/main`; ahead/behind and working-tree status; confirmation that the push
+was a normal fast-forward and no protected boundary was crossed; and an
+independent published-repository verification when practical.
 
 ## Preservation: archive instead of delete
 
@@ -208,10 +256,11 @@ contents, secret arguments, or sensitive runtime output.
 
 A validated local commit is part of an authorized bounded work unit. Codex
 stages only validated in-scope files. Prefer one tested commit per logical
-change. Pushes occur at clean milestone boundaries under project-lead direction,
-are never forceful under routine authority, and are followed by local/remote
-synchronization verification. Destructive or exceptional Git operations remain
-always gated.
+change. For an approved repository-only work unit, the canonical workflow above
+authorizes one normal fast-forward push when every safeguard passes. Pushes are
+never forceful under routine authority and are followed by fetch-based
+local/remote synchronization verification. Destructive or exceptional Git
+operations remain always gated.
 
 ## Recovery
 

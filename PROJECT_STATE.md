@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Owner review of coordinated-capture findings and follow-up measurement decision
+Repository planning for ESP32 forensic-collector runtime and security hardening
 
 Next Task:
-Review the seven correlated production-collapse candidates and decide whether one targeted follow-up measurement is justified.
+Define and review one bounded repository-only ESP32 hardening work unit before implementation.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,6 +19,17 @@ solardt
 main
 
 ## Current Status
+- Owner review accepted the coordinated evidence as sufficient to establish
+  repeated real aggregate AC-couple production collapse and recovery for the
+  project's initial diagnostic baseline. No additional causal measurement is
+  selected now
+- Irradiance, local-dongle, sub-second disturbance, per-microinverter, and fan
+  investigations remain decision-driven later possibilities, not active
+  milestones
+- The next technical milestone is repository-only ESP32 forensic-collector
+  runtime and security hardening. Repository implementation and later runtime
+  installation/live verification are separate bounded work units; neither is
+  authorized by the current planning task
 - Coordinated capture `solar-forensic-20260718T062127Z` was intentionally
   stopped through transient supervisor
   `solar-coordinated-solar-forensic-20260718T062127Z.service` after
@@ -73,8 +84,8 @@ main
 - Aggregate evidence cannot distinguish cloud/irradiance variation, inverter
   AC-couple control behavior, microinverter response, irradiance variation, or
   a sub-second AC disturbance, nor can it identify an individual microinverter.
-  Owner review must decide whether a targeted measurement adds enough
-  independent evidence to justify its cost and risk
+  These limitations remain, but no further causal measurement is selected for
+  the initial baseline
 - `esp32-frequency-v1` remains the current policy. The separate
   `esp32-conservative-v1` output is an explicit canary evaluation only
 - Home Assistant is a separate VM on the Proxmox host at static
@@ -111,6 +122,19 @@ main
   mode`; local-dongle versus cloud lineage is unproven per entity. Home
   Assistant, SolarAssistant, and direct-EG4 values must remain separately
   identified, with `solardt` as the authoritative aggregation/provenance layer
+- Home Assistant should eventually receive validated selected ESP32 and
+  related telemetry from `solardt`. Its existing direct ESPHome path remains
+  until the replacement survives explicit lineage, freshness, availability,
+  restart, and interruption validation
+- After ESP32 hardening, define a common telemetry observation, provenance,
+  source-lineage, timestamp, freshness, availability, and normalization
+  contract before production multi-source portal binding or reciprocal Home
+  Assistant integration. Never silently merge or substitute HA, direct EG4,
+  EG4 cloud, SolarAssistant, or ESP32 measurements
+- Strategic-review observations about SolarAssistant append behavior,
+  retained-output failure handling, and other static collector details are
+  candidates only. They are not implementation requirements until verified
+  locally in their own bounded work unit
 - HA directly integrates `EG4 Forensic Probe v3` at `192.168.3.13`, with
   approximately 21 entities; an old frequency dashboard has stale/missing
   references. Do not remove it until reboot behavior and the preferred
@@ -500,11 +524,14 @@ reports/eg4_portal.html
 Refresh command:
 ./eg4_refresh_report.sh
 
-## Do Not Change Yet
-- EG4 collector behavior
-- SQLite schema
-- Home Assistant integration
-- Additional collectors
+## Current Restrictions
+
+- The current planning task authorizes no ESP32 implementation, installation,
+  deployment, user/group or permission change, service action, live contact,
+  firmware change, capture, or network change
+- Do not change EG4 collector behavior, SQLite schema, Home Assistant
+  integration, production retention policy, or other collectors without a new
+  bounded work unit
 
 ## Startup Command
 cd /home/chris/solar-digital-twin
@@ -512,9 +539,7 @@ source .venv/bin/activate
 ./status.sh
 
 ## Workflow
-- One tested step at a time.
-- Test before every commit.
-- Commit every completed milestone.
-- Keep main clean.
-- Push clean milestone commits under project-lead direction and verify sync.
-- Engineering Bible is the design authority.
+
+`CONTRIBUTING.md` is canonical for workflow, approvals, protected boundaries,
+commits, pushes, and verification. The Engineering Bible remains the design
+authority.
