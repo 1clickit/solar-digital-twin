@@ -119,6 +119,11 @@ docs/capture_analyses/solar-forensic-20260718T062127Z-battery-cell-review.md
     coverage review at the seven event anchors and three controls, including
     capture-wide extrema and immutable evidence identities.
 
+docs/capture_analyses/cooling-control-20260719T115613Z-analysis.md
+    Source-update-aware analysis of the completed two-hour Home Assistant
+    cooling-control capture, including temperature-cycle episodes, power
+    context, cadence limits, provenance, and the no-fan-inference boundary.
+
 docs/capture_inventories/solar-forensic-20260718T062127Z-inventory.tsv
     Relative path, byte size, nanosecond modification time, and SHA-256 identity
     for every file in the closed coordinated capture.
@@ -126,6 +131,11 @@ docs/capture_inventories/solar-forensic-20260718T062127Z-inventory.tsv
 docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md
     Future reciprocal read-only HA telemetry, local EG4 candidate assessment,
     lineage protection, security boundaries, and RS-485 topology review.
+
+docs/EG4_HOME_ASSISTANT_TELEMETRY.md
+    Validated GET-only Home Assistant telemetry-bridge method, EG4 Web Monitor
+    hybrid-mode provenance, exact entity allowlist, source-cadence semantics,
+    control prohibition, and recommended retained metadata.
 
 docs/EG4_LOCAL_DONGLE_INVESTIGATION.md
     Pinned public-source protocol research, read/write boundary, provenance,

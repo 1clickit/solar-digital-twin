@@ -94,6 +94,23 @@ main
   second presentation of the same upstream cloud source as the solardt EG4
   collector, not independent evidence, and its writable controls remain
   unauthorized
+- A bounded two-hour Home Assistant REST capture completed normally with 7,200
+  successful one-second `GET /api/states` snapshots and zero errors. Local
+  allowlist filtering was proven, but polling cadence differed sharply from
+  source cadence: Radiator 1/2 had only 52/32 distinct `source_last_updated`
+  timestamps. Reusable method and safety boundaries are recorded in
+  `docs/EG4_HOME_ASSISTANT_TELEMETRY.md`
+- The cooling-control analysis found eight Radiator 1 temperature-cycle
+  episodes under both 5- and 10-minute grouping rules. Radiator 1/2 ranges were
+  59–72/47–51 °C; each high episode's next source update was below 68 °C
+  about 121 seconds later. Coarse endpoint rates of approximately −4.0 to
+  −6.0 °C/min are source-resolution-limited. No fan telemetry was available,
+  and no fan operation or causation was inferred. Further fan instrumentation
+  is deferred until after primary milestones
+- Provenance for the capture remains `Home Assistant → EG4 Web Monitor hybrid
+  mode`; local-dongle versus cloud lineage is unproven per entity. Home
+  Assistant, SolarAssistant, and direct-EG4 values must remain separately
+  identified, with `solardt` as the authoritative aggregation/provenance layer
 - HA directly integrates `EG4 Forensic Probe v3` at `192.168.3.13`, with
   approximately 21 entities; an old frequency dashboard has stale/missing
   references. Do not remove it until reboot behavior and the preferred

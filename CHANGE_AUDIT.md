@@ -609,3 +609,48 @@ or runtime change.
 - **Limitations:** Missing exported MOS, balancing, protection/alarm,
   individual-cell, and charge-limit topics mean an unobserved transient cannot
   be absolutely excluded. No new measurement is authorized.
+
+## 2026-07-20T18:16:37Z — Preserve cooling analysis and Home Assistant telemetry findings
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Preserve the completed July 19 cooling-control analysis and the
+  reusable, validated Home Assistant / EG4 Web Monitor telemetry method without
+  promoting fan investigation into the active milestone.
+- **Affected:** Added the tracked cooling analysis and
+  `docs/EG4_HOME_ASSISTANT_TELEMETRY.md`; updated project state, next-task
+  deferral, project navigation, and this append-only audit record.
+- **Change and reason:** Preserved the validated temporary report faithfully,
+  adding only a tracked-report note that pairs each ignored evidence filename
+  with its byte size, hash, and validation status;
+  documented the successful GET-only `/api/states` bridge, exact allowlist,
+  source-update timestamp semantics, hybrid-mode lineage qualification,
+  control prohibition, and retained-metadata requirements; deferred any fan
+  instrumentation until after primary project milestones.
+- **Evidence identity:** Ignored immutable raw telemetry is 20,227,369 bytes,
+  SHA-256 `4c411fbd9e258ffc217da2d52f3690662c4c97f1a73281b00f71174ff687cf0f`;
+  its manifest is 3,066 bytes, SHA-256
+  `96ed69112d9cfe8e78524557fedbe6afdf2e594f1386ee3b066cae44beac02f0`.
+  Both matched the completed read-only analysis identities.
+- **Findings preserved:** The two-hour capture completed 7,200/7,200 requests
+  with zero errors. Radiator 1/2 ranges were 59–72/47–51 °C with 52/32
+  distinct source updates; eight high-temperature episodes were stable under
+  5- and 10-minute grouping. Every next Radiator 1 source value was below 68
+  °C after about 121 seconds. No fan telemetry existed, and no fan activity or
+  causation was inferred.
+- **Untouched:** Immutable capture evidence; Home Assistant, EG4 dongle/cloud,
+  SolarAssistant, ESP32, credentials, network, firmware, devices, services,
+  timers, collectors, databases, permissions, and runtime configuration. No
+  installation, device contact, commit, or push occurred.
+- **Validation:** Temporary/tracked analysis-body comparison after excluding
+  the documented tracked-only preservation note;
+  evidence pre/post identity checks; documentation and sensitive-content
+  searches; `git diff --check`; repository health check; and final working-tree
+  review.
+- **Recovery:** Revert the future normal documentation commit containing this
+  entry. The ignored immutable capture remains authoritative and requires no
+  rollback.
+- **Related commit and push:** Not committed or pushed; awaiting separate
+  approval.
+- **Limitations:** Home Assistant polling cadence is not source cadence;
+  per-entity local-dongle/cloud lineage remains unproven; no fan command, RPM,
+  PWM/duty, current, or acoustic evidence was captured.

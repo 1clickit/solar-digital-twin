@@ -56,3 +56,12 @@ change, local-dongle contact, or physical-system manipulation.
 Chris receives the evidence-backed conclusion and uncertainties, and explicitly
 chooses whether the evidence is sufficient or which single targeted measurement
 is justified. Any selected operational step receives a new bounded work unit.
+
+## Deferred Post-Project Investigations
+
+Investigate low-load inverter fan control using additional instrumentation
+capable of measuring fan command, RPM, PWM/duty, electrical current, or
+synchronized acoustic evidence. Begin only after completion of the primary
+Solar Digital Twin milestones. Preserve the July 19, 2026 cooling-control
+capture as baseline evidence. Do not infer fan operation from radiator
+temperature alone.
