@@ -2,23 +2,58 @@
 
 ## Status and phase boundary
 
-This is an implementation-ready repository plan based on static review of the
-current collector, retention policies, focused tests, security model, and
-existing runtime conventions at commit
-`140f6fd4f9f4d9bc1daa4e9e7c0e59e9e43e658c`.
+Repository implementation is complete and offline-tested. The design was based
+on the static review at commit
+`140f6fd4f9f4d9bc1daa4e9e7c0e59e9e43e658c` and implemented from checkpoint
+`b1e821964427f62fa45237a8f915760146e817cc`.
 
-No collector, test, installer, systemd unit, firmware, runtime, identity,
-permission, service, device, network, evidence, database, or retention behavior
-was changed while preparing this plan. No device was contacted.
+The repository now contains the hardened collector, focused tests, a
+credentialless runtime installer, a fixed-provenance launcher, and a dormant
+systemd unit. Nothing was installed: no runtime, identity, permission, service,
+device, network, evidence, database, firmware, or retention-policy state was
+changed, and no device was contacted.
 
 The future work is separated into four gates:
 
-1. repository-only implementation;
+1. repository-only implementation — **complete**;
 2. separately approved installation on `solardt`;
 3. separately approved short passive live verification; and
 4. a later owner decision for persistent or long-duration operation.
 
 Approval of one gate does not authorize another.
+
+## Repository implementation result
+
+The implemented client uses a dedicated Requests session with environment
+proxy use disabled, rejects redirects, accepts only HTTP `200`, retries only
+`429`, `500`, `502`, `503`, and `504` plus transport failures, and treats every
+other HTTP status as permanent. `Retry-After` is numeric-only and locally
+capped at 30 seconds; malformed values fall back to the existing capped
+backoff.
+
+Before stream parsing, the collector requires `text/event-stream`
+case-insensitively and permits compatible parameters. A byte-level iterator
+reads 8 KiB transport chunks and limits each complete raw SSE line, excluding
+its line terminator, to 1 MiB before UTF-8 decoding or JSON parsing. Every
+response closes in a `finally` path, and diagnostics use fixed categories,
+safe status-derived categories, exception class names, and bounded delay only.
+
+Exclusive output creation now explicitly applies mode `0640`; newly created
+output directories are `0750`. Record fields, timestamps, manifests,
+allowlist, raw-first ordering, retained-writer isolation, reconnect state,
+policy meanings, and the `esp32-frequency-v1` default are unchanged.
+
+Repository artifacts are `scripts/install_esp32_runtime.sh`,
+`scripts/run_esp32_forensic_collector.sh`, and
+`systemd/esp32-forensic-collector.service`. The installer supports `--check`,
+`--install`, and `--verify`; whole-application replacement preserves a prior
+runtime and refuses an unmarked legacy shared runtime unless an administrator
+explicitly accepts it after inspection. The unit has a fixed one-hour
+foreground invocation, `Restart=no`, no timer, and no `[Install]` target.
+
+The actual device `Content-Type`, installed account/path state, shared-runtime
+compatibility, and host resource headroom remain unverified until later
+authorized phases. No production resource limits were invented.
 
 ## 1. Objective and non-objectives
 
@@ -254,22 +289,20 @@ Rollback removes or disables only newly installed runtime metadata after
 preserving evidence and restores the archived prior runtime where applicable.
 Any removal remains a separately reviewed administrator action.
 
-## 9. Next repository implementation work unit
+## 9. Completed repository implementation work unit
 
-The next separately authorized repository-only unit should expect changes to:
+The completed repository-only unit changed:
 
 - `src/solar_digital_twin/collectors/esp32_sse.py`;
-- `tests/test_esp32_sse.py` and, only if policy regression coverage requires it,
-  existing ESP32 retention tests;
-- a new ESP32 runtime installer under `scripts/` and focused installer tests;
-- a new dormant ESP32 systemd unit under `systemd/` and semantic tests;
-- a narrow foreground launcher only if it avoids duplicating installer/unit
-  behavior;
+- `tests/test_esp32_sse.py` and new `tests/test_esp32_runtime.py`;
+- new `scripts/install_esp32_runtime.sh`;
+- new `scripts/run_esp32_forensic_collector.sh`;
+- new `systemd/esp32-forensic-collector.service`;
 - this plan and directly related ESP32/security/runtime documentation;
 - `PROJECT_STATE.md`, `NEXT_TASK.md`, `PROJECT_INDEX.md`; and
 - one appended `CHANGE_AUDIT.md` entry.
 
-Implementation acceptance requires local source inspection before changes,
+Implementation acceptance included local source inspection before changes,
 focused tests for every confirmed HTTP gap, unchanged default-policy/record
 semantics, full repository tests, repository health, exact staged scope, and
 all canonical publication safeguards.

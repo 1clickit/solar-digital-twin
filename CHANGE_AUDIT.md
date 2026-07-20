@@ -753,3 +753,55 @@ or runtime change.
   an appropriate input ceiling, and production resource limits require later
   focused implementation or separately approved runtime verification. The plan
   does not authorize or perform those phases.
+
+## 2026-07-20T20:11:46Z — Harden ESP32 collector runtime
+
+- **Actor:** ChatGPT-directed Codex, authorized by Chris.
+- **Purpose:** Implement the reviewed repository-only ESP32 collector, runtime
+  installer, provenance launcher, and dormant-unit safeguards without
+  installation, service action, device contact, capture, or evidence changes.
+- **Collector:** Replaced the ambient Requests call with a dedicated
+  proxy-independent session; rejects redirects; accepts only HTTP `200`;
+  retries only `429`, `500`, `502`, `503`, `504`, and transport failures;
+  validates compatible `text/event-stream`; limits each raw SSE line to 1 MiB
+  through bounded 8 KiB chunk assembly; closes every response; and emits only
+  fixed payload-free failure categories. Existing deadline/backoff, record,
+  allowlist, timestamp, manifest, raw-first, retention-isolation, and policy
+  semantics remain unchanged.
+- **Evidence safety:** Exclusive output creation now applies file mode `0640`;
+  newly created output directories use `0750`. Collision refusal, partial-run
+  preservation, terminal manifests, and no-deletion behavior remain intact.
+- **Runtime artifacts:** Added `scripts/install_esp32_runtime.sh` with
+  side-effect-free `--check`, explicit `--install`, metadata-only `--verify`,
+  unknown/shared-runtime refusal, whole-application archival rollback, optional
+  explicit reporter selection, and no credential or device path. Added a
+  finite installed-commit launcher and dormant
+  `systemd/esp32-forensic-collector.service` with `Restart=no`, no timer, and no
+  `[Install]` activation target.
+- **Affected:** `src/solar_digital_twin/collectors/esp32_sse.py`,
+  `tests/test_esp32_sse.py`, new `tests/test_esp32_runtime.py`, the two new
+  scripts and unit above, the ESP32 hardening/telemetry/retention and security
+  documents, `PROJECT_INDEX.md`, `PROJECT_STATE.md`, `NEXT_TASK.md`, and this
+  append-only audit entry.
+- **Validation:** 66 focused offline ESP32 tests and all 218 repository tests
+  passed; installer `--check` was reviewed then run side-effect-free; shell
+  syntax and Python compilation passed; complete diff, diagnostic, network,
+  unit, credential, artifact, and exact-scope searches passed; `git diff
+  --check` and repository health passed; publication safeguards and independent
+  remote verification are required before completion.
+- **Untouched:** Installed runtime and protected paths; users, groups,
+  ownership, modes, ACLs, services, systemd state, timers, processes, packages,
+  credentials, devices, Home Assistant, firmware, networks, evidence, reports,
+  databases, generated artifacts, other collectors, portal behavior, and
+  retention policy/defaults. No live network request or capture occurred.
+- **Recovery:** Revert the single normal repository commit. No host or evidence
+  rollback applies because installer installation/verification modes and the
+  unit were not executed. Future installation has its own archive-first
+  rollback and remains separately gated.
+- **Related commit and push:** The commit containing this entry is titled
+  `Harden ESP32 collector runtime`; one normal fast-forward push to
+  `origin/main` is authorized after every canonical safeguard passes.
+- **Limitations:** Actual device `Content-Type`, installed identity/path state,
+  compatibility with the existing shared `/opt` runtime, reporter selection,
+  and host resource headroom remain installation or passive-verification facts.
+  The unit remains repository-only and dormant.

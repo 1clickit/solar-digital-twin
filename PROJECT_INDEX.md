@@ -99,9 +99,9 @@ docs/ESP32_FORENSIC_TELEMETRY_PLAN.md
     Read-only ESPHome SSE collection and timestamp design.
 
 docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md
-    Static source/test findings and separately gated repository, installation,
-    passive-verification, and persistent-operation plan for a credentialless
-    unprivileged ESP32 collector runtime.
+    Implemented and offline-tested collector safeguards, credentialless runtime
+    installer, dormant-unit design, and separately gated installation,
+    passive-verification, and persistent-operation phases.
 
 docs/ESP32_RETENTION_ASSESSMENT.md
     Reproducible full-capture ESP32 retention measurements, candidate comparison, and policy recommendation.
@@ -204,8 +204,23 @@ src/solar_digital_twin/collectors/retention.py
     Shared source-independent change and heartbeat retention mechanics.
 
 src/solar_digital_twin/collectors/esp32_sse.py
-    Standalone read-only ESPHome SSE evidence collector with default current
-    retention and dormant explicit dual-output canary support.
+    Hardened read-only ESPHome SSE evidence collector with fixed destination,
+    proxy/redirect rejection, bounded input, response validation, restrictive
+    output modes, default current retention, and explicit canary support.
+
+scripts/install_esp32_runtime.sh
+    Credentialless whole-application runtime installer with side-effect-free
+    check, explicit install, metadata-only verification, shared-runtime refusal,
+    archival rollback, and dormant-unit safeguards.
+
+scripts/run_esp32_forensic_collector.sh
+    Fixed-path, installed-commit-aware, finite foreground ESP32 launcher.
+
+systemd/esp32-forensic-collector.service
+    Dormant hardened ESP32 service definition with no timer or activation target.
+
+tests/test_esp32_runtime.py
+    Offline installer, launcher, and systemd semantic regression tests.
 
 src/solar_digital_twin/collectors/esp32_retention.py
     Versioned current and conservative ESP32 retention policies, canonical

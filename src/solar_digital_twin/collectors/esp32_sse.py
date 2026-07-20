@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from email.message import Message
 from pathlib import Path
-from typing import Any, TextIO
+from typing import Any, BinaryIO, Iterator, TextIO
 
 import requests
 
@@ -21,6 +23,11 @@ from solar_digital_twin.collectors.esp32_retention import (
 
 SSE_URL = "http://192.168.3.13/events"
 MAX_BACKOFF_SECONDS = 30.0
+MAX_RETRY_AFTER_SECONDS = 30.0
+MAX_SSE_LINE_BYTES = 1024 * 1024
+STREAM_CHUNK_BYTES = 8192
+HTTP_TIMEOUT = (3.0, 30.0)
+RETRYABLE_HTTP_STATUSES = frozenset({429, 500, 502, 503, 504})
 MANIFEST_SCHEMA = "solar-digital-twin.esp32-capture.v1"
 RETENTION_MODES = ("current", "canary", "conservative")
 DEFAULT_OUTPUT_DIR = Path("evidence/esp32")
@@ -44,6 +51,19 @@ APPROVED_IDS = {
     "text_sensor-00_current_status",
     "text_sensor-04_forensic_event_log",
 }
+
+
+class PermanentSSEError(Exception):
+    """A destination, response, or stream policy failure that must not retry."""
+
+
+class TransientSSEError(Exception):
+    """A transport or selected HTTP failure that may retry."""
+
+    def __init__(self, category: str, retry_after: float | None = None) -> None:
+        super().__init__(category)
+        self.category = category
+        self.retry_after = retry_after
 
 
 def receipt_timestamp() -> str:
@@ -75,6 +95,108 @@ def manifest_output_path(raw_output: Path) -> Path:
 
 def _json_line(payload: dict[str, Any]) -> str:
     return json.dumps(payload, separators=(",", ":"), ensure_ascii=False) + "\n"
+
+
+def _open_exclusive_text(path: Path) -> TextIO:
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o640)
+    try:
+        os.fchmod(descriptor, 0o640)
+        return os.fdopen(descriptor, "w", encoding="utf-8", buffering=1)
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def _ensure_output_directory(path: Path) -> None:
+    existed = path.exists()
+    path.mkdir(parents=True, exist_ok=True, mode=0o750)
+    if not existed:
+        path.chmod(0o750)
+
+
+def _new_session() -> requests.Session:
+    session = requests.Session()
+    session.trust_env = False
+    return session
+
+
+def _retry_after_seconds(value: str | None) -> float | None:
+    if value is None:
+        return None
+    try:
+        parsed = float(value.strip())
+    except (TypeError, ValueError):
+        return None
+    if not 0 <= parsed < float("inf"):
+        return None
+    return min(parsed, MAX_RETRY_AFTER_SECONDS)
+
+
+def _validate_response(response: requests.Response) -> None:
+    status = response.status_code
+    if status == 200:
+        pass
+    elif status in RETRYABLE_HTTP_STATUSES:
+        retry_after = (
+            _retry_after_seconds(response.headers.get("Retry-After"))
+            if status == 429
+            else None
+        )
+        raise TransientSSEError(f"http_{status}", retry_after)
+    elif 300 <= status <= 399:
+        raise PermanentSSEError("redirect_rejected")
+    elif 400 <= status <= 499:
+        raise PermanentSSEError("http_rejected")
+    else:
+        raise PermanentSSEError("http_status_rejected")
+
+    content_type = response.headers.get("Content-Type")
+    if not content_type:
+        raise PermanentSSEError("content_type_rejected")
+    message = Message()
+    message["content-type"] = content_type
+    if message.get_content_type().lower() != "text/event-stream":
+        raise PermanentSSEError("content_type_rejected")
+
+
+def _iter_bounded_lines(
+    raw: BinaryIO,
+    *,
+    max_line_bytes: int = MAX_SSE_LINE_BYTES,
+    chunk_bytes: int = STREAM_CHUNK_BYTES,
+) -> Iterator[str]:
+    """Yield UTF-8 SSE lines without ever accumulating an unbounded line."""
+    pending = bytearray()
+    for chunk in raw.stream(chunk_bytes, decode_content=True):
+        if not chunk:
+            continue
+        view = memoryview(chunk)
+        while view:
+            newline = bytes(view).find(b"\n")
+            if newline < 0:
+                if len(pending) + len(view) > max_line_bytes:
+                    raise PermanentSSEError("input_limit_exceeded")
+                pending.extend(view)
+                break
+            segment = view[:newline]
+            if len(pending) + len(segment) > max_line_bytes:
+                raise PermanentSSEError("input_limit_exceeded")
+            pending.extend(segment)
+            if pending.endswith(b"\r"):
+                pending.pop()
+            try:
+                yield pending.decode("utf-8")
+            except UnicodeDecodeError as exc:
+                raise PermanentSSEError("stream_encoding_rejected") from exc
+            pending.clear()
+            view = view[newline + 1 :]
+    if pending:
+        if pending.endswith(b"\r"):
+            pending.pop()
+        try:
+            yield pending.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise PermanentSSEError("stream_encoding_rejected") from exc
 
 
 @dataclass
@@ -263,7 +385,7 @@ def collect(
     retained_output = retained_output_path(output)
     manifest_output = manifest_output_path(output)
     retained_outputs = _retained_outputs(output, retention_mode)
-    output.parent.mkdir(parents=True, exist_ok=True)
+    _ensure_output_directory(output.parent)
     _assert_outputs_absent(
         [output, manifest_output, *(item.path for item in retained_outputs)]
     )
@@ -274,11 +396,11 @@ def collect(
     final_event = "completion"
     stop_reason = "duration" if duration > 0 else "stream_stopped"
 
-    print(f"Writing raw approved ESP32 updates to {output}")
+    print(f"Writing raw approved ESP32 updates to {output.name}")
     for item in retained_outputs:
-        print(f"Writing {item.policy_id} ESP32 updates to {item.path}")
+        print(f"Writing {item.policy_id} ESP32 updates to {item.path.name}")
 
-    with manifest_output.open("x", encoding="utf-8", buffering=1) as manifest:
+    with _open_exclusive_text(manifest_output) as manifest:
         _append_manifest(
             manifest,
             _manifest_start(
@@ -286,36 +408,33 @@ def collect(
             ),
         )
         try:
-            with output.open("x", encoding="utf-8", buffering=1) as evidence:
+            with _open_exclusive_text(output) as evidence:
                 for item in retained_outputs:
                     try:
-                        item.handle = item.path.open(
-                            "x", encoding="utf-8", buffering=1
-                        )
+                        item.handle = _open_exclusive_text(item.path)
                     except Exception as exc:
                         item.disable(exc)
 
+                session = _new_session()
                 try:
                     while deadline is None or time.monotonic() < deadline:
+                        response = None
                         try:
-                            response = requests.get(
+                            response = session.get(
                                 SSE_URL,
                                 headers={"Accept": "text/event-stream"},
                                 stream=True,
-                                timeout=(3, 30),
+                                timeout=HTTP_TIMEOUT,
+                                allow_redirects=False,
                             )
-                            response.raise_for_status()
+                            _validate_response(response)
                             backoff = 1.0
 
-                            for line in response.iter_lines(
-                                chunk_size=1,
-                                decode_unicode=True,
-                            ):
+                            for line in _iter_bounded_lines(response.raw):
                                 if (
                                     deadline is not None
                                     and time.monotonic() >= deadline
                                 ):
-                                    response.close()
                                     return (
                                         output,
                                         retained_output,
@@ -361,12 +480,22 @@ def collect(
                                         record, encoded_record, monotonic_now
                                     )
 
-                            response.close()
-                            raise requests.ConnectionError("SSE stream ended")
+                            raise TransientSSEError("stream_ended")
 
-                        except requests.RequestException as exc:
-                            if "response" in locals():
-                                response.close()
+                        except PermanentSSEError as exc:
+                            print(f"SSE stopped: {exc}.")
+                            raise
+                        except (requests.RequestException, TransientSSEError) as exc:
+                            category = (
+                                exc.category
+                                if isinstance(exc, TransientSSEError)
+                                else type(exc).__name__
+                            )
+                            requested_delay = (
+                                exc.retry_after
+                                if isinstance(exc, TransientSSEError)
+                                else None
+                            )
                             remaining = (
                                 None
                                 if deadline is None
@@ -374,18 +503,30 @@ def collect(
                             )
                             if remaining is not None and remaining <= 0:
                                 break
-                            delay = (
+                            base_delay = (
                                 backoff
+                                if requested_delay is None
+                                else min(
+                                    max(backoff, requested_delay),
+                                    MAX_RETRY_AFTER_SECONDS,
+                                )
+                            )
+                            delay = (
+                                base_delay
                                 if remaining is None
-                                else min(backoff, remaining)
+                                else min(base_delay, remaining)
                             )
                             print(
-                                f"SSE connection error: {exc}; "
+                                f"SSE transient failure ({category}); "
                                 f"retrying in {delay:.0f}s"
                             )
                             time.sleep(delay)
                             backoff = min(backoff * 2, MAX_BACKOFF_SECONDS)
+                        finally:
+                            if response is not None:
+                                response.close()
                 finally:
+                    session.close()
                     for item in retained_outputs:
                         item.close()
         except KeyboardInterrupt:
@@ -434,8 +575,8 @@ def main() -> None:
     else:
         print(
             f"Stopped cleanly after writing {written} "
-            f"raw records to {output} and {retained_written} "
-            f"records to {retained_output}."
+            f"raw records to {output.name} and {retained_written} "
+            f"records to {retained_output.name}."
         )
 
 

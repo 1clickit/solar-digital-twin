@@ -11,8 +11,9 @@ production policy remains unchanged; the implementation and canary design are
 in `docs/ESP32_RETENTION_PRODUCTION_PLAN.md`. The collector is
 `src/solar_digital_twin/collectors/esp32_sse.py`. Static runtime/security review
 and the separately gated hardening phases are defined in
-`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`; no hardening implementation or
-runtime action has occurred.
+`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. Repository hardening is
+implemented and offline-tested; no installation, runtime action, or live
+compatibility verification has occurred.
 
 ## Collection Decision
 Use the read-only ESPHome HTTP server-sent-event stream at `http://192.168.3.13/events` from `solardt`.
@@ -134,7 +135,7 @@ The versioned conservative writer and opt-in canary mode defined in
 validated. The historical `esp32-frequency-v1` output remains the default;
 `esp32-conservative-v1` is dormant unless explicitly selected. No live canary,
 deployment, or production-default change occurred. The next step is a
-separately authorized repository-only runtime/security hardening implementation
+separately authorized administrator installation and metadata-only verification
 under `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. It does not promote a
-retention policy or authorize installation, services, device contact, capture,
+retention policy or authorize service activation, device contact, capture,
 firmware, network, database, or portal changes.

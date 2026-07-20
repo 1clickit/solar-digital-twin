@@ -1,0 +1,18 @@
+[Unit]
+Description=Solar Digital Twin passive ESP32 forensic collector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=solardt-telemetry
+Group=solardt-telemetry
+UMask=0027
+ExecStart=/opt/solar-digital-twin/scripts/run_esp32_forensic_collector.sh
+Restart=no
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/solar-digital-twin/esp32
+RestrictAddressFamilies=AF_INET AF_UNIX

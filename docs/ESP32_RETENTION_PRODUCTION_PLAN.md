@@ -23,8 +23,9 @@ Host runtime and HTTP/SSE hardening are separate from retention-policy design.
 `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md` preserves the current default
 and independent writers while planning destination, proxy, content-type,
 input-size, failure-classification, identity, file-mode, and dormant-service
-safeguards. That plan does not promote `esp32-conservative-v1` or authorize a
-new canary or capture.
+safeguards. Repository hardening is implemented and tested without changing
+the default or either writer. It does not promote `esp32-conservative-v1` or
+authorize a new canary or capture.
 
 ## Decision and boundary
 

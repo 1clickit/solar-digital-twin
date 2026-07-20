@@ -1,10 +1,12 @@
 import json
+import os
+import stat
 import unittest
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from solar_digital_twin.collectors import esp32_sse
 
@@ -21,19 +23,58 @@ def sse_event(entity_id, value):
     )
 
 
-class FakeResponse:
-    def __init__(self, lines=(), interrupt=False):
-        self.lines = lines
+class FakeRaw:
+    def __init__(self, chunks=(), interrupt=False):
+        self.chunks = chunks
         self.interrupt = interrupt
-        self.closed = False
+        self.iterated = False
 
-    def raise_for_status(self):
-        return None
-
-    def iter_lines(self, **_kwargs):
-        yield from self.lines
+    def stream(self, _chunk_bytes, decode_content=True):
+        assert decode_content is True
+        self.iterated = True
+        yield from self.chunks
         if self.interrupt:
             raise KeyboardInterrupt
+
+
+class FakeResponse:
+    def __init__(
+        self,
+        lines=(),
+        interrupt=False,
+        *,
+        chunks=None,
+        status=200,
+        content_type="text/event-stream",
+        headers=None,
+    ):
+        if chunks is None:
+            chunks = [(line + "\n").encode() for line in lines]
+        self.raw = FakeRaw(chunks, interrupt)
+        self.interrupt = interrupt
+        self.status_code = status
+        self.headers = dict(headers or {})
+        if content_type is not None:
+            self.headers.setdefault("Content-Type", content_type)
+        self.closed = False
+
+    def close(self):
+        self.closed = True
+
+
+class FakeSession:
+    def __init__(self, side_effect):
+        self.side_effect = list(side_effect)
+        self.calls = []
+        self.closed = False
+        self.trust_env = True
+
+    def get(self, *args, **kwargs):
+        self.calls.append((args, kwargs))
+        result = self.side_effect.pop(0)
+        if isinstance(result, BaseException):
+            raise result
+        return result
 
     def close(self):
         self.closed = True
@@ -89,15 +130,17 @@ class CollectorHarness:
         if mode == "canary":
             outputs.append(self.conservative)
         opened = iter(outputs)
+        session = FakeSession(request_side_effect)
+        self.session = session
         patches = [
             patch.object(esp32_sse, "new_output_path", return_value=self.raw_path),
-            patch.object(Path, "mkdir"),
-            patch.object(Path, "open", side_effect=lambda *args, **kwargs: next(opened)),
+            patch.object(esp32_sse, "_ensure_output_directory"),
             patch.object(
-                esp32_sse.requests,
-                "get",
-                side_effect=request_side_effect,
+                esp32_sse,
+                "_open_exclusive_text",
+                side_effect=lambda *_args, **_kwargs: next(opened),
             ),
+            patch.object(esp32_sse, "_new_session", return_value=session),
             patch.object(esp32_sse.time, "sleep"),
         ]
         patches.extend(extra.values())
@@ -353,9 +396,13 @@ class Esp32CollectorTests(unittest.TestCase):
         output = StringIO()
         with (
             patch.object(esp32_sse, "new_output_path", return_value=harness.raw_path),
-            patch.object(Path, "mkdir"),
-            patch.object(Path, "open", side_effect=open_output),
-            patch.object(esp32_sse.requests, "get", return_value=response),
+            patch.object(esp32_sse, "_ensure_output_directory"),
+            patch.object(esp32_sse, "_open_exclusive_text", side_effect=open_output),
+            patch.object(
+                esp32_sse,
+                "_new_session",
+                return_value=FakeSession([response]),
+            ),
             redirect_stdout(output),
             self.assertRaises(KeyboardInterrupt),
         ):
@@ -550,7 +597,7 @@ class Esp32CollectorTests(unittest.TestCase):
                         patch.object(
                             esp32_sse, "new_output_path", return_value=raw
                         ),
-                        patch.object(esp32_sse.requests, "get") as get,
+                        patch.object(esp32_sse, "_new_session") as new_session,
                         self.assertRaisesRegex(FileExistsError, "already exists"),
                     ):
                         esp32_sse.collect(
@@ -558,7 +605,7 @@ class Esp32CollectorTests(unittest.TestCase):
                             retention_mode="canary",
                             collector_version="test-version",
                         )
-                    get.assert_not_called()
+                    new_session.assert_not_called()
                     self.assertEqual(existing.read_text(), "preserve-me")
 
     def test_raw_write_failure_is_manifested_and_stops_collection(self):
@@ -580,6 +627,217 @@ class Esp32CollectorTests(unittest.TestCase):
         manifest = [json.loads(line) for line in harness.manifest.lines]
         self.assertEqual(manifest[-1]["event"], "failure")
         self.assertEqual(manifest[-1]["stop_reason"], "OSError")
+
+    def test_manifest_creation_failure_prevents_raw_open_and_network(self):
+        harness = self.make_harness()
+        with (
+            patch.object(esp32_sse, "new_output_path", return_value=harness.raw_path),
+            patch.object(esp32_sse, "_ensure_output_directory"),
+            patch.object(
+                esp32_sse,
+                "_open_exclusive_text",
+                side_effect=OSError("private manifest path"),
+            ) as opener,
+            patch.object(esp32_sse, "_new_session") as new_session,
+            self.assertRaises(OSError),
+        ):
+            esp32_sse.collect(1)
+        self.assertEqual(opener.call_count, 1)
+        new_session.assert_not_called()
+
+    def test_session_ignores_proxy_environment(self):
+        session = esp32_sse._new_session()
+        self.addCleanup(session.close)
+        self.assertFalse(session.trust_env)
+
+    def test_request_uses_fixed_streaming_nonredirecting_policy(self):
+        harness = self.make_harness()
+        self.run_until_interrupt(harness, [FakeResponse(interrupt=True)])
+
+        args, kwargs = harness.session.calls[0]
+        self.assertEqual(args, (esp32_sse.SSE_URL,))
+        self.assertEqual(kwargs["headers"], {"Accept": "text/event-stream"})
+        self.assertTrue(kwargs["stream"])
+        self.assertFalse(kwargs["allow_redirects"])
+        self.assertEqual(kwargs["timeout"], esp32_sse.HTTP_TIMEOUT)
+        self.assertTrue(harness.session.closed)
+
+    def _assert_permanent_response(self, response, category):
+        harness = self.make_harness()
+        patches = harness.patches([response])
+        output = StringIO()
+        with (
+            patches[0], patches[1], patches[2], patches[3],
+            patches[4] as sleep, redirect_stdout(output),
+            self.assertRaisesRegex(esp32_sse.PermanentSSEError, category),
+        ):
+            esp32_sse.collect(1)
+        sleep.assert_not_called()
+        self.assertEqual(len(harness.session.calls), 1)
+        self.assertTrue(response.closed)
+        return output.getvalue(), response
+
+    def test_redirect_is_permanent_not_retried_or_disclosed(self):
+        output, _ = self._assert_permanent_response(
+            FakeResponse(
+                status=302,
+                headers={"Location": "http://private-target.example/secret"},
+            ),
+            "redirect_rejected",
+        )
+        self.assertNotIn("private-target", output)
+        self.assertNotIn("Location", output)
+
+    def test_ordinary_4xx_is_permanent_and_not_retried(self):
+        self._assert_permanent_response(FakeResponse(status=404), "http_rejected")
+
+    def test_nonretryable_server_status_stops_safely(self):
+        self._assert_permanent_response(
+            FakeResponse(status=501), "http_status_rejected"
+        )
+
+    def test_retryable_5xx_uses_existing_bounded_backoff(self):
+        harness = self.make_harness()
+        response = FakeResponse(status=503)
+        patches = harness.patches([response, KeyboardInterrupt()])
+        with (
+            patches[0], patches[1], patches[2], patches[3],
+            patches[4] as sleep, redirect_stdout(StringIO()),
+            self.assertRaises(KeyboardInterrupt),
+        ):
+            esp32_sse.collect(0)
+        sleep.assert_called_once_with(1.0)
+        self.assertTrue(response.closed)
+        self.assertEqual(len(harness.session.calls), 2)
+
+    def test_429_retry_after_is_locally_capped(self):
+        harness = self.make_harness()
+        response = FakeResponse(status=429, headers={"Retry-After": "999999"})
+        patches = harness.patches([response, KeyboardInterrupt()])
+        with (
+            patches[0], patches[1], patches[2], patches[3],
+            patches[4] as sleep, redirect_stdout(StringIO()),
+            self.assertRaises(KeyboardInterrupt),
+        ):
+            esp32_sse.collect(0)
+        sleep.assert_called_once_with(esp32_sse.MAX_RETRY_AFTER_SECONDS)
+
+    def test_malformed_retry_after_falls_back_to_backoff(self):
+        harness = self.make_harness()
+        response = FakeResponse(status=429, headers={"Retry-After": "secret-value"})
+        patches = harness.patches([response, KeyboardInterrupt()])
+        output = StringIO()
+        with (
+            patches[0], patches[1], patches[2], patches[3],
+            patches[4] as sleep, redirect_stdout(output),
+            self.assertRaises(KeyboardInterrupt),
+        ):
+            esp32_sse.collect(0)
+        sleep.assert_called_once_with(1.0)
+        self.assertNotIn("secret-value", output.getvalue())
+
+    def test_compatible_content_types_are_accepted(self):
+        for content_type in (
+            "text/event-stream",
+            "TEXT/EVENT-STREAM",
+            "text/event-stream; charset=utf-8",
+        ):
+            with self.subTest(content_type=content_type):
+                response = FakeResponse(
+                    [sse_event("sensor-01_gen_frequency", 60)],
+                    interrupt=True,
+                    content_type=content_type,
+                )
+                harness = self.make_harness()
+                self.run_until_interrupt(harness, [response])
+
+    def test_missing_or_wrong_content_type_rejected_before_iteration(self):
+        for content_type in (None, "application/json"):
+            with self.subTest(content_type=content_type):
+                _, response = self._assert_permanent_response(
+                    FakeResponse(content_type=content_type),
+                    "content_type_rejected",
+                )
+                self.assertFalse(response.raw.iterated)
+
+    def test_bounded_lines_accept_exact_limit_and_split_valid_event(self):
+        raw = FakeRaw([b"123", b"4567\n", b"da", b"ta:{}\n"])
+        self.assertEqual(
+            list(esp32_sse._iter_bounded_lines(raw, max_line_bytes=7)),
+            ["1234567", "data:{}"],
+        )
+
+    def test_bounded_lines_reject_split_over_limit_before_json(self):
+        response = FakeResponse(
+            chunks=[b"data:", b"x" * esp32_sse.MAX_SSE_LINE_BYTES, b"9\n"]
+        )
+        harness = self.make_harness()
+        patches = harness.patches([response])
+        with (
+            patches[0], patches[1], patches[2], patches[3], patches[4],
+            patch.object(esp32_sse.json, "loads") as loads,
+            redirect_stdout(StringIO()),
+            self.assertRaisesRegex(
+                esp32_sse.PermanentSSEError, "input_limit_exceeded"
+            ),
+        ):
+            esp32_sse.collect(1)
+        loads.assert_not_called()
+        self.assertTrue(response.closed)
+
+    def test_valid_event_split_across_transport_chunks_is_processed(self):
+        event = sse_event("sensor-01_gen_frequency", 60).encode() + b"\n"
+        response = FakeResponse(chunks=[event[:2], event[2:9], event[9:]], interrupt=True)
+        harness = self.make_harness()
+        self.run_until_interrupt(harness, [response])
+        self.assertEqual(len(harness.raw.lines), 1)
+
+    def test_response_closes_after_unexpected_stream_exception(self):
+        response = FakeResponse()
+        response.raw.stream = Mock(side_effect=ValueError("private payload"))
+        harness = self.make_harness()
+        patches = harness.patches([response])
+        output = StringIO()
+        with (
+            patches[0], patches[1], patches[2], patches[3], patches[4],
+            redirect_stdout(output), self.assertRaises(ValueError),
+        ):
+            esp32_sse.collect(1)
+        self.assertTrue(response.closed)
+        self.assertNotIn("private payload", output.getvalue())
+
+    def test_transport_diagnostic_omits_private_exception_text(self):
+        harness = self.make_harness()
+        patches = harness.patches(
+            [esp32_sse.requests.ConnectionError("private host and payload"), KeyboardInterrupt()]
+        )
+        output = StringIO()
+        with (
+            patches[0], patches[1], patches[2], patches[3], patches[4],
+            redirect_stdout(output), self.assertRaises(KeyboardInterrupt),
+        ):
+            esp32_sse.collect(0)
+        self.assertIn("ConnectionError", output.getvalue())
+        self.assertNotIn("private host", output.getvalue())
+
+    def test_exclusive_outputs_have_deterministic_modes_and_restore_umask(self):
+        with TemporaryDirectory() as directory:
+            parent = Path(directory) / "capture"
+            previous = os.umask(0o077)
+            try:
+                esp32_sse._ensure_output_directory(parent)
+                path = parent / "test.ndjson"
+                with esp32_sse._open_exclusive_text(path) as stream:
+                    stream.write("test\n")
+            finally:
+                os.umask(previous)
+
+            self.assertEqual(stat.S_IMODE(parent.stat().st_mode), 0o750)
+            self.assertEqual(stat.S_IMODE(path.stat().st_mode), 0o640)
+
+        probe_previous = os.umask(0)
+        os.umask(probe_previous)
+        self.assertEqual(probe_previous, previous)
 
 
 if __name__ == "__main__":

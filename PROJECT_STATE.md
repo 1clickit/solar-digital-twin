@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Repository-only ESP32 forensic-collector runtime and security hardening
+ESP32 forensic-collector runtime installation planning
 
 Next Task:
-Implement the reviewed ESP32 hardening plan in the repository without installation or live contact.
+Authorize administrator installation and metadata-only verification separately; no live contact.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,6 +19,17 @@ solardt
 main
 
 ## Current Status
+- ESP32 repository runtime/security hardening is implemented and offline-tested.
+  The collector now rejects redirects and environment proxies, classifies HTTP
+  failures, validates SSE media type, bounds raw SSE lines at 1 MiB before JSON
+  parsing, closes every response, redacts diagnostics, and creates outputs with
+  deterministic restrictive modes while preserving existing evidence schemas,
+  allowlist, timestamps, retry state, and retention behavior
+- The repository contains credentialless installer/check/verify logic, a
+  fixed-provenance finite launcher, and a dormant systemd unit with `Restart=no`,
+  no timer, and no `[Install]` target. They are not installed. The identity,
+  paths, unit state, actual device `Content-Type`, and live compatibility remain
+  unverified; no ESP32 contact or capture occurred
 - The static ESP32 runtime/security review and implementation-ready plan are
   complete in `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. No collector,
   test, installer, unit, runtime, identity, permission, service, device,
@@ -36,9 +47,10 @@ main
 - Irradiance, local-dongle, sub-second disturbance, per-microinverter, and fan
   investigations remain decision-driven later possibilities, not active
   milestones
-- The next technical milestone is repository-only ESP32 forensic-collector
-  runtime and security hardening. Repository implementation and later runtime
-  installation/live verification remain separate bounded work units
+- The next technical milestone is a separately authorized administrator
+  installation and metadata-only verification on `solardt`. It must inspect the
+  existing shared `/opt/solar-digital-twin` runtime, leave the new unit dormant,
+  and make no ESP32 contact. Passive live verification remains a later gate
 - Coordinated capture `solar-forensic-20260718T062127Z` was intentionally
   stopped through transient supervisor
   `solar-coordinated-solar-forensic-20260718T062127Z.service` after
@@ -535,10 +547,10 @@ Refresh command:
 
 ## Current Restrictions
 
-- The next task is repository implementation only. It authorizes no
-  installation, deployment, user/group or permission change, service action,
-  live contact, firmware change, capture, credential, evidence, database, or
-  network change until a new bounded implementation work unit is approved
+- The next task requires a new bounded administrator authorization. This state
+  document does not authorize installation, user/group or permission changes,
+  daemon reload, unit copying, service action, live contact, firmware change,
+  capture, credential, evidence, database, or network change
 - Do not change EG4 collector behavior, SQLite schema, Home Assistant
   integration, production retention policy, or other collectors without a new
   bounded work unit
