@@ -99,9 +99,9 @@ docs/ESP32_FORENSIC_TELEMETRY_PLAN.md
     Read-only ESPHome SSE collection and timestamp design.
 
 docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md
-    Implemented and offline-tested collector safeguards, credentialless runtime
-    installer, dormant-unit design, and separately gated installation,
-    passive-verification, and persistent-operation phases.
+    Implemented collector safeguards, installed and metadata-verified
+    credentialless runtime and dormant unit, and separately gated passive-
+    verification and persistent-operation phases.
 
 docs/ESP32_RETENTION_ASSESSMENT.md
     Reproducible full-capture ESP32 retention measurements, candidate comparison, and policy recommendation.

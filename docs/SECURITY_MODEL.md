@@ -106,9 +106,11 @@ reliable evidence proves technical read-only restriction.
 
 Preliminary classifications are:
 
-- ESP32 SSE telemetry: shared credentialless telemetry identity. The planned
-  name is `solardt-telemetry`; the repository installer and dormant unit are
-  implemented, but the identity and runtime are not installed. See
+- ESP32 SSE telemetry: shared credentialless telemetry identity
+  `solardt-telemetry`. The identity, runtime, narrowly writable evidence path,
+  trusted reporter access, and dormant static unit are installed and metadata-
+  verified; no credential exists and passive live verification remains
+  separately gated. See
   `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`.
 - SolarAssistant: separate identity until the `admin` credential's effective authority is confirmed.
 - EG4 vendor access: separate identity unless a technically enforced read-only credential is identified.

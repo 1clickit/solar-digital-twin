@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-ESP32 forensic-collector runtime installation planning
+ESP32 forensic-collector passive live-verification planning
 
 Next Task:
-Authorize administrator installation and metadata-only verification separately; no live contact.
+Authorize one short finite passive ESP32 verification separately; no persistent operation.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -25,21 +25,29 @@ main
   parsing, closes every response, redacts diagnostics, and creates outputs with
   deterministic restrictive modes while preserving existing evidence schemas,
   allowlist, timestamps, retry state, and retention behavior
-- The repository contains credentialless installer/check/verify logic, a
-  fixed-provenance finite launcher, and a dormant systemd unit with `Restart=no`,
-  no timer, and no `[Install]` target. They are not installed. The identity,
-  paths, unit state, actual device `Content-Type`, and live compatibility remain
-  unverified; no ESP32 contact or capture occurred
+- The credentialless ESP32 runtime from commit
+  `7f2274b9011c4bb85f3099eb80c8bb86a21f0e04` is installed at
+  `/opt/solar-digital-twin`. Metadata verification passed for the
+  `solardt-telemetry` identity, state/evidence paths, reporter access, installed
+  commit, code non-writability, and exact unit artifact. The unit is
+  static/inactive/dead with no timer, trigger, activation symlink, or collector
+  process; no credential, ESP32 evidence, device contact, start, or enablement
+  occurred
+- The prior shared runtime is preserved at
+  `/opt/solar-digital-twin.backup.20260720T205254Z`; rollback was not invoked.
+  The fresh virtual environment installed successfully, with an unresolved
+  maintenance warning that pinned `charset-normalizer==3.4.8` was yanked
+  without a stated reason
 - The static ESP32 runtime/security review and implementation-ready plan are
   complete in `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. No collector,
   test, installer, unit, runtime, identity, permission, service, device,
   network, evidence, or retention behavior changed during planning
-- Source review confirmed that allowlisting, exclusive output creation,
+- Source and offline tests confirm allowlisting, exclusive output creation,
   raw-before-retained ordering, per-retained-writer failure isolation,
-  manifests, and the default `esp32-frequency-v1` policy are already protected.
-  HTTP redirect/proxy restrictions, content-type and input-size validation, and
-  permanent/transient failure classification remain implementation work;
-  installed identity state requires a later runtime verification
+  manifests, the default `esp32-frequency-v1` policy, redirect/proxy
+  restrictions, content-type and input-size validation, and permanent/transient
+  failure classification. Actual device `Content-Type` and live compatibility
+  remain for the separately authorized passive phase
 - Owner review accepted the coordinated evidence as sufficient to establish
   repeated real aggregate AC-couple production collapse and recovery for the
   project's initial diagnostic baseline. No additional causal measurement is
@@ -47,10 +55,10 @@ main
 - Irradiance, local-dongle, sub-second disturbance, per-microinverter, and fan
   investigations remain decision-driven later possibilities, not active
   milestones
-- The next technical milestone is a separately authorized administrator
-  installation and metadata-only verification on `solardt`. It must inspect the
-  existing shared `/opt/solar-digital-twin` runtime, leave the new unit dormant,
-  and make no ESP32 contact. Passive live verification remains a later gate
+- The next technical milestone is a separately authorized short, finite,
+  passive live verification. Persistent or long-duration operation remains a
+  later owner decision; the installed unit stays dormant until separately
+  authorized
 - Coordinated capture `solar-forensic-20260718T062127Z` was intentionally
   stopped through transient supervisor
   `solar-coordinated-solar-forensic-20260718T062127Z.service` after
@@ -332,11 +340,11 @@ main
   86,400), completed 8,219 polls and 345,198 raw records, and stopped normally
   with `stopped_early: false`. It passed with the permissions qualifications
   recorded in `docs/SOLARASSISTANT_TELEMETRY_PLAN.md`
-- The read-only monitor remains running as `solardt-sa` in the
-  root-owned detached tmux session `solarassistant-monitor` at
-  `http://192.168.3.11:8792`; its health endpoint returned `{"status":"ok"}`.
-  It reports capture state `Complete` and expected post-capture freshness
-  `Stale`; the collector is no longer running
+- The completed SolarAssistant capture evidence remains preserved, but the
+  temporary read-only monitor is stopped after the VM reboot associated with
+  the memory upgrade. It had no systemd service and was not restarted or
+  modified during ESP32 installation; its outage is unrelated to the ESP32
+  runtime. Any monitor restart or deployment remains separately authorized
 - Collector PID 92638 and monitor PID 92674 were historical observations only;
   PIDs are transient and are not stable runtime configuration
 - The installed monitor badge correction remains committed and pushed but not

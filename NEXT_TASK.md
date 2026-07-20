@@ -2,9 +2,9 @@
 
 ## Objective
 
-Prepare and separately authorize one administrator-operated installation and
-metadata-only verification of the published ESP32 forensic-collector runtime
-on `solardt`. This task definition does not authorize installation.
+Prepare and separately authorize one short, finite, passive live verification
+of the installed ESP32 forensic-collector runtime on `solardt`. This task
+definition does not authorize device contact or service activation.
 
 ## Accepted repository baseline
 
@@ -15,63 +15,46 @@ It includes hardened HTTP/SSE behavior, focused regression tests,
 dormant `systemd/esp32-forensic-collector.service` with no timer or activation
 target. The current default remains `esp32-frequency-v1`.
 
-No runtime, identity, path, permission, unit, or device compatibility has been
-installed or verified. The actual ESP32 `Content-Type` remains unknown until a
-later passive-verification phase.
+The runtime and dormant unit from commit
+`7f2274b9011c4bb85f3099eb80c8bb86a21f0e04` are installed and metadata-
+verified. `solardt-telemetry`, `/var/lib/solar-digital-twin/esp32`, reporter
+read-only access, the exact installed commit/unit, and static/inactive state
+passed verification. No credential or evidence file exists, no timer or
+automatic activation path exists, and no device was contacted. The actual
+ESP32 `Content-Type` and live compatibility remain unknown.
 
 ## Scope
 
-A new authorization should require Chris-operated commands on exact host
-`solardt` and should proceed in observed stages:
+A new authorization should define one observed finite invocation and verify:
 
-1. review the published implementation and run the nonprivileged installer
-   `--check`;
-2. inspect the existing `/opt/solar-digital-twin` type, ownership, installation
-   marker, tracked-runtime contents, and SolarAssistant/shared-runtime impact
-   without modifying it;
-3. inspect whether `solardt-telemetry` or conflicting identity/group state
-   already exists;
-4. select any trusted reporting account explicitly and verify that the proposed
-   group model grants evidence read/traverse but not write access;
-5. only after the preflight matches the documented design, run the
-   administrator installation using the reviewed legacy-runtime decision when
-   applicable;
-6. run metadata-only `--verify` for identity, path, ownership, mode, installed
-   commit, code non-writability, evidence access, unit installation, and
-   rollback/archive state; and
-7. prove the unit is disabled/static and inactive, no timer exists, and no
-   automatic contact path was created.
+1. installed commit and dormant pre-run state;
+2. fixed-destination connectivity and actual compatible SSE `Content-Type`;
+3. credentialless operation, approved allowlist, UTC receipt/provenance fields,
+   restrictive output ownership/modes, and raw/current-retained ordering;
+4. complete start/terminal manifest state, clean finite stop, payload-free
+   diagnostics, and preserved partial evidence on failure; and
+5. post-run inactive/static state with no timer or persistent operation.
 
-The installer must preserve the complete prior shared runtime through its
-timestamped archive model and stop on unknown or incompatible state. A failure
-must leave the unit inactive, preserve prior runtime and evidence, and report
-the exact partial state before recovery.
+The resulting finite evidence must be inventoried and preserved even if live
+compatibility fails. Permanent HTTP/content-policy rejection must not be
+retried or worked around by weakening validation or changing the device.
 
 ## Protected boundary
 
-This document does not authorize installation, root commands, user/group or
-permission changes, `/opt`, `/var/lib`, `/etc`, or `/usr` writes, daemon reload,
-unit copying, service start/enable/disable/stop, live ESP32 or solar-device
-contact, HTTP/SSE requests, capture, evidence changes, firmware, network,
-credential, Home Assistant, database, portal, or retention-policy changes.
-
-The later installation work unit must authorize only identity, paths, installed
-tracked code, dormant unit installation, daemon reload needed to register that
-unit, and metadata verification. It must still prohibit service start,
-enablement, device contact, capture, firmware/network/credential/evidence
-changes, and persistent operation.
-
-Passive live verification requires another owner authorization after the
-installation result is reviewed. Persistent or long-duration operation remains
-a fourth, later decision.
+This document does not authorize root commands, user/group or permission
+changes, installation, daemon reload, unit changes, service start/enablement,
+live ESP32 contact, HTTP/SSE requests, capture, evidence creation, firmware,
+network, credential, Home Assistant, database, portal, or retention-policy
+changes. A new bounded owner authorization must explicitly cover the finite
+passive run and its evidence handling. Persistent or long-duration operation
+remains a later decision.
 
 ## Success
 
-The approved repository commit is installed without damaging the existing
-shared runtime; the credentialless identity and paths match the reviewed model;
-trusted reporting access is read-only; the installed commit is verifiable; the
-unit is present but disabled/static and inactive; no timer exists; prior
-runtime and evidence are preserved; and no device was contacted.
+One finite credentialless run confirms actual compatible SSE response behavior,
+approved records/provenance, restrictive outputs, clean manifest closure, and
+safe stopping without device/configuration change. The unit returns inactive,
+no persistent activation is created, and all verification evidence is preserved.
 
 ## Architectural sequence after hardening
 

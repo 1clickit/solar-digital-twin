@@ -7,20 +7,44 @@ on the static review at commit
 `140f6fd4f9f4d9bc1daa4e9e7c0e59e9e43e658c` and implemented from checkpoint
 `b1e821964427f62fa45237a8f915760146e817cc`.
 
-The repository now contains the hardened collector, focused tests, a
-credentialless runtime installer, a fixed-provenance launcher, and a dormant
-systemd unit. Nothing was installed: no runtime, identity, permission, service,
-device, network, evidence, database, firmware, or retention-policy state was
-changed, and no device was contacted.
+The repository contains the hardened collector, focused tests, a credentialless
+runtime installer, a fixed-provenance launcher, and a dormant systemd unit.
+Installation and metadata-only verification completed successfully on
+`solardt` from commit `7f2274b9011c4bb85f3099eb80c8bb86a21f0e04`.
+No service was started or enabled, no evidence was created, and no device was
+contacted.
 
 The future work is separated into four gates:
 
 1. repository-only implementation — **complete**;
-2. separately approved installation on `solardt`;
+2. separately approved installation on `solardt` — **complete**;
 3. separately approved short passive live verification; and
 4. a later owner decision for persistent or long-duration operation.
 
 Approval of one gate does not authorize another.
+
+## Installation result
+
+The tracked whole-application runtime is installed at
+`/opt/solar-digital-twin` with an exact commit marker. The prior shared runtime
+is preserved at `/opt/solar-digital-twin.backup.20260720T205254Z`; installer
+rollback was not invoked. The fresh virtual environment completed successfully,
+although pip warned that pinned `charset-normalizer==3.4.8` was yanked without
+a stated reason. This remains a dependency-maintenance observation, not an
+installation failure.
+
+The new system identity `solardt-telemetry` has observed UID/GID `996/989`,
+home `/nonexistent`, shell `/usr/sbin/nologin`, and only its same-named primary
+group. Trusted reporter `chris` was added to that group; read/traverse passed
+and write access was denied. Existing `solardt-telemetry-readers` was not
+modified or repurposed. State and evidence directories are
+`solardt-telemetry:solardt-telemetry` mode `0750`; the evidence file count was
+zero. No ESP32 credential path exists.
+
+The installed unit exactly matches the repository artifact and is
+`root:root 0644`, static, inactive, and dead. It has no timer, trigger,
+activation symlink, automatic start path, or collector process. Actual device
+`Content-Type` and live compatibility remain for the passive-verification gate.
 
 ## Repository implementation result
 
@@ -314,13 +338,11 @@ database work, portal work, evidence changes, and retention-policy promotion.
 
 ## 10. Separately approved runtime phases
 
-### Installation
+### Installation — complete
 
-After repository implementation is committed and reviewed, a new bounded
-administrator-operated work unit may run nonprivileged check, install the
-identity/directories/tracked runtime and dormant unit, then perform metadata-
-only verification. It must confirm the service remains disabled and inactive
-and must not contact the device.
+The administrator-operated check, legacy-runtime inspection, archive-first
+installation, and metadata-only verification passed. The unit remained static
+and inactive and no device was contacted.
 
 ### Passive verification
 
@@ -423,8 +445,6 @@ and validate from synthetic fixtures before any later passive run.
 
 ## Remaining decisions and uncertainties
 
-- Installation must verify whether `solardt-telemetry` or an equivalent
-  identity already exists; this plan does not inspect host identities.
 - The passive phase must record the device's actual `Content-Type` parameters.
 - The implementation unit should confirm that 1 MiB safely exceeds legitimate
   observed fixture/event size before fixing the bound.

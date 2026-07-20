@@ -181,10 +181,11 @@ open this protected evidence directory. Any metadata inventory, source hash,
 controlled read-only copy, analysis read, or temporary-copy removal requires
 its own explicitly reviewed approval and must not weaken these permissions.
 
-The separate LAN-only live-capture monitor is installed and running as
-`solardt-sa` in root-owned detached tmux session `solarassistant-monitor` at
-`http://192.168.3.11:8792`; `GET /health` returned `{"status":"ok"}`. Its
-observed PID 92674 is transient, not configuration. The fresh-data `Unknown`
-badge correction is committed but has not been deployed. The monitor now
-reports the completed capture as stale, as expected. Any deployment or monitor
-restart still requires explicit approval.
+The separate LAN-only live-capture monitor is installed but currently stopped.
+It had run as `solardt-sa` in a root-owned detached tmux session with no systemd
+service; the VM reboot associated with the memory upgrade ended that temporary
+process. Completed capture evidence remains preserved. The monitor was not
+restarted or modified during ESP32 runtime installation, and its outage is
+unrelated to that installation or to the SolarAssistant device. The fresh-data
+`Unknown` badge correction remains committed but not deployed. Any deployment
+or monitor restart still requires explicit approval.

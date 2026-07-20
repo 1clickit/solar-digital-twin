@@ -805,3 +805,64 @@ or runtime change.
   compatibility with the existing shared `/opt` runtime, reporter selection,
   and host resource headroom remain installation or passive-verification facts.
   The unit remains repository-only and dormant.
+
+## 2026-07-20T21:09:23Z — Install dormant ESP32 runtime
+
+- **Actor:** Chris operated the `solardt` terminal under a ChatGPT-directed,
+  owner-authorized bounded installation; Codex synchronized this durable record.
+- **Purpose:** Install the published credentialless ESP32 runtime and perform
+  metadata-only verification while leaving device contact and persistent
+  operation separately gated.
+- **Installed source and runtime:** Commit
+  `7f2274b9011c4bb85f3099eb80c8bb86a21f0e04` was installed as a tracked whole-
+  application deployment at `/opt/solar-digital-twin`; its exact commit marker
+  passed. The previous shared runtime is preserved at
+  `/opt/solar-digital-twin.backup.20260720T205254Z`. Rollback was not invoked.
+- **Identity and access:** Created system user/group `solardt-telemetry` with
+  observed UID/GID `996/989`, `/nonexistent` home, `/usr/sbin/nologin`, and only
+  its same-named primary group. Added trusted reporter `chris` to that group;
+  reporter read/traverse passed and write was denied. Existing
+  `solardt-telemetry-readers` was not modified or repurposed.
+- **Paths and unit:** Created `/var/lib/solar-digital-twin/esp32` and its
+  `evidence` directory as `solardt-telemetry:solardt-telemetry` mode `0750`.
+  Installed `/etc/systemd/system/esp32-forensic-collector.service` as
+  `root:root 0644`, performed the required daemon reload, and verified the unit
+  exactly matched the repository artifact and remained static/inactive/dead.
+  No timer, trigger, activation symlink, automatic-start path, or collector
+  process existed.
+- **Credential and evidence boundary:** No credential was created;
+  `/etc/solar-digital-twin/esp32` was independently absent. Service evidence
+  write access passed; reporter read passed and write was denied. Post-install
+  evidence-file count was zero; no raw or retained evidence was created or
+  modified.
+- **Shared-runtime compatibility:** SolarAssistant collector and monitor local
+  import/help validation passed. The temporary SolarAssistant monitor was
+  already stopped by the VM reboot associated with the memory upgrade; it has
+  no systemd service, was not restarted or modified, and its outage is unrelated
+  to this installation. Completed capture evidence remains preserved.
+- **Validation:** Repository preflight and installer `--check` passed; existing
+  legacy runtime, archives, identity, unit, path, reporter, space, and inode
+  state were reviewed; installer `--verify` passed; independent installed-
+  commit, ownership/mode, access, unit-artifact, static/inactive, no-timer,
+  no-process, no-evidence, no-credential-path, local import, repository HEAD,
+  origin, divergence, and clean-tree checks passed.
+- **Untouched:** ESP32 and all solar devices; services and tmux processes beyond
+  the required unit registration; credentials and protected directories; raw
+  evidence; firmware; networking; Home Assistant; databases; portal; collector
+  and retention behavior. The ESP32 unit was not started or enabled, and no
+  device was contacted.
+- **Dependency observation:** The fresh virtual environment installed
+  successfully, but pip warned that pinned `charset-normalizer==3.4.8` was a
+  yanked version without a stated reason. This is unresolved dependency
+  maintenance, not an installation failure.
+- **Recovery:** The preserved timestamped shared-runtime archive is the rollback
+  source. Any rollback, monitor restart, passive ESP32 verification, or
+  persistent operation requires its own authorization; do not delete the
+  archive or evidence.
+- **Related commit and push:** The documentation commit containing this entry is
+  titled `Record dormant ESP32 runtime installation`; one normal fast-forward
+  push to `origin/main` is authorized after canonical safeguards pass.
+- **Next gate:** Separately authorize one short, finite passive ESP32 live
+  verification to record actual `Content-Type`, credentialless connectivity,
+  output/provenance behavior, manifest closure, and clean stop. Persistent or
+  long-duration operation remains a later owner decision.

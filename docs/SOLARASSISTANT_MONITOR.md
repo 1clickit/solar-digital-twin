@@ -7,24 +7,26 @@ dashboard for observing a controlled evidence capture. It is the separate
 standard-library module
 `solar_digital_twin.reporting.solarassistant_monitor`; it does not change or
 run inside the collector. Repository implementation and offline testing are
-complete. The monitor is installed and running as `solardt-sa` in root-owned
-detached tmux session `solarassistant-monitor` at
-`http://192.168.3.11:8792`; its health endpoint returned `{"status":"ok"}`.
+complete. The monitor is installed but currently stopped. It previously ran as
+`solardt-sa` in a root-owned detached tmux session with no systemd service; the
+VM reboot associated with the memory upgrade ended that temporary process.
+Completed capture evidence remains preserved, and no collector or device
+failure is implied.
 
 No systemd service is included. Integration into the primary project portal
 remains deferred.
 
-The running monitor reports the completed capture as `Complete` and its
-freshness as `Stale`, which is expected now that collection has ended. Commit
-`a227b68` reproduced the earlier fresh-data `Unknown` badge defect offline: bare JavaScript `status` resolved to the browser-provided
-defect offline: bare JavaScript `status` resolved to the browser-provided
+Before the reboot, the monitor reported the completed capture as `Complete` and
+its freshness as `Stale`, which was expected after collection ended. Commit
+`a227b68` reproduced the earlier fresh-data `Unknown` badge defect offline:
+bare JavaScript `status` resolved to the browser-provided
 `window.status` value instead of the intended badge element. The correction
 explicitly binds that element and uses it for normal rendering and fetch-error
 fallback. A regression test explicitly rejects bare `status.textContent`.
 Focused monitor tests passed (27), and the full suite passed (87). Backend
 status semantics and read-only monitor behavior were unchanged. The commit is
-pushed but has not been deployed to the running monitor. Its PID was observed as
-92674, but PIDs are transient observations and not stable runtime configuration.
+pushed but has not been deployed. Historical PID 92674 was transient and is
+not stable runtime configuration.
 
 ## Data flow and in-memory operation
 
@@ -150,10 +152,10 @@ the planned network boundary.
 ## Completed-capture boundary and later workflow
 
 The 86,400-second collector completed normally and is no longer running. The
-monitor remains running and `/health` returned `{"status":"ok"}`. Any monitor
-deployment or restart still requires separate explicit approval; a later
-approved update must restart only the monitor and preserve all captured
-evidence.
+temporary monitor is also stopped after the VM reboot; it has no systemd
+service and was not restarted during ESP32 installation. Any monitor deployment
+or restart still requires separate explicit approval; a later approved update
+must restart only the monitor and preserve all captured evidence.
 
 During the read-only completion inspection, an in-memory abort-control token
 field was inadvertently included in command output. The token was not used,

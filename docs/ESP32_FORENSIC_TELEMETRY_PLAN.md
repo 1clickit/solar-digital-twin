@@ -133,9 +133,10 @@ retiring the current policy.
 The versioned conservative writer and opt-in canary mode defined in
 `docs/ESP32_RETENTION_PRODUCTION_PLAN.md` are implemented and synthetically
 validated. The historical `esp32-frequency-v1` output remains the default;
-`esp32-conservative-v1` is dormant unless explicitly selected. No live canary,
-deployment, or production-default change occurred. The next step is a
-separately authorized administrator installation and metadata-only verification
-under `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. It does not promote a
-retention policy or authorize service activation, device contact, capture,
-firmware, network, database, or portal changes.
+`esp32-conservative-v1` is dormant unless explicitly selected. The hardened
+runtime and dormant unit are now installed and metadata-verified under
+`docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`; no live contact, capture, or
+production-default change occurred. The next step is a separately authorized
+short finite passive verification. It does not promote a retention policy or
+authorize persistent activation, firmware, network, database, or portal
+changes.
