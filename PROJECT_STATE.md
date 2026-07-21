@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Independent review of the synthetic SolarAssistant SOC adapter implementation
+Synthetic SolarAssistant SOC adapter independently reviewed and owner-accepted
 
 Next Task:
-Independently review and accept or correct the synthetic SolarAssistant combined-SOC adapter implementation without authorizing production binding.
+Select and plan the next telemetry-contract milestone after acceptance of the synthetic SolarAssistant combined-SOC adapter, without authorizing production binding or operational integration.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -52,12 +52,18 @@ main
   outage, deterministic immutable behavior, and no file, database, or network
   I/O. One valid input emits one root source-value observation and no normalized
   product
-- The implementation imports no live collector, provides no production ID
-  encoding or storage binding, and represents JK telemetry only through
-  SolarAssistant REST. It is pending independent implementation review and
-  remains Deferred for production binding; no runtime, evidence, database,
-  credential, service, device, portal, Home Assistant, or persistent ESP32
-  action occurred
+- The corrected synthetic offline implementation passed independent ChatGPT
+  review, and Chris explicitly accepted it as a completed source-adapter slice.
+  The accepted sequence is `fa225d58a4108fa08955210276480127ff442869`
+  (initial synthetic implementation),
+  `d5868054d0582c5cffa9fae42b03e57bc3e10bb8` (explicit-state and validator
+  correction), and `54df732adb854f0de9a971bdf21ae56f0750c46e`
+  (mixed root/status profile correction). The implementation imports no live
+  collector, provides no production ID encoding or storage binding, and
+  represents JK telemetry only through SolarAssistant REST. Production binding
+  and operational integration remain separately Deferred and unauthorized; no
+  runtime, evidence, database, credential, service, device, portal, Home
+  Assistant, or persistent ESP32 action occurred
 - Deferred adapter detail: define the HA-import fallback meaning of
   `source.metric_id` when the root-native identifier is unresolved and only the
   HA entity identifier is known; do not silently decide it during milestone

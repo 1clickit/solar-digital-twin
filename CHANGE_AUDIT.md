@@ -1324,3 +1324,26 @@ or runtime change.
   profiles`; publish once by normal fast-forward to expected `origin/main`
   after all safeguards pass. Recovery is a later normal revert of this
   correction commit. No operational rollback applies.
+
+## 2026-07-21T03:52:47Z — Accept synthetic SolarAssistant SOC adapter
+
+- **Decision:** Independent ChatGPT review passed, and Chris explicitly
+  accepted the corrected synthetic SolarAssistant combined-SOC implementation
+  as a completed offline source-adapter slice.
+- **Accepted commits:** `fa225d58a4108fa08955210276480127ff442869`
+  (initial implementation), `d5868054d0582c5cffa9fae42b03e57bc3e10bb8`
+  (explicit-state and validator correction), and
+  `54df732adb854f0de9a971bdf21ae56f0750c46e` (mixed root/status correction).
+- **Documentation-only scope:** Updated `PROJECT_STATE.md`, `NEXT_TASK.md`,
+  `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, and this append-only audit entry to
+  record acceptance and make selection and planning of the next
+  telemetry-contract milestone the active task.
+- **Boundary:** Acceptance does not authorize production IDs or binding,
+  storage/schema or historical adaptation, live SolarAssistant or JK access,
+  collectors, retention, evidence, runtime, services, deployment, portal, Home
+  Assistant, devices, or network action. No code, test, fixture, contract,
+  dependency, generated, database, credential, or operational state changed.
+- **Publication and recovery:** Publish this documentation-only acceptance as
+  one normal fast-forward commit with subject `Accept synthetic SolarAssistant
+  SOC adapter`. Recovery is a later normal revert of this documentation commit
+  only; no operational rollback applies.

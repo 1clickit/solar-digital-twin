@@ -568,19 +568,21 @@ ID/version/method; that behavior is outside this slice.
 
 ### Validation state and exclusions
 
-The synthetic slice is implemented and passes its focused offline tests. Its
-explicit null, `unknown`, and `unavailable` inputs produce root source-value
+The synthetic slice is implemented, independently reviewed, and owner-accepted.
+Its explicit null, `unknown`, and `unavailable` inputs produce root source-value
 state observations with preserved raw state and no normalized numeric value;
 missing and invalid inputs remain rejections. The minimal validator enforces
 required-null presence and prohibited fields for its root and source-status
-profiles. It also passes
-immutability and deterministic-output checks, full offline suite, repository
-health, and exact scope checks. It remains pending independent implementation
-review. It does not open real NDJSON, evidence, SQLite, reports, credentials,
-or network endpoints; change collectors or outputs; select production ID
-encoding or storage; add EG4, ESP32, HA, portal, export, persistence, or
-migrations; or access installed runtime. Recovery is a normal revert of the
-implementation commit; no operational rollback applies.
+profiles. During implementation review, all 21 focused tests and all 239 full
+offline tests passed, together with immutability, deterministic-output,
+repository-health, and exact-scope checks. Acceptance does not authorize
+production record or observation IDs, storage or schema work, historical
+adaptation, live binding, device contact, or deployment. The slice does not
+open real NDJSON, evidence, SQLite, reports, credentials, or network endpoints;
+change collectors or outputs; add EG4, ESP32, HA, portal, export, persistence,
+or migrations; or access installed runtime. Recovery remains a normal revert
+of the applicable implementation or correction commit; no operational rollback
+applies.
 
 ## 13. Deferred decisions and milestone sequence
 
@@ -598,5 +600,6 @@ Still deferred:
 
 Independent review passed and Chris accepted this plan and its selected
 synthetic-only slice. The separately authorized repository implementation is
-complete and pending independent implementation review. It does not authorize
-storage, production binding, device contact, or deployment.
+complete, independently reviewed, and owner-accepted. Acceptance does not
+authorize production IDs, storage, historical adaptation, live binding, device
+contact, or deployment.
