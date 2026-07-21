@@ -42,7 +42,10 @@ integrations remain constrained by separate authorization. See
 `docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md`. The proposed canonical
 observation and provenance semantics are centralized in
 `docs/TELEMETRY_OBSERVATION_CONTRACT.md`, accepted by the project owner after
-final independent review.
+final independent review. The proposed implementation mapping and first
+synthetic-only slice are centralized in
+`docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, pending independent review and owner
+acceptance.
 
 ## Operational Completion Baseline
 

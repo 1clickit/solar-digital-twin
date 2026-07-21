@@ -7,7 +7,9 @@ Initial source-role decisions agreed during read-only discovery.
 The owner-accepted canonical representation of these roles alongside
 observation, timestamp, freshness, quality, and lineage semantics is
 `TELEMETRY_OBSERVATION_CONTRACT.md`. This document remains the authority for
-source-role decisions.
+source-role decisions. The proposed source-specific mappings into that
+contract are centralized in `TELEMETRY_SOURCE_ADAPTER_PLAN.md`, pending
+independent review and owner acceptance.
 
 ## Battery Authority
 

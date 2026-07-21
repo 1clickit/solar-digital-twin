@@ -2,60 +2,62 @@
 
 ## Objective
 
-Plan source-specific adapters and select the first bounded offline implementation slice.
+Independently review and accept or correct the proposed telemetry source-adapter plan and selected first offline implementation slice.
 
-The planning is governed by the owner-accepted
-`docs/TELEMETRY_OBSERVATION_CONTRACT.md`.
+## Review baseline
 
-## Accepted repository baseline
+`docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md` is a proposed authoritative
+implementation plan governed by the owner-accepted
+`solar-digital-twin.telemetry-observation.v1` contract. It maps EG4 cloud
+runtime, energy, and day-series data; SolarAssistant/JK BMS; ESP32 SSE; future
+allowlisted Home Assistant imports; and normalized and derived producers into
+the canonical contract.
 
-`solar-digital-twin.telemetry-observation.v1` passed final independent ChatGPT
-review and was explicitly accepted by Chris as the authoritative observation
-and provenance contract. Its six earlier internal review findings are resolved.
-Acceptance establishes design authority but does not authorize implementation.
+The plan selects one later bounded slice: a minimal shared envelope
+model/validator plus a SolarAssistant combined-SOC adapter using synthetic poll
+fixtures. Production record and observation IDs remain injectable and
+unselected. The selection does not authorize implementation automatically.
 
 ## Scope
 
-A bounded repository-only planning work unit should:
+Review should confirm that:
 
-1. define source-adapter plans for EG4 cloud runtime, energy, and day series;
-2. define adapter plans for SolarAssistant/JK BMS, ESP32 SSE, and future
-   allowlisted Home Assistant imports;
-3. define normalized and derived producer responsibilities;
-4. plan the adapter registry and stable metric-ID mappings;
-5. map source-specific timestamps, state, unit, lineage, and evidence fields;
-6. assess compatibility with existing SQLite, NDJSON, reports, portal behavior,
-   and `TimedRecord`;
-7. identify contract acceptance gates for each source before production
-   binding; and
-8. select and justify one small offline-fixture implementation slice for a
-   later separately authorized work unit.
+1. the shared adapter boundary is small, deterministic, and storage-neutral;
+2. metric and unit registries preserve source identity, authority, and unit
+   provenance;
+3. every source mapping preserves native timestamp, state, lineage, evidence,
+   and retention semantics;
+4. all sixteen contract acceptance gates have concrete planning coverage;
+5. existing collectors, evidence, SQLite, reports, portal behavior,
+   `TimedRecord`, and correlation analysis remain compatible;
+6. the selected synthetic-only slice is appropriately bounded and useful; and
+7. implementation, production binding, and operational decisions remain
+   separately gated.
 
-The planning must preserve the unresolved HA-import fallback meaning of
-`source.metric_id` when only the HA entity ID is known as an explicit deferred
-adapter decision; milestone selection must not silently decide it.
+The unresolved Home Assistant fallback for `source.metric_id` when only an HA
+entity ID is known remains a later owner-reviewed adapter decision. The
+unscheduled `solardt` reboot/recovery procedure also remains a separate future
+task.
 
 ## Protected boundary
 
-This task is planning-only. It does not authorize adapter or collector code,
-schemas or migrations, database reads/writes, evidence reads or changes,
-runtime/service action, live device or Home Assistant contact, portal binding,
-HA export, retention changes, or persistent ESP32 operation. The separately
-deferred `solardt` VM reboot/recovery procedure is not part of this milestone.
+Review does not authorize adapter or collector code, schemas or migrations,
+storage or database access, evidence access or changes, runtime/service action,
+live device or Home Assistant contact, portal binding, HA export, retention
+changes, or persistent ESP32 operation.
 
 ## Success
 
-A reviewed source-adapter plan maps each source honestly to the accepted
-contract, documents compatibility and acceptance gates, and selects one small
-offline-fixture implementation slice without performing implementation or
-crossing an operational boundary.
+Independent review either accepts the proposed plan and selected slice or
+returns bounded corrections. Acceptance confirms planning authority only; it
+does not authorize implementation or publication by itself.
 
-## Architectural sequence
+## After acceptance
 
-After adapter planning is accepted, separately authorize the selected offline
-fixture slice. Storage/schema planning, production normalized storage, portal
-binding, Home Assistant export, duplicate-ingestion retirement, and persistent
-ESP32 operation remain later independent milestones.
+Separately authorize the selected synthetic-fixture implementation slice.
+Storage/schema planning, production normalized storage, portal binding, Home
+Assistant export, duplicate-ingestion retirement, and persistent ESP32
+operation remain later independent milestones.
 
 ## Deferred Post-Project Investigations
 

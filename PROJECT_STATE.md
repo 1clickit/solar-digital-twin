@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Source-adapter planning
+Independent review of the proposed telemetry source-adapter plan
 
 Next Task:
-Plan source-specific adapters and select the first bounded offline implementation slice.
+Independently review and accept or correct the proposed telemetry source-adapter plan and selected first offline implementation slice.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -32,9 +32,14 @@ main
   adapter, schema/storage, portal, Home Assistant, collector,
   retention, runtime, evidence, device, or network implementation occurred
 - The current milestone is planning source adapters and selecting the first
-  bounded offline implementation slice. Persistent or long-duration
-  ESP32 operation remains an unmade owner decision, with no timer or automatic
-  operation authorized
+  bounded offline implementation slice. That planning is locally complete in
+  `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, pending independent ChatGPT review
+  and owner acceptance. It selects a minimal shared envelope model/validator
+  plus a SolarAssistant combined-SOC adapter using synthetic poll fixtures as
+  the first later slice. The plan is documentation only: no adapter, schema,
+  storage, portal, Home Assistant, collector, retention, runtime, evidence,
+  device, database, or network implementation occurred. Its local
+  `commit-only` result awaits review and separate publication authorization
 - Deferred adapter detail: define the HA-import fallback meaning of
   `source.metric_id` when the root-native identifier is unresolved and only the
   HA entity identifier is known; do not silently decide it during milestone
@@ -91,12 +96,10 @@ main
 - Irradiance, local-dongle, sub-second disturbance, per-microinverter, and fan
   investigations remain decision-driven later possibilities, not active
   milestones
-- The next technical milestone is a repository design for a common telemetry
-  observation, provenance, source-lineage, timestamp, freshness, availability,
-  and normalization contract before production multi-source portal binding or
-  reciprocal Home Assistant integration. Persistent or long-duration ESP32
-  operation remains an unmade owner decision; no timer or automatic operation
-  is authorized
+- Persistent or long-duration ESP32 operation remains an unmade owner decision;
+  no timer or automatic operation is authorized. Storage/migration planning,
+  portal binding, Home Assistant export, and production adapter binding remain
+  separate future milestones
 - Coordinated capture `solar-forensic-20260718T062127Z` was intentionally
   stopped through transient supervisor
   `solar-coordinated-solar-forensic-20260718T062127Z.service` after

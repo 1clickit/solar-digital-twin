@@ -1056,3 +1056,57 @@ or runtime change.
   ID is known remains an adapter-planning detail. The unscheduled `solardt` VM
   reboot/recovery procedure remains a separate future task covering service,
   collector, timer, dormant-unit, evidence-integrity, and recovery behavior.
+
+## 2026-07-21T00:28:56Z — Plan telemetry source adapters
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  source-adapter planning authorization with publication mode `commit-only`.
+- **Purpose:** Create the proposed authoritative implementation plan mapping
+  current and planned telemetry sources into the owner-accepted
+  `solar-digital-twin.telemetry-observation.v1` contract, compare candidate
+  first implementation slices, and select one later offline-fixture slice.
+- **Affected:** New `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, `PROJECT_STATE.md`,
+  `NEXT_TASK.md`, `PROJECT_INDEX.md`, concise authority references in
+  `docs/Engineering_Bible.md` and `docs/TELEMETRY_SOURCE_ROLES.md`, and this
+  append-only audit entry.
+- **Proposed architecture:** Caller-supplied native records pass through
+  source-specific parsing and validation into canonical observation, scoped
+  status, or rejection envelopes. The plan keeps collection, evidence,
+  adaptation, normalization, derivation, retention, storage, freshness,
+  presentation, and Home Assistant transport separate. It proposes a small
+  standard-library-first adapter protocol, immutable internal models,
+  versioned metric/unit registries, structured source mappings, and concrete
+  coverage for all sixteen contract acceptance gates.
+- **Selected later slice:** A minimal shared envelope model/validator plus a
+  SolarAssistant trusted combined-SOC adapter using synthetic poll fixtures.
+  Production IDs remain injectable and unselected; implementation requires a
+  separate authorization after review and acceptance.
+- **Reuse findings:** Existing collectors and retention modules remain evidence
+  producers and semantic references rather than canonical adapters. Parsing and
+  timestamp helpers may be wrapped where stricter contract semantics are added.
+  `TimedRecord` and forensic correlation adapters remain specialized
+  compatibility consumers; later canonical integration requires equivalence
+  tests and does not replace them in this milestone.
+- **Untouched:** The accepted telemetry contract; source and test code;
+  fixtures, schemas, collectors, retention, reports, portal and Home Assistant
+  implementation; runtime, services, VM state, databases, evidence,
+  credentials, devices, firmware, networking, identities, permissions,
+  packages, installation, deployment, and persistent ESP32 operation.
+- **Validation:** Exact plan/state/task/reference review, contract-unchanged and
+  documentation-scope checks, all mapping/gate/candidate/selection checks,
+  `git diff --check`, repository health, shell syntax, Python compilation, and
+  all 218 canonical offline tests passed. The first sandboxed test invocation
+  denied five loopback test-server binds; the unchanged suite passed when
+  rerun with the already approved loopback-test capability.
+- **Recovery:** Revert the single normal local documentation commit before any
+  later publication, or use a later normal revert commit if separately
+  published. No operational rollback applies.
+- **Commit and publication:** Planned subject `Plan telemetry source adapters`.
+  `commit-only` authorizes exact staging and one local commit; no push is
+  authorized. The result remains available locally for independent ChatGPT
+  review and a later separately authorized publication decision.
+- **Review and deferred matters:** The plan and selected slice remain pending
+  independent ChatGPT review and owner acceptance. Final HA-import
+  `source.metric_id` fallback semantics and the unscheduled `solardt` VM
+  reboot/recovery procedure remain explicit separate decisions, as do storage,
+  migration, portal binding, HA export, and persistent ESP32 operation.
