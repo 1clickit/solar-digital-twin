@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Independent review of the proposed telemetry source-adapter plan
+Prepare the first bounded telemetry source-adapter implementation request
 
 Next Task:
-Independently review and accept or correct the proposed telemetry source-adapter plan and selected first offline implementation slice.
+Prepare the bounded repository-only implementation request for the accepted synthetic SolarAssistant combined-SOC slice.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -31,17 +31,16 @@ main
   implementation boundaries. Acceptance does not authorize implementation; no
   adapter, schema/storage, portal, Home Assistant, collector,
   retention, runtime, evidence, device, or network implementation occurred
-- Source-adapter planning is locally complete in
-  `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, pending independent ChatGPT review
-  and owner acceptance. The current milestone is independent review and
-  correction of that proposed plan and selected slice. It selects a minimal
-  shared envelope model/validator plus a SolarAssistant combined-SOC adapter
-  using synthetic poll fixtures as
-  the first later slice. The plan is documentation only: no adapter, schema,
-  storage, portal, Home Assistant, collector, retention, runtime, evidence,
-  device, database, or network implementation occurred. Its local
-  `commit-only` result remains unpublished to `origin/main` and awaits re-review
-  and separate publication authorization
+- `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md` is the owner-accepted authoritative
+  implementation plan. Independent ChatGPT review passed, four narrow findings
+  were corrected, and the SolarAssistant JK telemetry namespace was clarified
+  before Chris accepted the plan and its selected first slice. The accepted
+  slice is a minimal shared envelope model/validator plus a SolarAssistant
+  combined-SOC adapter using synthetic poll fixtures. Acceptance does not
+  authorize implementation automatically; no adapter, schema, storage, portal,
+  Home Assistant, collector, retention, runtime, evidence, device, database, or
+  network implementation occurred. The current milestone is preparing a
+  separately bounded repository-only implementation request for that slice
 - Deferred adapter detail: define the HA-import fallback meaning of
   `source.metric_id` when the root-native identifier is unresolved and only the
   HA entity identifier is known; do not silently decide it during milestone

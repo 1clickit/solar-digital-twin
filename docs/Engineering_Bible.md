@@ -39,13 +39,13 @@ Future Home Assistant interoperability begins as allowlisted, LAN-only,
 reciprocal read-only telemetry. Source lineage must prevent circular imports or
 copied values from being counted as independent evidence, and control-capable
 integrations remain constrained by separate authorization. See
-`docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md`. The proposed canonical
+`docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md`. The canonical
 observation and provenance semantics are centralized in
 `docs/TELEMETRY_OBSERVATION_CONTRACT.md`, accepted by the project owner after
-final independent review. The proposed implementation mapping and first
-synthetic-only slice are centralized in
-`docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, pending independent review and owner
-acceptance.
+final independent review. The owner-accepted authoritative implementation
+mapping and first synthetic-only slice are centralized in
+`docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`. Its acceptance does not authorize
+implementation automatically.
 
 ## Operational Completion Baseline
 

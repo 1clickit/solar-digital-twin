@@ -1181,3 +1181,38 @@ or runtime change.
 - **Recovery:** Revert the local clarification commit before later publication,
   or use a later normal revert if separately published. No operational rollback
   applies.
+
+## 2026-07-21T01:33:05Z — Record telemetry adapter plan acceptance
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  acceptance synchronization with publication mode `commit-and-push`.
+- **Owner decision:** Independent ChatGPT review passed after the planning
+  commit and two correction commits. Chris explicitly accepted the Telemetry
+  Source Adapter Plan and its selected first synthetic-only implementation
+  slice as the project's authoritative implementation plan. Acceptance does
+  not authorize implementation automatically.
+- **Purpose:** Change the plan from pending review to owner-accepted authority,
+  synchronize project state and references, and advance the next task to
+  preparing a bounded repository-only implementation request for the accepted
+  SolarAssistant combined-SOC slice.
+- **Affected:** `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, `PROJECT_STATE.md`,
+  `NEXT_TASK.md`, `PROJECT_INDEX.md`, `docs/Engineering_Bible.md`,
+  `docs/TELEMETRY_SOURCE_ROLES.md`, and this append-only audit entry.
+- **Boundary:** No adapter, source, tests, fixtures, contract, schema, storage,
+  collector, retention, report, portal, Home Assistant, runtime, service,
+  database, evidence, credential, device, firmware, network, permission, or
+  persistent ESP32 change is authorized or performed. Preparing the next work
+  request is distinct from authorizing its implementation.
+- **Validation:** Acceptance/status consistency, stale pending-wording,
+  state/task/reference, accepted-contract-unchanged, exact documentation scope,
+  artifact exclusion, `git diff --check`, repository health, and documentation
+  checks passed before staging. Exact staged scope and pre-push fast-forward
+  safeguards remain required before publication.
+- **Publication/recovery:** Planned subject `Record telemetry adapter plan
+  acceptance`; one normal fast-forward push of local `main` to expected
+  `origin/main` is authorized. Recovery is a later normal revert of this
+  acceptance commit and, if needed, the preceding three plan commits; no
+  operational rollback applies. The temporary review branch remains intact.
+- **Deferred:** Production ID encoding, HA `source.metric_id` fallback, other
+  adapters, storage/migration, portal/HA binding, reboot/recovery, and
+  persistent ESP32 operation remain separate future decisions.

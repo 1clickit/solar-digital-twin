@@ -89,9 +89,10 @@ docs/TELEMETRY_OBSERVATION_CONTRACT.md
     contract.
 
 docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md
-    Proposed source-specific mapping, registry, compatibility, acceptance-gate,
-    and first offline implementation-slice plan under the accepted telemetry
-    contract; pending independent review and owner acceptance.
+    Owner-accepted authoritative source-specific mapping, registry,
+    compatibility, acceptance-gate, and first offline implementation-slice plan
+    under the accepted telemetry contract. Acceptance does not authorize
+    implementation automatically.
 
 docs/EG4_LOCAL_PORTAL.md
     Current EG4 portal operations and the primary engineering-interface plan.

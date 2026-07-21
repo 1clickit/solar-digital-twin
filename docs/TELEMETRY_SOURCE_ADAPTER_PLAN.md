@@ -1,7 +1,6 @@
 # Telemetry Source Adapter Plan
 
-**Status:** Proposed authoritative implementation plan; pending independent
-ChatGPT review and owner acceptance
+**Status:** Owner-accepted authoritative implementation plan
 **Governing contract:**
 `solar-digital-twin.telemetry-observation.v1`
 **Boundary:** Planning only. This document does not authorize implementation,
@@ -589,6 +588,7 @@ Still deferred:
 - persistent or long-duration ESP32 operation; and
 - the separate unscheduled `solardt` reboot/recovery procedure.
 
-After independent review and owner acceptance of this plan, separately
-authorize the selected synthetic-only slice. Adapter implementation does not
-authorize storage, production binding, device contact, or deployment.
+Independent review passed and Chris accepted this plan and its selected
+synthetic-only slice. Acceptance establishes planning authority only; separately
+authorize implementation. Adapter implementation would not authorize storage,
+production binding, device contact, or deployment.
