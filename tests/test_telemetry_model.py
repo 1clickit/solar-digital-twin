@@ -129,6 +129,10 @@ class TelemetryModelTests(unittest.TestCase):
         record["transformation"]["id"] = "no-op"
         self.assert_reason(record, "unexpected_transformation")
 
+        record = deepcopy(self.record)
+        record["status"] = {"scope": "source", "state": "unreachable"}
+        self.assert_reason(record, "invalid_root_profile")
+
     def test_invalid_json_value_and_time_are_bounded(self):
         record = deepcopy(self.record)
         record["value"]["raw"] = float("nan")

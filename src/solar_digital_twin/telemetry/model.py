@@ -176,6 +176,7 @@ def _validate_root(record: Mapping[str, Any]) -> None:
         ),
         "incomplete_root_profile",
     )
+    _prohibit_fields(record, ("status",), "invalid_root_profile")
     observation = _mapping(record.get("observation"), "invalid_observation_profile")
     product_kind = observation.get("product_kind")
     if not isinstance(product_kind, str) or product_kind not in SUPPORTED_PRODUCT_KINDS:

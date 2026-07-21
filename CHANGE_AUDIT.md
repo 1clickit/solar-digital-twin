@@ -1301,3 +1301,26 @@ or runtime change.
   authorized after final safeguards pass. Recovery is a later normal revert of
   this correction commit followed, only if necessary, by a normal revert of
   the original implementation commit. No operational rollback applies.
+
+## 2026-07-21T03:46:29Z — Reject mixed root/status profiles
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  correction authorization with publication mode `commit-and-push`.
+- **Finding and correction:** Independent review found that the root validator
+  accepted a mixed profile containing a top-level `status` field even though
+  the source-status validator already rejects observation-profile fields. The
+  root path now rejects top-level `status` with bounded reason
+  `invalid_root_profile`, covered within an existing focused test method.
+- **Affected:** `src/solar_digital_twin/telemetry/model.py`,
+  `tests/test_telemetry_model.py`, and this append-only audit entry.
+- **Validation and boundary:** The 21 focused tests, all 239 offline repository
+  tests, `git diff --check`, repository health, exact three-file scope, and the
+  unchanged telemetry-contract blob are required before publication. Numeric
+  and explicit-state behavior, the adapter, fixtures, registry, identity,
+  documentation status, and next task remain unchanged. No production binding,
+  runtime, service, evidence, database, credential, portal, network, device, or
+  operational action occurred.
+- **Publication and recovery:** Planned subject `Reject mixed root status
+  profiles`; publish once by normal fast-forward to expected `origin/main`
+  after all safeguards pass. Recovery is a later normal revert of this
+  correction commit. No operational rollback applies.
