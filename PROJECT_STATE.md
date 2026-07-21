@@ -31,15 +31,17 @@ main
   implementation boundaries. Acceptance does not authorize implementation; no
   adapter, schema/storage, portal, Home Assistant, collector,
   retention, runtime, evidence, device, or network implementation occurred
-- The current milestone is planning source adapters and selecting the first
-  bounded offline implementation slice. That planning is locally complete in
+- Source-adapter planning is locally complete in
   `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, pending independent ChatGPT review
-  and owner acceptance. It selects a minimal shared envelope model/validator
-  plus a SolarAssistant combined-SOC adapter using synthetic poll fixtures as
+  and owner acceptance. The current milestone is independent review and
+  correction of that proposed plan and selected slice. It selects a minimal
+  shared envelope model/validator plus a SolarAssistant combined-SOC adapter
+  using synthetic poll fixtures as
   the first later slice. The plan is documentation only: no adapter, schema,
   storage, portal, Home Assistant, collector, retention, runtime, evidence,
   device, database, or network implementation occurred. Its local
-  `commit-only` result awaits review and separate publication authorization
+  `commit-only` result remains unpublished to `origin/main` and awaits re-review
+  and separate publication authorization
 - Deferred adapter detail: define the HA-import fallback meaning of
   `source.metric_id` when the root-native identifier is unresolved and only the
   HA entity identifier is known; do not silently decide it during milestone

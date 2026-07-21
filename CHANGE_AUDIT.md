@@ -1110,3 +1110,46 @@ or runtime change.
   `source.metric_id` fallback semantics and the unscheduled `solardt` VM
   reboot/recovery procedure remain explicit separate decisions, as do storage,
   migration, portal binding, HA export, and persistent ESP32 operation.
+
+## 2026-07-21T00:55:11Z — Correct telemetry source adapter plan
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  correction authorization following independent ChatGPT review, with
+  publication mode `commit-only`.
+- **Review result:** Independent review found four narrow corrections. The
+  overall adapter architecture and selected minimal shared validator plus
+  synthetic SolarAssistant combined-SOC slice remain supported.
+- **Review publication context:** The first planning commit was published only
+  to temporary branch `review/telemetry-source-adapter-plan` for review;
+  `origin/main` remained unchanged.
+- **Corrections:** Separated SolarAssistant `jk_bms` acquisition identity from
+  `solarassistant_rest_v1` transport; separated semantic `observation_id` from
+  persisted-instance `record_id` algorithms and inputs; removed a redundant
+  normalized SOC observation from the selected slice; separated future gate
+  coverage from current Deferred production readiness; and reconciled project-
+  state milestone wording.
+- **Identity/copy semantics:** The selected valid record uses canonical metric
+  `solarassistant.jk_bms.combined.state_of_charge`, system
+  `solarassistant`, device `jk_bms_bank`, native metric
+  `total/battery_state_of_charge`, authority role, and REST v1 transport. Raw
+  and retained copies share one observation ID, use distinct record IDs, and
+  differ only through copy-specific retention/evidence provenance.
+- **Scope:** `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, `PROJECT_STATE.md`, and
+  this append-only audit entry only. The accepted contract, source, tests,
+  fixtures, schemas, collectors, retention, reports, portal, Home Assistant,
+  runtime, services, databases, evidence, credentials, devices, networking,
+  permissions, and persistent ESP32 state remain untouched.
+- **Validation:** Exact identity/transport, ID-boundary, copy semantics,
+  root-only valid SOC, gate coverage/readiness, milestone, contract-unchanged,
+  scope, artifact, documentation/reference, repository health, shell syntax,
+  Python compilation, and all 218 canonical offline tests passed before the
+  local correction commit.
+- **Commit/publication:** Planned subject `Correct telemetry source adapter
+  plan`. One normal local correction commit is authorized; no push or review-
+  branch update is authorized. Re-review and separate publication authority
+  remain required.
+- **Recovery and deferred matters:** Revert the local correction commit before
+  later publication, or use a later normal revert if separately published. HA
+  fallback semantics, production ID encoding, adapter implementation, storage,
+  portal/HA binding, reboot/recovery, and persistent ESP32 operation remain
+  deferred.

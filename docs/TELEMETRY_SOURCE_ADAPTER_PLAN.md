@@ -68,7 +68,8 @@ AdapterContext
   registry_version
   producer_name
   producer_version
-  id_provider
+  observation_id_provider
+  record_id_provider
 
 SourceAdapter.adapt(input_record, context, evidence_reference, ingest_sequence)
   -> bounded iterator[canonical record mapping]
@@ -107,7 +108,7 @@ it must not fill semantic fields by guessing.
 | Contract area | Planned construction rule |
 |---|---|
 | Version/kind | Exact accepted contract version; `observation`, `status`, or `rejection`; observations also select `root`, `normalized`, or `derived` product kind |
-| IDs | Obtain `record_id` and observation-only `observation_id` from an injected provider after identity, time, sequence, producer, and evidence inputs are finalized |
+| IDs | Obtain observation-only `observation_id` and per-persisted-instance `record_id` from separate injected provider methods after their distinct inputs are finalized |
 | Metric identity | Resolve only through the versioned metric registry; status scope controls whether `metric_id` is required or null |
 | Source | Registry provides root system, acquisition path, role, device-scope rule, and native-ID rule; input supplies actual device/native values |
 | Lineage | Build minimal structured hops in root-to-current order; unresolved facts remain explicit |
@@ -123,23 +124,38 @@ it must not fill semantic fields by guessing.
 
 ### ID boundary
 
-Production ID encoding remains deliberately deferred. An eventual deterministic
-algorithm must consume, at minimum:
+Production ID encodings remain deliberately deferred. Later implementation
+must expose separate `observation_id_for(...)` and `record_id_for(...)` methods
+(or equivalently distinct protocols) so their semantics cannot be conflated.
 
-- contract/profile and registry versions;
-- root source, acquisition path, device, native and canonical metric identity;
-- selected and original time fields;
-- ingest/source sequence or source-native unique reference;
-- producer and transformation versions;
-- evidence capture/file/table/record reference; and
-- parent IDs or selector identity for derived records.
+An **observation ID** identifies one semantic observation occurrence. For a
+receipt-only SolarAssistant occurrence, its future descriptor uses established
+facts such as root source, `jk_bms` acquisition path, device scope, native and
+canonical metric identities, completed poll-group or accepted-response
+occurrence, accepted receipt/observation time, and a source-occurrence
+discriminator when required. It excludes copy-local file/line references,
+retention stream/policy, copy-local ingest sequence, producer version,
+serialization, and copy-specific evidence paths. Consequently it remains
+stable across raw/retained/current/conservative/canary copies, file relocation,
+serialization differences, and adapter reprocessing that does not change the
+semantic occurrence. A normalized or derived observation is a new semantic
+observation with its own observation ID and explicit root/parent references.
 
-Before implementation, device-scope rules, evidence-reference shapes, stream
-sequence semantics, and normalized-observation identity must be finalized for
-the selected source. Offline fixtures use an injected deterministic test ID
-provider such as a counter keyed by fixture case. Tests must not imply that its
-format is the production algorithm. Later production ID selection plugs into
-the protocol without changing source parsers or record construction.
+A **record ID** identifies one persisted canonical record instance. Its future
+descriptor may include record kind, observation ID where applicable, product
+kind, producer/transformation version, retention stream/policy, copy/evidence
+reference, and record-specific status or rejection identity. Thus raw and
+retained records for one root occurrence share the root observation ID but have
+different record IDs and retention/evidence provenance; they are not separate
+physical measurements.
+
+Before implementation, device-scope and poll-group occurrence rules,
+evidence-reference shapes, and record-copy semantics must be finalized for the
+selected source. Offline fixtures use separately injected deterministic test
+providers or methods, such as distinct counters keyed by fixture case. Tests
+must not imply that either format is the production encoding. Later production
+algorithms plug into these boundaries without changing source parsing or
+record construction.
 
 ## 5. Versioned metric registry
 
@@ -172,6 +188,12 @@ SolarAssistant combined/Battery 1/Battery 2 remain distinct. ESP32 entries
 preserve exact entity IDs. Aliases represent actual replacement over time and
 must never combine simultaneously valid sources. EG4 SOC remains comparison/
 source-estimated; SolarAssistant combined SOC remains battery authority.
+
+For the selected combined-SOC entry, the canonical metric ID is
+`solarassistant.jk_bms.combined.state_of_charge`: `solarassistant` is the root,
+`jk_bms` is the acquisition-path component, and `solarassistant_rest_v1` is the
+separate transport value. Registry construction must not combine the
+acquisition family and REST transport into one acquisition-path token.
 
 ## 6. Unit-mapping registry
 
@@ -254,16 +276,17 @@ missing/empty unit.
 | Concern | Planned mapping |
 |---|---|
 | Native input | Caller-supplied NDJSON-like row or completed synthetic poll group; no path opening in adapter |
-| Identity | Root `solarassistant`; acquisition `jk_bms_rest`; topic plus device/number/group scope; combined, Battery 1, Battery 2 distinct |
-| Role | Combined and per-battery BMS telemetry; combined SOC is trusted battery `authority` |
+| Identity | `metric_id=solarassistant.jk_bms.combined.state_of_charge`; `source.system=solarassistant`; acquisition path `jk_bms`; `source.device=jk_bms_bank`; `source.metric_id=total/battery_state_of_charge`; combined, Battery 1, and Battery 2 remain distinct |
+| Role | Combined and per-battery BMS telemetry; combined SOC uses `source.role=authority` |
+| Transport | `source.transport=solarassistant_rest_v1`; transport remains separate from the `jk_bms` acquisition-path component |
 | Time | No source observation time; all rows in one successful response share UTC millisecond `received_at_utc`, selected as observation time; preserve poll-group identity |
 | Order | Input line/row order and ingest sequence; same timestamp does not collapse separate metrics |
 | Value/unit | Preserve value/type and source-supplied unit; numeric validation is metric-specific; no guessed unit |
 | State | Missing/malformed topic, absent value, nonnumeric numeric metric, unknown/unavailable, and unapproved topic yield bounded rejection or explicit state according to fixture rules |
 | Capability | Topic allowlist plus device-scope registry; omission from one poll is `not_observed`, not unsupported |
 | Evidence | Caller-supplied capture/file/line or poll-group reference; protected operational path is never embedded or opened by tests |
-| Retention | Raw and retained copies share root observation; retained reason/heartbeat is selection provenance, not a new measurement |
-| Lineage | SolarAssistant root with JK BMS device/scope reference and REST acquisition hop |
+| Retention | Raw and retained records share one root `observation_id`, have distinct `record_id` values, and differ in retention/evidence provenance; retained reason/heartbeat is selection provenance, not a new measurement |
+| Lineage | Root hop identifies `solarassistant`, `jk_bms_bank`, and native metric `total/battery_state_of_charge`; acquisition/transport metadata records `jk_bms` and `solarassistant_rest_v1` separately without inventing another source |
 | Risks/fixtures | No source time, mutable display fields, identity tuple currently includes name/unit, inferred poll grouping, raw/retained duplication; synthetic fixtures cover combined SOC first |
 | Gates | Strong candidate for full offline gates using synthetic fixtures; production evidence/path validation remains later |
 
@@ -403,33 +426,52 @@ evidence and existing operational products remain untouched.
 
 ## 10. Sixteen acceptance gates
 
-Status below is a planning conclusion: **P** planned pass evidence, **Q** likely
-qualified pending a named limitation, **D** deferred to later production work,
-and **F** would block. No source has passed merely because this plan exists.
+### Planned coverage
+
+The matrix describes future coverage only. **C** means the adapter plan calls
+for a fixture, test, review, or evidence item for that gate. It is not Pass or
+Qualified Pass and makes no readiness claim.
 
 | # | Gate / concrete evidence | EG4 runtime | EG4 energy | EG4 day | SolarAssistant | ESP32 | HA import | Producers |
 |---:|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 1 | Exact field/capability fixtures | P | P | P | P | P | P | P |
-| 2 | Registry/alias review | P | P | P | P | P | P | P |
-| 3 | Device identity validation | P | P | P | P | P | Q | P |
-| 4 | Time/zone/DST/precision/clock tests | Q | Q | Q | P | P | Q | P |
-| 5 | Raw value/unit preservation | P | P | P | P | Q | P | P |
-| 6 | Deterministic normalization fixtures | P | P | P | P | P | P | P |
-| 7 | Zero/false/empty/null/missing/unavailable/unknown/invalid/rejected | P | P | P | P | P | P | P |
-| 8 | Transport and structured lineage | P | P | P | P | P | Q | P |
-| 9 | Duplicate/export-loop detection | P | P | P | P | P | Q | P |
-| 10 | Restart/tie/repeated-time/order | Q | Q | Q | P | P | P | P |
-| 11 | Gap/cadence/stale/future-time | P | P | P | P | P | P | P |
-| 12 | Evidence/capture references | P | P | Q | P | P | D | P |
-| 13 | Synthetic/sanitized fixtures | P | P | P | P | P | P | P |
-| 14 | Existing evidence/storage/consumer compatibility | Q | Q | Q | P | P | Q | P |
-| 15 | No substitution/evidence mutation | P | P | P | P | P | P | P |
-| 16 | Explicit production-binding approval | D | D | D | D | D | D | D |
+| 1 | Exact field/capability fixtures | C | C | C | C | C | C | C |
+| 2 | Registry/alias review | C | C | C | C | C | C | C |
+| 3 | Device identity validation | C | C | C | C | C | C | C |
+| 4 | Time/zone/DST/precision/clock tests | C | C | C | C | C | C | C |
+| 5 | Raw value/unit preservation | C | C | C | C | C | C | C |
+| 6 | Deterministic normalization fixtures | C | C | C | C | C | C | C |
+| 7 | Zero/false/empty/null/missing/unavailable/unknown/invalid/rejected | C | C | C | C | C | C | C |
+| 8 | Transport and structured lineage | C | C | C | C | C | C | C |
+| 9 | Duplicate/export-loop detection | C | C | C | C | C | C | C |
+| 10 | Restart/tie/repeated-time/order | C | C | C | C | C | C | C |
+| 11 | Gap/cadence/stale/future-time | C | C | C | C | C | C | C |
+| 12 | Evidence/capture references | C | C | C | C | C | C | C |
+| 13 | Synthetic/sanitized fixtures | C | C | C | C | C | C | C |
+| 14 | Existing evidence/storage/consumer compatibility | C | C | C | C | C | C | C |
+| 15 | No substitution/evidence mutation | C | C | C | C | C | C | C |
+| 16 | Explicit production-binding approval | C | C | C | C | C | C | C |
 
-**Pass** requires all applicable evidence with no unresolved semantic risk.
-**Qualified pass** preserves a named limitation in records and restricts
-consumers accordingly. **Fail** blocks binding. **Deferred** means evidence or
-approval belongs to a later work unit; it is not a pass.
+### Current gate disposition
+
+Every source and producer is currently **Deferred** for production binding
+because its canonical adapter and required evidence do not yet exist. The
+selected SolarAssistant slice has strong planned coverage but remains Deferred
+until it is implemented, tested, independently reviewed, owner-accepted, and
+separately approved for production binding.
+
+Known likely qualifications must remain visible during later evaluation: EG4
+runtime/energy receipt and revision semantics; EG4 day-series receipt, DST, and
+replacement semantics; ESP32 unit provenance; HA device identity, hybrid
+lineage, duplicate-loop behavior, and evidence references; and producer parent
+and selector reproducibility. These are not Qualified Pass results today.
+
+**Pass** may be assigned only after all applicable evidence exists and
+independent review confirms no unresolved semantic risk. **Qualified Pass**
+preserves a named limitation in records and restricts consumers accordingly.
+**Fail** applies when evidence contradicts required identity, time, value,
+lineage, compatibility, or safety semantics and blocks binding. **Deferred**
+means implementation, evidence, review, or approval is incomplete; it is not a
+pass.
 
 ## 11. Candidate first slices
 
@@ -451,9 +493,10 @@ model is implemented only to the extent needed to construct and validate the
 SolarAssistant cases, avoiding a speculative universal framework.
 
 It covers trusted role, stable metric identity, receipt-only time, poll
-grouping, source-supplied units, root versus normalized products, raw/retained
-provenance, scoped status, rejection, immutable input, and injected IDs. It
-avoids SQLite, uncertain EG4 receipt/unit semantics, ESP32 unit qualification,
+grouping, source-supplied units, one root source-value product, raw/retained
+provenance, scoped status, rejection, immutable input, and separate injected
+observation/record IDs. It avoids SQLite, uncertain EG4 receipt/unit semantics,
+ESP32 unit qualification,
 HA ambiguity, live paths, storage, and credentials.
 
 ## 12. Exact later implementation boundary
@@ -475,11 +518,21 @@ conventions require it; scope may not expand silently.
 ### Interfaces and subset
 
 - Frozen context/lineage/registry dataclasses and JSON-compatible output.
-- Minimal adapter `Protocol` and injected deterministic fixture ID provider.
+- Minimal adapter `Protocol` and separate injected deterministic fixture methods
+  for observation IDs and record IDs.
 - Registry version `1` entries only for combined SolarAssistant SOC.
 - One completed synthetic poll group with `total/battery_state_of_charge`.
-- Root raw and optional normalized-source record construction.
-- Raw and retained stream provenance for the same root observation.
+- Exactly one normal valid root observation with metric ID
+  `solarassistant.jk_bms.combined.state_of_charge`, source system
+  `solarassistant`, device `jk_bms_bank`, native metric
+  `total/battery_state_of_charge`, authority role, `jk_bms` acquisition path,
+  and `solarassistant_rest_v1` transport.
+- That root preserves numeric raw SOC, equal normalized numeric SOC, raw and
+  canonical unit `%`, `raw_unit_basis=source_supplied`,
+  `source_nature=measured`, `result_nature=source_value`, and null
+  transformation fields (`transformation.id`, version, and method are null).
+- Raw and retained records share the same root observation ID but have distinct
+  record IDs and retention/evidence provenance.
 - Source-level transport status fixture without metric fabrication.
 - Rejections for malformed mapping, missing/invalid receipt time, unapproved
   topic, missing value, invalid numeric SOC, missing unit where normalization is
@@ -491,15 +544,23 @@ conventions require it; scope may not expand silently.
 - exact metric/source/device/role/lineage mapping;
 - receipt-only time and shared poll grouping;
 - zero SOC preserved as valid, null/missing/unavailable distinct;
-- source-supplied percent unit and deterministic identity mapping;
+- exact canonical/source/device/native/acquisition/role/transport mapping;
+- source-supplied percent unit, equal raw/normalized value, source-value nature,
+  and null transformation metadata;
 - input deep equality before/after adaptation;
-- raw/retained copies share root identity and differ only in retention
-  provenance;
+- raw/retained copies share root observation ID, differ in record ID and
+  retention/evidence provenance, and are counted once as a measurement;
 - source outage emits one source-scoped status;
 - bounded reason codes contain no payload;
 - injected test IDs are deterministic and explicitly non-production;
 - unsupported enum/profile fields fail safely; and
 - no imports open files, databases, networks, credentials, or runtime paths.
+
+The selected slice emits no additional normalized observation because no
+value, unit, sign, precision, or semantic transformation occurs. A later real
+versioned transformation may emit `product_kind=normalized` with its own
+observation ID, the root observation as parent, and explicit transformation
+ID/version/method; that behavior is outside this slice.
 
 ### Acceptance criteria and exclusions
 
