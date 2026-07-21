@@ -1,0 +1,310 @@
+"""Minimal validator for the implemented canonical telemetry profiles."""
+
+from __future__ import annotations
+
+import json
+import math
+import re
+from copy import deepcopy
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Mapping
+
+
+CONTRACT_VERSION = "solar-digital-twin.telemetry-observation.v1"
+SUPPORTED_RECORD_KINDS = frozenset({"observation", "status", "rejection"})
+SUPPORTED_PRODUCT_KINDS = frozenset({"root"})
+SUPPORTED_TIME_BASES = frozenset({"solardt_receipt", "status_detection"})
+SUPPORTED_RETENTION_STREAMS = frozenset({"raw", "retained"})
+UTC_MILLISECOND_PATTERN = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$"
+)
+
+
+@dataclass(frozen=True)
+class LineageHop:
+    """Immutable lineage construction with JSON-compatible output."""
+
+    system: str
+    instance: str
+    role: str
+    reference: str
+    transformation_id: str | None = None
+    unresolved: bool = False
+
+    def as_mapping(self) -> dict[str, Any]:
+        return {
+            "system": self.system,
+            "instance": self.instance,
+            "role": self.role,
+            "reference": self.reference,
+            "transformation_id": self.transformation_id,
+            "unresolved": self.unresolved,
+        }
+
+
+class ContractValidationError(ValueError):
+    """Bounded validation failure containing only a stable reason code."""
+
+    def __init__(self, reason_code: str):
+        super().__init__(reason_code)
+        self.reason_code = reason_code
+
+
+def _fail(reason_code: str) -> None:
+    raise ContractValidationError(reason_code)
+
+
+def _mapping(value: Any, reason_code: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping):
+        _fail(reason_code)
+    return value
+
+
+def _nonempty_string(value: Any, reason_code: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        _fail(reason_code)
+    return value
+
+
+def _nonnegative_integer(value: Any, reason_code: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        _fail(reason_code)
+    return value
+
+
+def _utc_timestamp(value: Any, reason_code: str) -> str:
+    text = _nonempty_string(value, reason_code)
+    if not UTC_MILLISECOND_PATTERN.fullmatch(text):
+        _fail(reason_code)
+    try:
+        parsed = datetime.fromisoformat(text[:-1] + "+00:00")
+    except ValueError:
+        _fail(reason_code)
+    if parsed.utcoffset() is None or parsed.utcoffset().total_seconds() != 0:
+        _fail(reason_code)
+    return text
+
+
+def _common(record: Mapping[str, Any]) -> tuple[str, Mapping[str, Any]]:
+    if record.get("contract_version") != CONTRACT_VERSION:
+        _fail("unsupported_contract_version")
+    kind = record.get("record_kind")
+    if not isinstance(kind, str) or kind not in SUPPORTED_RECORD_KINDS:
+        _fail("unsupported_record_kind")
+    _nonempty_string(record.get("record_id"), "invalid_record_id")
+    source = _mapping(record.get("source"), "invalid_source")
+    _nonempty_string(source.get("system"), "invalid_source_system")
+    lineage = source.get("lineage")
+    if not isinstance(lineage, list) or not lineage:
+        _fail("invalid_lineage")
+    for hop in lineage:
+        hop_map = _mapping(hop, "invalid_lineage")
+        _nonempty_string(hop_map.get("system"), "invalid_lineage")
+        _nonempty_string(hop_map.get("role"), "invalid_lineage")
+        if not isinstance(hop_map.get("unresolved"), bool):
+            _fail("invalid_lineage")
+
+    time = _mapping(record.get("time"), "invalid_time")
+    received = _utc_timestamp(time.get("received_at"), "invalid_received_at")
+    observed = _utc_timestamp(time.get("observed_at"), "invalid_observed_at")
+    basis = time.get("basis")
+    if not isinstance(basis, str) or basis not in SUPPORTED_TIME_BASES:
+        _fail("unsupported_time_basis")
+    _nonnegative_integer(
+        _mapping(record.get("sequence"), "invalid_sequence").get("ingest"),
+        "invalid_ingest_sequence",
+    )
+    producer = _mapping(record.get("producer"), "invalid_producer")
+    _nonempty_string(producer.get("name"), "invalid_producer")
+    _nonempty_string(producer.get("version"), "invalid_producer")
+    if "evidence" not in record:
+        _fail("missing_evidence")
+    diagnostics = _mapping(record.get("diagnostics"), "invalid_diagnostics")
+    reasons = diagnostics.get("reason_codes")
+    if not isinstance(reasons, list) or any(
+        not isinstance(reason, str) or not reason for reason in reasons
+    ):
+        _fail("invalid_diagnostics")
+    return kind, {"received_at": received, "observed_at": observed}
+
+
+def _validate_root(record: Mapping[str, Any]) -> None:
+    observation = _mapping(record.get("observation"), "invalid_observation_profile")
+    product_kind = observation.get("product_kind")
+    if not isinstance(product_kind, str) or product_kind not in SUPPORTED_PRODUCT_KINDS:
+        _fail("unsupported_product_kind")
+    _nonempty_string(record.get("observation_id"), "invalid_observation_id")
+    _nonempty_string(record.get("metric_id"), "invalid_metric_id")
+    source = _mapping(record["source"], "invalid_source")
+    for field in ("device", "metric_id", "role", "transport"):
+        _nonempty_string(source.get(field), f"invalid_source_{field}")
+    if source.get("system") != "solarassistant":
+        _fail("invalid_source_system")
+    if source.get("device") != "jk_bms_bank":
+        _fail("invalid_source_device")
+    if source.get("metric_id") != "total/battery_state_of_charge":
+        _fail("invalid_source_metric_id")
+    if source.get("role") != "authority":
+        _fail("invalid_source_role")
+    if source.get("transport") != "solarassistant_rest_v1":
+        _fail("invalid_source_transport")
+    if record.get("metric_id") != "solarassistant.jk_bms.combined.state_of_charge":
+        _fail("invalid_metric_id")
+    if source.get("lineage") != [
+        {
+            "system": "solarassistant",
+            "instance": "jk_bms_bank",
+            "role": "root",
+            "reference": "total/battery_state_of_charge",
+            "transformation_id": None,
+            "unresolved": False,
+        }
+    ]:
+        _fail("invalid_lineage")
+
+    time = _mapping(record["time"], "invalid_time")
+    if time.get("source_at") is not None or time.get("source_at_raw") is not None:
+        _fail("unexpected_source_time")
+    if time.get("basis") != "solardt_receipt":
+        _fail("invalid_observation_time_basis")
+    if time.get("received_at") != time.get("observed_at"):
+        _fail("receipt_observation_time_mismatch")
+    if time.get("source_timezone") is not None:
+        _fail("unexpected_source_timezone")
+    if any(
+        field in time
+        for field in ("derived_at", "window_start", "window_end", "anchor_at")
+    ):
+        _fail("unexpected_derived_time")
+    if time.get("precision") != "millisecond":
+        _fail("invalid_time_precision")
+    clock_quality = time.get("clock_quality")
+    if not isinstance(clock_quality, str) or clock_quality not in {
+        "synchronized",
+        "unknown",
+    }:
+        _fail("unsupported_clock_quality")
+    if time.get("uncertainty_ms") is not None:
+        uncertainty = time.get("uncertainty_ms")
+        if (
+            isinstance(uncertainty, bool)
+            or not isinstance(uncertainty, (int, float))
+            or not math.isfinite(uncertainty)
+            or uncertainty < 0
+        ):
+            _fail("invalid_time_uncertainty")
+
+    value = _mapping(record.get("value"), "invalid_value")
+    if value.get("raw_present") is not True or value.get("raw_type") != "number":
+        _fail("invalid_root_value")
+    raw = value.get("raw")
+    normalized = value.get("normalized")
+    if (
+        isinstance(raw, bool)
+        or not isinstance(raw, (int, float))
+        or not math.isfinite(raw)
+        or not 0 <= raw <= 100
+        or normalized != raw
+    ):
+        _fail("invalid_root_value")
+    if value.get("raw_unit") != "%" or value.get("canonical_unit") != "%":
+        _fail("invalid_root_unit")
+    if value.get("raw_unit_basis") != "source_supplied":
+        _fail("invalid_raw_unit_basis")
+    if value.get("raw_unit_mapping") is not None:
+        _fail("unexpected_unit_mapping")
+    if value.get("source_nature") != "measured":
+        _fail("invalid_source_nature")
+    if value.get("result_nature") != "source_value":
+        _fail("invalid_result_nature")
+
+    if record.get("availability") != "available":
+        _fail("invalid_availability")
+    if record.get("validity") != "valid":
+        _fail("invalid_validity")
+    if record.get("capability") != "supported":
+        _fail("invalid_capability")
+    quality = _mapping(record.get("quality"), "invalid_quality")
+    if quality.get("categories") != ["direct", "clock_uncertain"]:
+        _fail("invalid_quality")
+    if quality.get("reasons") != ["source_time_absent"]:
+        _fail("invalid_quality")
+    transformation = _mapping(record.get("transformation"), "invalid_transformation")
+    if any(transformation.get(field) is not None for field in ("id", "version", "method")):
+        _fail("unexpected_transformation")
+    if record.get("parents") != []:
+        _fail("unexpected_parents")
+    retention = _mapping(record.get("retention"), "invalid_retention")
+    stream = retention.get("stream")
+    if not isinstance(stream, str) or stream not in SUPPORTED_RETENTION_STREAMS:
+        _fail("unsupported_retention_stream")
+    if retention.get("stream") == "raw" and retention.get("policy_id") is not None:
+        _fail("unexpected_raw_retention_policy")
+    if retention.get("stream") == "retained":
+        _nonempty_string(retention.get("policy_id"), "missing_retention_policy")
+
+
+def _validate_status(record: Mapping[str, Any]) -> None:
+    if "observation_id" in record or "observation" in record or "value" in record:
+        _fail("invalid_status_profile")
+    if record.get("metric_id") is not None:
+        _fail("invalid_source_status_metric")
+    status = _mapping(record.get("status"), "invalid_status_profile")
+    if status.get("scope") != "source" or status.get("state") != "unreachable":
+        _fail("unsupported_status")
+    source = _mapping(record["source"], "invalid_source")
+    if source.get("device") is not None or source.get("metric_id") is not None:
+        _fail("invalid_source_status_identity")
+    if source.get("role") != "operational":
+        _fail("invalid_source_status_role")
+    if source.get("system") != "solarassistant":
+        _fail("invalid_source_system")
+    if source.get("transport") != "solarassistant_rest_v1":
+        _fail("invalid_source_transport")
+    if source.get("lineage") != [
+        {
+            "system": "solarassistant",
+            "instance": "solarassistant",
+            "role": "root",
+            "reference": "solarassistant_rest_v1",
+            "transformation_id": None,
+            "unresolved": False,
+        }
+    ]:
+        _fail("invalid_lineage")
+    time = _mapping(record["time"], "invalid_time")
+    if time.get("basis") != "status_detection":
+        _fail("invalid_status_time_basis")
+    if time.get("received_at") != time.get("observed_at"):
+        _fail("status_time_mismatch")
+
+
+def _validate_rejection(record: Mapping[str, Any]) -> None:
+    if "observation_id" in record or "observation" in record or "status" in record:
+        _fail("invalid_rejection_profile")
+    if record.get("validity") != "rejected":
+        _fail("invalid_rejection_validity")
+    time = _mapping(record["time"], "invalid_time")
+    if time.get("basis") != "status_detection":
+        _fail("invalid_rejection_time_basis")
+    if time.get("received_at") != time.get("observed_at"):
+        _fail("rejection_time_mismatch")
+
+
+def validate_record(record: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate and return a detached JSON-compatible record mapping."""
+    if not isinstance(record, Mapping):
+        _fail("record_not_mapping")
+    kind, _ = _common(record)
+    if kind == "observation":
+        _validate_root(record)
+    elif kind == "status":
+        _validate_status(record)
+    else:
+        _validate_rejection(record)
+    try:
+        json.dumps(record, allow_nan=False, separators=(",", ":"))
+    except (TypeError, ValueError):
+        _fail("record_not_json_compatible")
+    return deepcopy(dict(record))

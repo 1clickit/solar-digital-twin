@@ -1,0 +1,30 @@
+{
+  "valid_poll": {
+    "received_at_utc": "2026-01-15T18:00:01.123Z",
+    "poll_group_id": "synthetic-poll-001",
+    "topic": "total/battery_state_of_charge",
+    "device": "Battery",
+    "number": 0,
+    "group": "Total",
+    "name": "State of charge",
+    "value": 82.375,
+    "unit": "%"
+  },
+  "raw_evidence": {
+    "synthetic": true,
+    "capture_id": "synthetic-sa-capture-001",
+    "record_ref": "raw-record-001",
+    "poll_group_id": "synthetic-poll-001"
+  },
+  "retained_evidence": {
+    "synthetic": true,
+    "capture_id": "synthetic-sa-capture-001",
+    "record_ref": "retained-record-001",
+    "poll_group_id": "synthetic-poll-001"
+  },
+  "status_evidence": {
+    "synthetic": true,
+    "capture_id": "synthetic-sa-status-001",
+    "record_ref": "status-record-001"
+  }
+}

@@ -1216,3 +1216,49 @@ or runtime change.
 - **Deferred:** Production ID encoding, HA `source.metric_id` fallback, other
   adapters, storage/migration, portal/HA binding, reboot/recovery, and
   persistent ESP32 operation remain separate future decisions.
+
+## 2026-07-21T02:59:47Z — Implement synthetic SolarAssistant SOC adapter
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  implementation authorization with publication mode `commit-and-push`.
+- **Purpose:** Implement only the owner-accepted first synthetic slice: a
+  minimal canonical telemetry model/validator, version-1 single-metric
+  registry, small adapter/ID-provider protocols, SolarAssistant combined-SOC
+  adapter, synthetic fixture, and focused offline tests.
+- **Affected:** New `src/solar_digital_twin/telemetry/__init__.py`, `model.py`,
+  `registry.py`, `adapters.py`, and `solarassistant_adapter.py`; new synthetic
+  fixture `tests/fixtures/telemetry/solarassistant_combined_soc.json`; new
+  `tests/test_telemetry_model.py` and `tests/test_solarassistant_adapter.py`;
+  implementation-status updates in `PROJECT_STATE.md`, `NEXT_TASK.md`, and
+  `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`; and this append-only audit entry.
+- **Implementation:** Registry version 1 contains only
+  `solarassistant.jk_bms.combined.state_of_charge`. One valid 0–100 numeric
+  input produces one root source-value observation with equal raw/normalized
+  percent values and no transformation or normalized product. Separate
+  required injected providers distinguish semantic observation IDs from
+  persisted record IDs; raw/retained copies share observation identity and
+  have distinct record and evidence/retention provenance.
+- **Safety and provenance:** SolarAssistant REST is the sole represented
+  interface. No direct JK lineage/source/transport, production ID default,
+  collector import, credential, network, file, database, evidence, storage, or
+  runtime I/O exists. Distinct bounded rejection reasons cover missing, null,
+  unknown, unavailable, malformed, numeric, unit, receipt-time, registry,
+  provenance, retention, sequence, and injected-ID failures. One transport
+  outage produces one source-scoped status.
+- **Validation:** Synthetic fixture JSON parsing, Python compilation,
+  `git diff --check`, repository health and exact scope/artifact checks passed;
+  all 17 focused model/adapter tests and all 235 offline repository tests
+  passed. Tests assert JSON compatibility, immutability, deterministic output,
+  prohibited-profile fields, safe enum failure, no operational I/O, and exact
+  source/identity behavior.
+- **Boundary:** The accepted observation contract is unchanged. Other adapters,
+  production ID encoding, storage/schema/migration, historical evidence,
+  collectors/retention, portal, Home Assistant, runtime/services, credentials,
+  devices, networking, deployment, and persistent ESP32 operation remain
+  untouched and unauthorized.
+- **Review/publication:** The implementation remains pending independent review
+  and Deferred for production binding. Planned subject `Implement synthetic
+  SolarAssistant SOC adapter`; one normal fast-forward push to expected
+  `origin/main` is authorized after final staging and remote safeguards pass.
+- **Recovery:** Revert the single normal implementation commit. No operational
+  rollback applies because no operational state changed.

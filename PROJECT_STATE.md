@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Prepare the first bounded telemetry source-adapter implementation request
+Independent review of the synthetic SolarAssistant SOC adapter implementation
 
 Next Task:
-Prepare the bounded repository-only implementation request for the accepted synthetic SolarAssistant combined-SOC slice.
+Independently review and accept or correct the synthetic SolarAssistant combined-SOC adapter implementation without authorizing production binding.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -28,19 +28,34 @@ main
   identity, separate time and state axes, freshness evaluation, non-destructive
   normalization, acyclic derivation lineage, Home Assistant loop prevention,
   adapter responsibilities, acceptance gates, compatibility risks, and phased
-  implementation boundaries. Acceptance does not authorize implementation; no
-  adapter, schema/storage, portal, Home Assistant, collector,
-  retention, runtime, evidence, device, or network implementation occurred
+  implementation boundaries. Contract acceptance itself did not authorize or
+  perform adapter, schema/storage, portal, Home Assistant, collector,
+  retention, runtime, evidence, device, or network implementation
 - `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md` is the owner-accepted authoritative
   implementation plan. Independent ChatGPT review passed, four narrow findings
   were corrected, and the SolarAssistant JK telemetry namespace was clarified
   before Chris accepted the plan and its selected first slice. The accepted
   slice is a minimal shared envelope model/validator plus a SolarAssistant
   combined-SOC adapter using synthetic poll fixtures. Acceptance does not
-  authorize implementation automatically; no adapter, schema, storage, portal,
-  Home Assistant, collector, retention, runtime, evidence, device, database, or
-  network implementation occurred. The current milestone is preparing a
-  separately bounded repository-only implementation request for that slice
+  authorize implementation automatically. The selected slice was subsequently
+  authorized as the bounded repository-only implementation described below;
+  no schema, storage, portal, Home Assistant, collector, retention, runtime,
+  evidence, device, database, or network implementation occurred
+- The accepted first slice is now implemented locally with a minimal canonical
+  root/status/rejection validator, immutable version-1 single-metric registry,
+  separate injected observation/record ID protocols, and an I/O-free
+  SolarAssistant combined-SOC adapter. Synthetic fixtures and 16 focused tests
+  cover exact identity and provenance, receipt-only timing, zero/boundary SOC,
+  distinct invalid states, bounded rejection reasons, raw/retained identity,
+  one source-scoped outage, deterministic immutable behavior, and no file,
+  database, or network I/O. One valid input emits one root source-value
+  observation and no normalized product
+- The implementation imports no live collector, provides no production ID
+  encoding or storage binding, and represents JK telemetry only through
+  SolarAssistant REST. It is pending independent implementation review and
+  remains Deferred for production binding; no runtime, evidence, database,
+  credential, service, device, portal, Home Assistant, or persistent ESP32
+  action occurred
 - Deferred adapter detail: define the HA-import fallback meaning of
   `source.metric_id` when the root-native identifier is unresolved and only the
   HA entity identifier is known; do not silently decide it during milestone

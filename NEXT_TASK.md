@@ -2,65 +2,61 @@
 
 ## Objective
 
-Prepare the bounded repository-only implementation request for the accepted synthetic SolarAssistant combined-SOC slice.
+Independently review and accept or correct the synthetic SolarAssistant combined-SOC adapter implementation without authorizing production binding.
 
-## Accepted baseline
+## Review baseline
 
-`docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md` is the owner-accepted authoritative
-implementation plan under `solar-digital-twin.telemetry-observation.v1`.
-Independent review passed and Chris accepted both the plan and its selected
-first slice. Acceptance establishes planning authority only and does not
-authorize implementation automatically.
+The owner-accepted first slice is implemented in
+`src/solar_digital_twin/telemetry/` with a committed synthetic fixture and
+focused tests. It provides only the minimal root-observation,
+source-status, and rejection profiles needed for SolarAssistant combined SOC.
 
-The selected slice is a minimal shared canonical envelope model/validator plus
-a SolarAssistant combined-SOC adapter driven exclusively by synthetic poll
-fixtures. It preserves the exact SolarAssistant source mapping, separate
-observation and record identities, one normal root SOC observation, and
-Deferred production-binding status.
+Review should verify:
+
+1. the registry contains exactly the accepted combined-SOC metric;
+2. SolarAssistant REST is the sole represented interface and no direct-JK
+   source, transport, protocol, address, credential, or connection exists;
+3. observation and record IDs use separate required injected providers with no
+   production encoding;
+4. one valid numeric input emits exactly one root source-value observation and
+   no normalized observation;
+5. raw and retained records share semantic observation identity but have
+   distinct record and copy provenance;
+6. missing, null, unknown, unavailable, malformed, out-of-range, unit, time,
+   registry, provenance, and ID failures remain distinct and payload-free;
+7. one transport outage creates one source-scoped status; and
+8. implementation and tests perform no operational I/O.
 
 ## Scope
 
-Prepare a complete bounded request that defines:
+Review the implementation, synthetic fixture, focused tests, contract
+conformance, validation results, and exact repository scope. Return bounded
+corrections or accept the implementation as an offline source-adapter slice.
 
-1. exact repository checkpoint and publication mode;
-2. the files, minimal standard-library-first interfaces, and synthetic fixtures
-   authorized for the slice;
-3. separate injected observation-ID and record-ID methods without selecting a
-   production encoding;
-4. the exact combined-SOC registry mapping, root-record fields, status and
-   rejection cases, and raw/retained-copy identity behavior;
-5. focused and full offline validation;
-6. exact staging, publication, recovery, and completion-report safeguards; and
-7. explicit exclusions for every later adapter, storage, production, portal,
-   Home Assistant, retention, runtime, evidence, device, and network action.
-
-The request must preserve that `jk_bms` is a canonical telemetry namespace for
-JK BMS data reported by SolarAssistant. Solar Digital Twin never contacts a JK
-BMS directly; the exclusive source transport is `solarassistant_rest_v1`.
+The review does not decide production ID encoding, storage representation,
+historical adaptation, runtime integration, or the Deferred production-binding
+gates.
 
 ## Protected boundary
 
-This task prepares the implementation request only. It does not itself
-authorize code, tests, fixtures, schema or storage changes; evidence or database
-access; collector, runtime, service, or device action; live SolarAssistant or
-Home Assistant contact; portal/HA binding; retention changes; or persistent
-ESP32 operation.
+Review does not authorize production binding, schema/storage work, collector or
+retention changes, live SolarAssistant or JK access, evidence/database access,
+runtime/service action, deployment, portal binding, Home Assistant work, or
+persistent ESP32 operation.
 
 The unresolved HA `source.metric_id` fallback and unscheduled `solardt` reboot/
 recovery procedure remain separate deferred tasks.
 
 ## Success
 
-A complete, copyable, independently reviewable bounded work request precisely
-authorizes the accepted synthetic-only slice without expanding into production
-binding or operational work. Implement nothing while preparing that request.
+Independent review either accepts the synthetic-only implementation or returns
+specific bounded corrections. Acceptance of the offline implementation does
+not authorize production binding or operational integration automatically.
 
-## Architectural sequence
+## After acceptance
 
-After the bounded request is reviewed and authorized, implement and offline-test
-only the selected slice. Storage/schema planning, production binding, other
-source adapters, portal binding, Home Assistant export, duplicate-ingestion
-retirement, and persistent ESP32 operation remain later independent milestones.
+Select and plan the next contract milestone separately. Production storage and
+binding require their own evidence, review, and authorization.
 
 ## Deferred Post-Project Investigations
 

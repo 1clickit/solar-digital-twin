@@ -455,11 +455,12 @@ Qualified Pass and makes no readiness claim.
 
 ### Current gate disposition
 
-Every source and producer is currently **Deferred** for production binding
-because its canonical adapter and required evidence do not yet exist. The
-selected SolarAssistant slice has strong planned coverage but remains Deferred
-until it is implemented, tested, independently reviewed, owner-accepted, and
-separately approved for production binding.
+Every source and producer remains **Deferred** for production binding. Most
+canonical adapters and their required evidence do not yet exist. The selected
+SolarAssistant slice is now implemented and offline-tested with
+synthetic fixtures, but remains Deferred until the implementation is
+independently reviewed and accepted and production binding is separately
+approved. Other source adapters remain unimplemented.
 
 Known likely qualifications must remain visible during later evaluation: EG4
 runtime/energy receipt and revision semantics; EG4 day-series receipt, DST, and
@@ -501,9 +502,9 @@ observation/record IDs. It avoids SQLite, uncertain EG4 receipt/unit semantics,
 ESP32 unit qualification,
 HA ambiguity, live paths, storage, and credentials.
 
-## 12. Exact later implementation boundary
+## 12. Implemented first-slice boundary
 
-### Proposed files
+### Implemented files
 
 - `src/solar_digital_twin/telemetry/__init__.py`
 - `src/solar_digital_twin/telemetry/model.py`
@@ -513,9 +514,6 @@ HA ambiguity, live paths, storage, and credentials.
 - `tests/fixtures/telemetry/solarassistant_combined_soc.json`
 - `tests/test_telemetry_model.py`
 - `tests/test_solarassistant_adapter.py`
-
-Exact names may be adjusted during the later bounded work if repository
-conventions require it; scope may not expand silently.
 
 ### Interfaces and subset
 
@@ -546,7 +544,7 @@ conventions require it; scope may not expand silently.
 - exact metric/source/device/role/lineage mapping;
 - receipt-only time and shared poll grouping;
 - zero SOC preserved as valid, null/missing/unavailable distinct;
-- exact canonical/source/device/native/acquisition/role/transport mapping;
+- exact canonical/source/device/native/namespace/role/transport mapping;
 - source-supplied percent unit, equal raw/normalized value, source-value nature,
   and null transformation metadata;
 - input deep equality before/after adaptation;
@@ -564,15 +562,16 @@ versioned transformation may emit `product_kind=normalized` with its own
 observation ID, the root observation as parent, and explicit transformation
 ID/version/method; that behavior is outside this slice.
 
-### Acceptance criteria and exclusions
+### Validation state and exclusions
 
-The later slice passes when focused and full offline tests, repository health,
-immutability, deterministic output, and exact scope checks pass. It must not
-open real NDJSON, evidence, SQLite, reports, credentials, or network endpoints;
-change collectors or outputs; select production ID encoding or storage; add EG4,
-ESP32, HA, portal, export, persistence, or migrations; or access installed
-runtime. Recovery is a normal revert of the later implementation commit; no
-operational rollback applies.
+The synthetic slice is implemented and passes its focused offline tests,
+immutability and deterministic-output checks, full offline suite, repository
+health, and exact scope checks. It remains pending independent implementation
+review. It does not open real NDJSON, evidence, SQLite, reports, credentials,
+or network endpoints; change collectors or outputs; select production ID
+encoding or storage; add EG4, ESP32, HA, portal, export, persistence, or
+migrations; or access installed runtime. Recovery is a normal revert of the
+implementation commit; no operational rollback applies.
 
 ## 13. Deferred decisions and milestone sequence
 
@@ -589,6 +588,6 @@ Still deferred:
 - the separate unscheduled `solardt` reboot/recovery procedure.
 
 Independent review passed and Chris accepted this plan and its selected
-synthetic-only slice. Acceptance establishes planning authority only; separately
-authorize implementation. Adapter implementation would not authorize storage,
-production binding, device contact, or deployment.
+synthetic-only slice. The separately authorized repository implementation is
+complete and pending independent implementation review. It does not authorize
+storage, production binding, device contact, or deployment.
