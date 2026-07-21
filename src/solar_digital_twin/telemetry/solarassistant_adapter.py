@@ -337,19 +337,15 @@ class SolarAssistantSocAdapter:
         if "value" not in input_record:
             return "missing_value"
         value = input_record["value"]
-        if value is None:
-            return "explicit_null"
-        if value == "unknown":
-            return "source_unknown"
-        if value == "unavailable":
-            return "source_unavailable"
         if isinstance(value, bool):
             return "invalid_numeric_boolean"
-        if not isinstance(value, (int, float)):
+        if value is not None and not (
+            isinstance(value, str) and value in {"unknown", "unavailable"}
+        ) and not isinstance(value, (int, float)):
             return "unsupported_value"
-        if not math.isfinite(value):
+        if isinstance(value, (int, float)) and not math.isfinite(value):
             return "invalid_numeric_non_finite"
-        if not 0 <= value <= 100:
+        if isinstance(value, (int, float)) and not 0 <= value <= 100:
             return "invalid_numeric_range"
         if "unit" not in input_record or input_record.get("unit") in (None, ""):
             return "missing_unit"
@@ -371,6 +367,24 @@ class SolarAssistantSocAdapter:
     ) -> dict[str, Any]:
         received_at = input_record["received_at_utc"]
         value = input_record["value"]
+        if value is None:
+            raw_type = "null"
+            normalized = None
+            source_nature = "state"
+            availability = "unknown"
+            state_reason = "explicit_null"
+        elif isinstance(value, str) and value in {"unknown", "unavailable"}:
+            raw_type = "string"
+            normalized = None
+            source_nature = "state"
+            availability = value
+            state_reason = f"source_{value}"
+        else:
+            raw_type = "number"
+            normalized = value
+            source_nature = metric.source_nature
+            availability = "available"
+            state_reason = None
         return {
             "contract_version": CONTRACT_VERSION,
             "record_kind": "observation",
@@ -391,21 +405,24 @@ class SolarAssistantSocAdapter:
             "value": {
                 "raw_present": True,
                 "raw": value,
-                "raw_type": "number",
-                "normalized": value,
+                "raw_type": raw_type,
+                "normalized": normalized,
                 "raw_unit": metric.raw_unit,
                 "canonical_unit": metric.raw_unit,
-                "source_nature": metric.source_nature,
+                "source_nature": source_nature,
                 "result_nature": metric.result_nature,
                 "raw_unit_basis": metric.raw_unit_basis,
                 "raw_unit_mapping": None,
             },
-            "availability": "available",
+            "availability": availability,
             "validity": "valid",
             "capability": "supported",
             "quality": {
                 "categories": ["direct", "clock_uncertain"],
-                "reasons": ["source_time_absent"],
+                "reasons": [
+                    "source_time_absent",
+                    *([state_reason] if state_reason is not None else []),
+                ],
             },
             "transformation": {"id": None, "version": None, "method": None},
             "parents": [],
@@ -418,7 +435,9 @@ class SolarAssistantSocAdapter:
                 "stream": retention_stream,
                 "policy_id": retention_policy_id,
             },
-            "diagnostics": {"reason_codes": []},
+            "diagnostics": {
+                "reason_codes": [] if state_reason is None else [state_reason]
+            },
         }
 
     def _rejection(

@@ -44,12 +44,14 @@ main
 - The accepted first slice is now implemented locally with a minimal canonical
   root/status/rejection validator, immutable version-1 single-metric registry,
   separate injected observation/record ID protocols, and an I/O-free
-  SolarAssistant combined-SOC adapter. Synthetic fixtures and 16 focused tests
+  SolarAssistant combined-SOC adapter. Synthetic fixtures and 21 focused tests
   cover exact identity and provenance, receipt-only timing, zero/boundary SOC,
-  distinct invalid states, bounded rejection reasons, raw/retained identity,
-  one source-scoped outage, deterministic immutable behavior, and no file,
-  database, or network I/O. One valid input emits one root source-value
-  observation and no normalized product
+  explicit null/unknown/unavailable source observations, distinct invalid
+  inputs, complete required-null profile enforcement, prohibited source-status
+  fields, bounded rejection reasons, raw/retained identity, one source-scoped
+  outage, deterministic immutable behavior, and no file, database, or network
+  I/O. One valid input emits one root source-value observation and no normalized
+  product
 - The implementation imports no live collector, provides no production ID
   encoding or storage binding, and represents JK telemetry only through
   SolarAssistant REST. It is pending independent implementation review and

@@ -543,7 +543,9 @@ HA ambiguity, live paths, storage, and credentials.
 - complete envelope/profile validation and JSON compatibility;
 - exact metric/source/device/role/lineage mapping;
 - receipt-only time and shared poll grouping;
-- zero SOC preserved as valid, null/missing/unavailable distinct;
+- zero SOC preserved as valid; explicit null, `unknown`, and `unavailable`
+  preserved as distinct root state observations; missing/invalid inputs remain
+  bounded rejections;
 - exact canonical/source/device/native/namespace/role/transport mapping;
 - source-supplied percent unit, equal raw/normalized value, source-value nature,
   and null transformation metadata;
@@ -553,7 +555,9 @@ HA ambiguity, live paths, storage, and credentials.
 - source outage emits one source-scoped status;
 - bounded reason codes contain no payload;
 - injected test IDs are deterministic and explicitly non-production;
-- unsupported enum/profile fields fail safely; and
+- unsupported enum/profile fields fail safely;
+- required-null fields cannot be omitted and source-status profiles reject
+  prohibited observation/value/state/retention fields; and
 - no imports open files, databases, networks, credentials, or runtime paths.
 
 The selected slice emits no additional normalized observation because no
@@ -564,7 +568,12 @@ ID/version/method; that behavior is outside this slice.
 
 ### Validation state and exclusions
 
-The synthetic slice is implemented and passes its focused offline tests,
+The synthetic slice is implemented and passes its focused offline tests. Its
+explicit null, `unknown`, and `unavailable` inputs produce root source-value
+state observations with preserved raw state and no normalized numeric value;
+missing and invalid inputs remain rejections. The minimal validator enforces
+required-null presence and prohibited fields for its root and source-status
+profiles. It also passes
 immutability and deterministic-output checks, full offline suite, repository
 health, and exact scope checks. It remains pending independent implementation
 review. It does not open real NDJSON, evidence, SQLite, reports, credentials,

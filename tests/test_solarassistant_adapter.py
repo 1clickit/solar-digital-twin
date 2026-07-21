@@ -142,24 +142,76 @@ class SolarAssistantSocAdapterTests(unittest.TestCase):
                 self.assertEqual(record["value"]["normalized"], value)
                 self.assertEqual(record["validity"], "valid")
 
-    def test_missing_null_unknown_and_unavailable_are_distinct(self):
-        cases = {
-            "missing_value": object(),
-            "explicit_null": None,
-            "source_unknown": "unknown",
-            "source_unavailable": "unavailable",
-        }
-        for reason, value in cases.items():
+    def test_missing_value_rejects_but_explicit_states_are_observations(self):
+        missing = deepcopy(self.fixture["valid_poll"])
+        del missing["value"]
+        rejection = self.adapt(missing)[0]
+        self.assertEqual(rejection["record_kind"], "rejection")
+        self.assertEqual(rejection["diagnostics"]["reason_codes"], ["missing_value"])
+        self.assertNotIn("observation_id", rejection)
+
+        cases = (
+            (None, "null", "unknown", "explicit_null"),
+            ("unknown", "string", "unknown", "source_unknown"),
+            ("unavailable", "string", "unavailable", "source_unavailable"),
+        )
+        for value, raw_type, availability, reason in cases:
             with self.subTest(reason=reason):
                 source = deepcopy(self.fixture["valid_poll"])
-                if reason == "missing_value":
-                    del source["value"]
-                else:
-                    source["value"] = value
+                source["value"] = value
                 record = self.adapt(source)[0]
-                self.assertEqual(record["record_kind"], "rejection")
+                self.assertEqual(record["record_kind"], "observation")
+                self.assertEqual(record["observation"], {"product_kind": "root"})
+                self.assertEqual(record["value"]["raw"], value)
+                self.assertEqual(record["value"]["raw_type"], raw_type)
+                self.assertIsNone(record["value"]["normalized"])
+                self.assertEqual(record["value"]["source_nature"], "state")
+                self.assertEqual(record["value"]["result_nature"], "source_value")
+                self.assertEqual(record["value"]["raw_unit"], "%")
+                self.assertEqual(record["value"]["canonical_unit"], "%")
+                self.assertEqual(record["value"]["raw_unit_basis"], "source_supplied")
+                self.assertIsNone(record["value"]["raw_unit_mapping"])
+                self.assertEqual(record["availability"], availability)
+                self.assertEqual(record["validity"], "valid")
+                self.assertEqual(record["capability"], "supported")
                 self.assertEqual(record["diagnostics"]["reason_codes"], [reason])
-                self.assertNotIn("observation_id", record)
+                self.assertEqual(
+                    record["quality"]["reasons"], ["source_time_absent", reason]
+                )
+                self.assertEqual(
+                    record["transformation"],
+                    {"id": None, "version": None, "method": None},
+                )
+                self.assertEqual(record["parents"], [])
+
+    def test_raw_and_retained_state_copies_share_observation_identity(self):
+        source = deepcopy(self.fixture["valid_poll"])
+        source["value"] = "unavailable"
+        raw = self.adapter.adapt(
+            source, self.context, self.fixture["raw_evidence"], 5
+        )[0]
+        retained = self.adapter.adapt(
+            source,
+            self.context,
+            self.fixture["retained_evidence"],
+            5,
+            retention_stream="retained",
+            retention_policy_id="solarassistant-retention-v1",
+        )[0]
+        self.assertEqual(raw["observation_id"], retained["observation_id"])
+        self.assertNotEqual(raw["record_id"], retained["record_id"])
+        self.assertNotEqual(raw["evidence"], retained["evidence"])
+
+    def test_explicit_states_still_require_the_source_unit(self):
+        for value in (None, "unknown", "unavailable"):
+            with self.subTest(value=value):
+                source = deepcopy(self.fixture["valid_poll"])
+                source["value"] = value
+                del source["unit"]
+                rejection = self.adapt(source)[0]
+                self.assertEqual(
+                    rejection["diagnostics"]["reason_codes"], ["missing_unit"]
+                )
 
     def test_malformed_and_invalid_values_have_bounded_reasons(self):
         cases = (

@@ -61,6 +61,20 @@ def _mapping(value: Any, reason_code: str) -> Mapping[str, Any]:
     return value
 
 
+def _require_fields(
+    mapping: Mapping[str, Any], fields: tuple[str, ...], reason_code: str
+) -> None:
+    if any(field not in mapping for field in fields):
+        _fail(reason_code)
+
+
+def _prohibit_fields(
+    mapping: Mapping[str, Any], fields: tuple[str, ...], reason_code: str
+) -> None:
+    if any(field in mapping for field in fields):
+        _fail(reason_code)
+
+
 def _nonempty_string(value: Any, reason_code: str) -> str:
     if not isinstance(value, str) or not value.strip():
         _fail(reason_code)
@@ -87,6 +101,21 @@ def _utc_timestamp(value: Any, reason_code: str) -> str:
 
 
 def _common(record: Mapping[str, Any]) -> tuple[str, Mapping[str, Any]]:
+    _require_fields(
+        record,
+        (
+            "contract_version",
+            "record_kind",
+            "record_id",
+            "source",
+            "time",
+            "sequence",
+            "producer",
+            "evidence",
+            "diagnostics",
+        ),
+        "incomplete_record_profile",
+    )
     if record.get("contract_version") != CONTRACT_VERSION:
         _fail("unsupported_contract_version")
     kind = record.get("record_kind")
@@ -130,6 +159,23 @@ def _common(record: Mapping[str, Any]) -> tuple[str, Mapping[str, Any]]:
 
 
 def _validate_root(record: Mapping[str, Any]) -> None:
+    _require_fields(
+        record,
+        (
+            "observation",
+            "observation_id",
+            "metric_id",
+            "value",
+            "availability",
+            "validity",
+            "capability",
+            "quality",
+            "transformation",
+            "parents",
+            "retention",
+        ),
+        "incomplete_root_profile",
+    )
     observation = _mapping(record.get("observation"), "invalid_observation_profile")
     product_kind = observation.get("product_kind")
     if not isinstance(product_kind, str) or product_kind not in SUPPORTED_PRODUCT_KINDS:
@@ -137,6 +183,11 @@ def _validate_root(record: Mapping[str, Any]) -> None:
     _nonempty_string(record.get("observation_id"), "invalid_observation_id")
     _nonempty_string(record.get("metric_id"), "invalid_metric_id")
     source = _mapping(record["source"], "invalid_source")
+    _require_fields(
+        source,
+        ("system", "device", "metric_id", "role", "transport", "lineage"),
+        "incomplete_root_source",
+    )
     for field in ("device", "metric_id", "role", "transport"):
         _nonempty_string(source.get(field), f"invalid_source_{field}")
     if source.get("system") != "solarassistant":
@@ -164,6 +215,21 @@ def _validate_root(record: Mapping[str, Any]) -> None:
         _fail("invalid_lineage")
 
     time = _mapping(record["time"], "invalid_time")
+    _require_fields(
+        time,
+        (
+            "source_at",
+            "source_at_raw",
+            "received_at",
+            "observed_at",
+            "basis",
+            "source_timezone",
+            "precision",
+            "clock_quality",
+            "uncertainty_ms",
+        ),
+        "incomplete_root_time",
+    )
     if time.get("source_at") is not None or time.get("source_at_raw") is not None:
         _fail("unexpected_source_time")
     if time.get("basis") != "solardt_receipt":
@@ -196,17 +262,48 @@ def _validate_root(record: Mapping[str, Any]) -> None:
             _fail("invalid_time_uncertainty")
 
     value = _mapping(record.get("value"), "invalid_value")
-    if value.get("raw_present") is not True or value.get("raw_type") != "number":
+    _require_fields(
+        value,
+        (
+            "raw_present",
+            "raw",
+            "raw_type",
+            "normalized",
+            "raw_unit",
+            "canonical_unit",
+            "source_nature",
+            "result_nature",
+            "raw_unit_basis",
+            "raw_unit_mapping",
+        ),
+        "incomplete_root_value",
+    )
+    if value.get("raw_present") is not True:
         _fail("invalid_root_value")
     raw = value.get("raw")
     normalized = value.get("normalized")
-    if (
-        isinstance(raw, bool)
-        or not isinstance(raw, (int, float))
-        or not math.isfinite(raw)
-        or not 0 <= raw <= 100
-        or normalized != raw
-    ):
+    raw_type = value.get("raw_type")
+    if raw_type == "number":
+        if (
+            isinstance(raw, bool)
+            or not isinstance(raw, (int, float))
+            or not math.isfinite(raw)
+            or not 0 <= raw <= 100
+            or normalized != raw
+        ):
+            _fail("invalid_root_value")
+        expected_source_nature = "measured"
+        expected_availability = "available"
+        expected_reason = None
+    elif raw_type == "null" and raw is None and normalized is None:
+        expected_source_nature = "state"
+        expected_availability = "unknown"
+        expected_reason = "explicit_null"
+    elif raw_type == "string" and raw in {"unknown", "unavailable"} and normalized is None:
+        expected_source_nature = "state"
+        expected_availability = raw
+        expected_reason = f"source_{raw}"
+    else:
         _fail("invalid_root_value")
     if value.get("raw_unit") != "%" or value.get("canonical_unit") != "%":
         _fail("invalid_root_unit")
@@ -214,28 +311,40 @@ def _validate_root(record: Mapping[str, Any]) -> None:
         _fail("invalid_raw_unit_basis")
     if value.get("raw_unit_mapping") is not None:
         _fail("unexpected_unit_mapping")
-    if value.get("source_nature") != "measured":
+    if value.get("source_nature") != expected_source_nature:
         _fail("invalid_source_nature")
     if value.get("result_nature") != "source_value":
         _fail("invalid_result_nature")
 
-    if record.get("availability") != "available":
+    if record.get("availability") != expected_availability:
         _fail("invalid_availability")
     if record.get("validity") != "valid":
         _fail("invalid_validity")
     if record.get("capability") != "supported":
         _fail("invalid_capability")
     quality = _mapping(record.get("quality"), "invalid_quality")
+    _require_fields(quality, ("categories", "reasons"), "incomplete_root_quality")
     if quality.get("categories") != ["direct", "clock_uncertain"]:
         _fail("invalid_quality")
-    if quality.get("reasons") != ["source_time_absent"]:
+    expected_quality_reasons = ["source_time_absent"]
+    if expected_reason is not None:
+        expected_quality_reasons.append(expected_reason)
+    if quality.get("reasons") != expected_quality_reasons:
         _fail("invalid_quality")
     transformation = _mapping(record.get("transformation"), "invalid_transformation")
+    _require_fields(
+        transformation,
+        ("id", "version", "method"),
+        "incomplete_root_transformation",
+    )
     if any(transformation.get(field) is not None for field in ("id", "version", "method")):
         _fail("unexpected_transformation")
     if record.get("parents") != []:
         _fail("unexpected_parents")
     retention = _mapping(record.get("retention"), "invalid_retention")
+    _require_fields(
+        retention, ("stream", "policy_id"), "incomplete_root_retention"
+    )
     stream = retention.get("stream")
     if not isinstance(stream, str) or stream not in SUPPORTED_RETENTION_STREAMS:
         _fail("unsupported_retention_stream")
@@ -243,17 +352,40 @@ def _validate_root(record: Mapping[str, Any]) -> None:
         _fail("unexpected_raw_retention_policy")
     if retention.get("stream") == "retained":
         _nonempty_string(retention.get("policy_id"), "missing_retention_policy")
+    expected_diagnostics = [] if expected_reason is None else [expected_reason]
+    if record["diagnostics"].get("reason_codes") != expected_diagnostics:
+        _fail("invalid_root_diagnostics")
 
 
 def _validate_status(record: Mapping[str, Any]) -> None:
-    if "observation_id" in record or "observation" in record or "value" in record:
-        _fail("invalid_status_profile")
+    _require_fields(record, ("metric_id", "status"), "incomplete_status_profile")
+    _prohibit_fields(
+        record,
+        (
+            "observation_id",
+            "observation",
+            "value",
+            "availability",
+            "validity",
+            "capability",
+            "quality",
+            "transformation",
+            "parents",
+            "retention",
+        ),
+        "invalid_status_profile",
+    )
     if record.get("metric_id") is not None:
         _fail("invalid_source_status_metric")
     status = _mapping(record.get("status"), "invalid_status_profile")
     if status.get("scope") != "source" or status.get("state") != "unreachable":
         _fail("unsupported_status")
     source = _mapping(record["source"], "invalid_source")
+    _require_fields(
+        source,
+        ("system", "device", "metric_id", "role", "transport", "lineage"),
+        "incomplete_status_source",
+    )
     if source.get("device") is not None or source.get("metric_id") is not None:
         _fail("invalid_source_status_identity")
     if source.get("role") != "operational":
@@ -274,10 +406,47 @@ def _validate_status(record: Mapping[str, Any]) -> None:
     ]:
         _fail("invalid_lineage")
     time = _mapping(record["time"], "invalid_time")
+    _require_fields(
+        time,
+        (
+            "source_at",
+            "source_at_raw",
+            "received_at",
+            "observed_at",
+            "basis",
+            "source_timezone",
+            "precision",
+            "clock_quality",
+            "uncertainty_ms",
+        ),
+        "incomplete_status_time",
+    )
+    _prohibit_fields(
+        time,
+        ("derived_at", "window_start", "window_end", "anchor_at"),
+        "invalid_status_profile",
+    )
+    if time.get("source_at") is not None or time.get("source_at_raw") is not None:
+        _fail("unexpected_source_time")
+    if time.get("source_timezone") is not None:
+        _fail("unexpected_source_timezone")
     if time.get("basis") != "status_detection":
         _fail("invalid_status_time_basis")
     if time.get("received_at") != time.get("observed_at"):
         _fail("status_time_mismatch")
+    if time.get("precision") != "millisecond":
+        _fail("invalid_time_precision")
+    if time.get("clock_quality") not in {"synchronized", "unknown"}:
+        _fail("unsupported_clock_quality")
+    if time.get("uncertainty_ms") is not None:
+        uncertainty = time.get("uncertainty_ms")
+        if (
+            isinstance(uncertainty, bool)
+            or not isinstance(uncertainty, (int, float))
+            or not math.isfinite(uncertainty)
+            or uncertainty < 0
+        ):
+            _fail("invalid_time_uncertainty")
 
 
 def _validate_rejection(record: Mapping[str, Any]) -> None:

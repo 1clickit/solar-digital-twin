@@ -138,6 +138,80 @@ class TelemetryModelTests(unittest.TestCase):
         record["time"]["received_at"] = "2026-01-15T18:00:01Z"
         self.assert_reason(record, "invalid_received_at")
 
+    def test_required_nullable_root_fields_cannot_be_omitted(self):
+        cases = (
+            ("source_at", "time", "incomplete_root_time"),
+            ("source_timezone", "time", "incomplete_root_time"),
+            ("raw_unit_mapping", "value", "incomplete_root_value"),
+            ("id", "transformation", "incomplete_root_transformation"),
+            ("policy_id", "retention", "incomplete_root_retention"),
+        )
+        for field, section, reason in cases:
+            with self.subTest(section=section, field=field):
+                record = deepcopy(self.record)
+                del record[section][field]
+                self.assert_reason(record, reason)
+
+    def test_source_status_requires_nullable_fields_and_prohibits_observation_fields(self):
+        status = {
+            "contract_version": "solar-digital-twin.telemetry-observation.v1",
+            "record_kind": "status",
+            "record_id": "test-record:status",
+            "metric_id": None,
+            "status": {"scope": "source", "state": "unreachable"},
+            "source": {
+                "system": "solarassistant",
+                "device": None,
+                "metric_id": None,
+                "role": "operational",
+                "transport": "solarassistant_rest_v1",
+                "lineage": [{
+                    "system": "solarassistant",
+                    "instance": "solarassistant",
+                    "role": "root",
+                    "reference": "solarassistant_rest_v1",
+                    "transformation_id": None,
+                    "unresolved": False,
+                }],
+            },
+            "time": {
+                "source_at": None,
+                "source_at_raw": None,
+                "source_changed_at": None,
+                "received_at": "2026-01-15T18:00:02.000Z",
+                "observed_at": "2026-01-15T18:00:02.000Z",
+                "basis": "status_detection",
+                "source_timezone": None,
+                "precision": "millisecond",
+                "clock_quality": "unknown",
+                "uncertainty_ms": None,
+            },
+            "sequence": {"ingest": 4, "source": None},
+            "producer": {"name": "test_adapter", "version": "test-v1"},
+            "evidence": {"synthetic": True},
+            "diagnostics": {"reason_codes": ["source_transport_unreachable"]},
+        }
+        validate_record(status)
+
+        missing = deepcopy(status)
+        del missing["source"]["device"]
+        self.assert_reason(missing, "incomplete_status_source")
+
+        missing = deepcopy(status)
+        del missing["time"]["source_at"]
+        self.assert_reason(missing, "incomplete_status_time")
+
+        for field, value in (
+            ("observation", {"product_kind": "root"}),
+            ("value", {}),
+            ("availability", "unavailable"),
+            ("retention", {"stream": "raw", "policy_id": None}),
+        ):
+            with self.subTest(prohibited=field):
+                invalid = deepcopy(status)
+                invalid[field] = value
+                self.assert_reason(invalid, "invalid_status_profile")
+
 
 if __name__ == "__main__":
     unittest.main()

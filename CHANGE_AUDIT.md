@@ -1262,3 +1262,42 @@ or runtime change.
   `origin/main` is authorized after final staging and remote safeguards pass.
 - **Recovery:** Revert the single normal implementation commit. No operational
   rollback applies because no operational state changed.
+
+## 2026-07-21T03:15:59Z — Correct SolarAssistant SOC state handling
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  correction authorization with publication mode `commit-and-push`.
+- **Purpose:** Resolve independent-review findings in the synthetic
+  SolarAssistant combined-SOC slice: explicit null, `unknown`, and
+  `unavailable` are valid source-state observations rather than rejections;
+  missing and invalid inputs remain bounded rejections.
+- **Affected:** `src/solar_digital_twin/telemetry/model.py`,
+  `src/solar_digital_twin/telemetry/solarassistant_adapter.py`,
+  `tests/test_telemetry_model.py`, `tests/test_solarassistant_adapter.py`,
+  `PROJECT_STATE.md`, `NEXT_TASK.md`,
+  `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, and this append-only audit entry.
+- **Correction:** State observations preserve raw null or raw source strings,
+  source-supplied percent-unit provenance, state nature, valid/supported axes,
+  explicit availability, null normalized values and transformations, and
+  stable payload-free reasons. Raw/retained state copies retain one semantic
+  observation ID with separate record/evidence/retention provenance. The
+  minimal validator now distinguishes absent required-null fields from present
+  nulls and rejects observation/value/state/retention fields prohibited on the
+  implemented source-status profile.
+- **Validation:** The accepted contract blob remained
+  `9be6fd270d23d9ebea27f5d38bcbca7e0f37408f`; 21 focused tests and all 239
+  offline repository tests passed, along with Python compilation. The first
+  full-suite attempt was blocked only by sandbox denial of five loopback test
+  sockets; the identical authorized suite passed when permitted to bind its
+  localhost-only ephemeral test server. Final repository health, diff, scope,
+  artifact, staging, remote, and publication safeguards remain required.
+- **Boundary:** No live collector, direct JK path, runtime, service, evidence,
+  database, credential, storage/migration, portal, Home Assistant, device,
+  network, deployment, or persistent ESP32 action was introduced or performed.
+  The corrected synthetic slice remains Deferred for production binding and
+  pending independent review.
+- **Publication/recovery:** Planned subject `Correct SolarAssistant SOC state
+  handling`; one normal fast-forward push to expected `origin/main` is
+  authorized after final safeguards pass. Recovery is a later normal revert of
+  this correction commit followed, only if necessary, by a normal revert of
+  the original implementation commit. No operational rollback applies.

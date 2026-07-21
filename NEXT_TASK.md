@@ -22,10 +22,13 @@ Review should verify:
    no normalized observation;
 5. raw and retained records share semantic observation identity but have
    distinct record and copy provenance;
-6. missing, null, unknown, unavailable, malformed, out-of-range, unit, time,
-   registry, provenance, and ID failures remain distinct and payload-free;
+6. explicit null, unknown, and unavailable remain distinct root state
+   observations, while missing, malformed, out-of-range, unit, time, registry,
+   provenance, and ID failures remain distinct and payload-free;
 7. one transport outage creates one source-scoped status; and
-8. implementation and tests perform no operational I/O.
+8. required-null and prohibited-field rules are enforced for the implemented
+   root and source-status profiles; and
+9. implementation and tests perform no operational I/O.
 
 ## Scope
 
