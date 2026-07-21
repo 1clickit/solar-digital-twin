@@ -1153,3 +1153,31 @@ or runtime change.
   fallback semantics, production ID encoding, adapter implementation, storage,
   portal/HA binding, reboot/recovery, and persistent ESP32 operation remain
   deferred.
+
+## 2026-07-21T01:05:38Z — Clarify SolarAssistant JK telemetry namespace
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  clarification authorization with publication mode `commit-only`.
+- **Purpose:** Clarify that `jk_bms` in canonical SolarAssistant metric IDs is
+  a stable namespace for JK BMS telemetry reported by SolarAssistant, not a
+  direct acquisition path or hardware connection.
+- **Mapping preserved:** Canonical metric
+  `solarassistant.jk_bms.combined.state_of_charge`, source system
+  `solarassistant`, device `jk_bms_bank`, native metric
+  `total/battery_state_of_charge`, authority role, and exclusive transport
+  `solarassistant_rest_v1` remain unchanged.
+- **Boundary:** Solar Digital Twin never polls or connects to either JK BMS
+  directly. No direct JK protocol, address, credential, collector, polling,
+  connection, or control path is planned or authorized.
+- **Affected:** `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md` and this append-only
+  audit entry only. The accepted contract, source/tests, runtime, evidence,
+  databases, credentials, services, devices, and all operational state remain
+  untouched.
+- **Validation/publication:** Exact namespace, mapping, direct-access
+  prohibition, contract-unchanged, scope, `git diff --check`, and repository
+  health checks passed before one local commit named `Clarify SolarAssistant JK
+  telemetry namespace`. No push is authorized; independent re-review remains
+  required.
+- **Recovery:** Revert the local clarification commit before later publication,
+  or use a later normal revert if separately published. No operational rollback
+  applies.

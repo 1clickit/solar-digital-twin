@@ -130,10 +130,11 @@ must expose separate `observation_id_for(...)` and `record_id_for(...)` methods
 
 An **observation ID** identifies one semantic observation occurrence. For a
 receipt-only SolarAssistant occurrence, its future descriptor uses established
-facts such as root source, `jk_bms` acquisition path, device scope, native and
-canonical metric identities, completed poll-group or accepted-response
-occurrence, accepted receipt/observation time, and a source-occurrence
-discriminator when required. It excludes copy-local file/line references,
+facts such as root source, the `jk_bms` canonical telemetry namespace, device
+scope, native and canonical metric identities, `solarassistant_rest_v1`
+transport, completed poll-group or accepted-response occurrence, accepted
+receipt/observation time, and a source-occurrence discriminator when required.
+It excludes copy-local file/line references,
 retention stream/policy, copy-local ingest sequence, producer version,
 serialization, and copy-specific evidence paths. Consequently it remains
 stable across raw/retained/current/conservative/canary copies, file relocation,
@@ -191,9 +192,10 @@ source-estimated; SolarAssistant combined SOC remains battery authority.
 
 For the selected combined-SOC entry, the canonical metric ID is
 `solarassistant.jk_bms.combined.state_of_charge`: `solarassistant` is the root,
-`jk_bms` is the acquisition-path component, and `solarassistant_rest_v1` is the
-separate transport value. Registry construction must not combine the
-acquisition family and REST transport into one acquisition-path token.
+`jk_bms` is the stable canonical namespace for JK BMS telemetry reported by
+SolarAssistant, and `solarassistant_rest_v1` is the sole source transport. The
+namespace does not represent a direct JK protocol, hardware connection,
+collector, polling source, address, or credential path.
 
 ## 6. Unit-mapping registry
 
@@ -275,10 +277,10 @@ missing/empty unit.
 
 | Concern | Planned mapping |
 |---|---|
-| Native input | Caller-supplied NDJSON-like row or completed synthetic poll group; no path opening in adapter |
-| Identity | `metric_id=solarassistant.jk_bms.combined.state_of_charge`; `source.system=solarassistant`; acquisition path `jk_bms`; `source.device=jk_bms_bank`; `source.metric_id=total/battery_state_of_charge`; combined, Battery 1, and Battery 2 remain distinct |
+| Native input | Caller-supplied SolarAssistant REST-derived NDJSON-like row or completed synthetic poll group; no path opening or direct JK input in the adapter |
+| Identity | `metric_id=solarassistant.jk_bms.combined.state_of_charge`; `source.system=solarassistant`; stable telemetry namespace `jk_bms`; `source.device=jk_bms_bank`; `source.metric_id=total/battery_state_of_charge`; combined, Battery 1, and Battery 2 remain distinct |
 | Role | Combined and per-battery BMS telemetry; combined SOC uses `source.role=authority` |
-| Transport | `source.transport=solarassistant_rest_v1`; transport remains separate from the `jk_bms` acquisition-path component |
+| Transport | `source.transport=solarassistant_rest_v1`; all JK telemetry enters exclusively through SolarAssistant REST, while `jk_bms` names the represented telemetry family |
 | Time | No source observation time; all rows in one successful response share UTC millisecond `received_at_utc`, selected as observation time; preserve poll-group identity |
 | Order | Input line/row order and ingest sequence; same timestamp does not collapse separate metrics |
 | Value/unit | Preserve value/type and source-supplied unit; numeric validation is metric-specific; no guessed unit |
@@ -286,7 +288,8 @@ missing/empty unit.
 | Capability | Topic allowlist plus device-scope registry; omission from one poll is `not_observed`, not unsupported |
 | Evidence | Caller-supplied capture/file/line or poll-group reference; protected operational path is never embedded or opened by tests |
 | Retention | Raw and retained records share one root `observation_id`, have distinct `record_id` values, and differ in retention/evidence provenance; retained reason/heartbeat is selection provenance, not a new measurement |
-| Lineage | Root hop identifies `solarassistant`, `jk_bms_bank`, and native metric `total/battery_state_of_charge`; acquisition/transport metadata records `jk_bms` and `solarassistant_rest_v1` separately without inventing another source |
+| Lineage | Root hop identifies `solarassistant`, `jk_bms_bank`, and native metric `total/battery_state_of_charge`; lineage preserves the `jk_bms` telemetry namespace and `solarassistant_rest_v1` transport without inventing a direct JK source |
+| Direct-access boundary | Solar Digital Twin never polls or connects to either JK BMS directly; no direct protocol, address, credential, collector, polling, connection, or control path is planned |
 | Risks/fixtures | No source time, mutable display fields, identity tuple currently includes name/unit, inferred poll grouping, raw/retained duplication; synthetic fixtures cover combined SOC first |
 | Gates | Strong candidate for full offline gates using synthetic fixtures; production evidence/path validation remains later |
 
@@ -525,8 +528,8 @@ conventions require it; scope may not expand silently.
 - Exactly one normal valid root observation with metric ID
   `solarassistant.jk_bms.combined.state_of_charge`, source system
   `solarassistant`, device `jk_bms_bank`, native metric
-  `total/battery_state_of_charge`, authority role, `jk_bms` acquisition path,
-  and `solarassistant_rest_v1` transport.
+  `total/battery_state_of_charge`, authority role, stable `jk_bms` telemetry
+  namespace, and exclusive `solarassistant_rest_v1` transport.
 - That root preserves numeric raw SOC, equal normalized numeric SOC, raw and
   canonical unit `%`, `raw_unit_basis=source_supplied`,
   `source_nature=measured`, `result_nature=source_value`, and null
