@@ -1,11 +1,15 @@
 # Telemetry Observation and Provenance Contract
 
 **Contract version:** `solar-digital-twin.telemetry-observation.v1`
-**Status:** Proposed authoritative contract; pending independent ChatGPT review
-and owner acceptance
+**Status:** Owner-accepted authoritative contract
 **Authority:** This is the single normative repository contract for normalized
 telemetry observations and provenance. Source-specific documents remain
 authoritative for native behavior and evidence history.
+
+Final independent ChatGPT review passed, and Chris explicitly accepted version
+1 as project owner. Acceptance establishes design authority only; it does not
+authorize adapter, storage, portal, Home Assistant, collector, retention, or
+runtime implementation.
 
 ## 1. Scope and non-goals
 
@@ -540,7 +544,7 @@ fixtures must include the complete envelope.
 
 ## 18. Separated future milestones
 
-1. Independent review and owner acceptance of this contract.
+1. **Complete:** independent review and owner acceptance of this contract.
 2. Source-specific adapter planning and selection of the first bounded slice.
 3. Adapter implementation against offline fixtures.
 4. Storage/schema and compatibility-migration planning.

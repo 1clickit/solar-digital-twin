@@ -90,9 +90,9 @@ unrestricted evidence directories.
 
 ## Lineage and feedback-loop protection
 
-The proposed transport-neutral normative envelope and cycle-rejection rules are
-centralized in `TELEMETRY_OBSERVATION_CONTRACT.md`, pending independent review
-and owner acceptance. This plan does not select or implement a transport.
+The owner-accepted transport-neutral normative envelope and cycle-rejection
+rules are centralized in `TELEMETRY_OBSERVATION_CONTRACT.md`. This plan does
+not select or implement a transport.
 
 Bidirectional exchange must not turn one observation into apparently
 independent corroboration. Every imported or exported metric requires source

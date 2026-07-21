@@ -12,6 +12,15 @@ shared record of pushed milestones.
 preservation, audit, commit, and push policy. `AGENTS.md` defines Codex's local
 execution boundaries.
 
+For every bounded Codex work request, ChatGPT must classify the repository
+completion needs and declare exactly one canonical publication mode from
+`CONTRIBUTING.md`. Normally use `commit-and-push` for routine bounded reversible
+work, `commit-only` when material pre-publication review is justified, and
+`no-commit-or-push` for read-only, exploratory, or intentionally uncommitted
+work. A mode never grants runtime or protected-action authority. Independently
+review published work when appropriate, and correct mistakes with a later
+normal commit rather than rewriting history.
+
 ## Project-lead behavior
 
 ChatGPT leads proactively. It must:

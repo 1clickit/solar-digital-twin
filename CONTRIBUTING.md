@@ -43,10 +43,63 @@ ChatGPT classifies actions by actual risk and explains material risk plainly.
 After Chris authorizes a bounded objective, ChatGPT may direct Codex through
 the complete work cycle without repeated approval: authorized reads and
 telemetry inspection, in-scope edits, tests, corrections, validation, related
-documentation, exact staging, one validated local commit, one normal
-fast-forward push to the expected `origin/main`, and published-result
-verification when the work unit is repository-only and every safeguard in the
-canonical workflow below passes.
+documentation, and the repository completion actions allowed by the work
+unit's required publication mode. The publication mode controls staging,
+commit, and push authority; it does not change substantive scope or grant
+operational authority.
+
+### Git publication modes
+
+Every bounded Codex work request must declare exactly one of the following
+modes. Codex must identify it before write work and enforce it exactly.
+
+#### Publication mode: commit-and-push
+
+After validation and every normal safeguard passes, Codex may stage only
+validated in-scope files, create one normal local commit, push once normally by
+fast-forward to the expected `origin/main`, fetch and verify synchronization,
+and verify the published result.
+
+This is normally appropriate for routine, bounded, reversible repository work:
+documentation synchronization, narrow tested corrections, focused tests,
+small implementation slices with settled requirements, and low-risk
+maintenance. A discovered mistake is corrected with a later normal commit;
+never amend, reset, force-push, or rewrite history merely to conceal it.
+
+#### Publication mode: commit-only
+
+After validation, Codex may stage only validated in-scope files, create one
+normal local commit, and must stop before every push. Its report includes the
+local commit hash and subject, files, validation, working-tree state, and an
+explicit statement that no push occurred.
+
+ChatGPT may select this mode when pre-publication review is materially
+justified, including authoritative architecture/contracts, security or
+credential policy, evidence or retention semantics, storage schemas or
+migrations, substantial deletions/reorganization, unusually public or
+sensitive material, unresolved technical uncertainty, or any request that
+requires review before publication. A later push needs a separate bounded work
+request with its own publication mode.
+
+#### Publication mode: no-commit-or-push
+
+Codex must not stage, commit, or push. Use this for read-only review,
+repository inspection, exploratory analysis, unapproved planning, or drafts
+intended to remain uncommitted. Codex reports every resulting working-tree
+change clearly.
+
+#### Missing publication mode
+
+Codex must not infer publication authority. If a bounded work request declares
+no mode, Codex may perform only clearly authorized read-only inspection; it
+must not begin write work, stage, commit, or push, and must report that the
+publication mode is missing.
+
+A publication mode never expands the substantive work-unit scope or grants
+runtime, service, credential, evidence, database, network, deployment,
+device-control, or destructive-Git authority. Normal pushes are fast-forward
+only. Destructive and exceptional Git operations remain always gated. A
+platform confirmation neither changes the selected mode nor expands scope.
 
 ### Standing read-only authority
 
@@ -113,10 +166,10 @@ authorizes it, Codex proceeds uninterrupted through every activity explicitly
 included in that repository-only unit: inspection, in-scope tracked-file
 edits, correction of in-scope defects, relevant tests and validation, directly
 related documentation, exact staging of understood files, one normal local
-commit, one normal fast-forward push to the expected `origin/main`, and
-published-result verification. Approval of the bounded repository work unit
-includes these ordinary completion actions when every safeguard below passes;
-they do not require separate routine confirmation.
+commit, normal fast-forward publication, and published-result verification
+only to the extent allowed by the declared publication mode. Allowed completion
+actions do not require separate routine confirmation when every applicable
+safeguard below passes.
 
 Codex must not request repeated permission for an already-authorized activity.
 Chris should not be placed in a routine “press Y” role after ChatGPT has already
@@ -135,9 +188,10 @@ work. Those actions remain governed by their applicable one-approval or
 always-gated class and must be explicitly included in a separate bounded work
 unit.
 
-### Automatic publication safeguards
+### Publication safeguards
 
-Before the authorized normal commit and push, Codex must confirm that:
+Before any authorized staging, commit, or push, Codex must confirm the
+applicable safeguards for the selected publication mode:
 
 - the work remains entirely within the approved purpose and file scope;
 - the starting working tree and every resulting change are understood;
@@ -153,9 +207,10 @@ Before the authorized normal commit and push, Codex must confirm that:
   normal fast-forward; and
 - no protected operational action occurred.
 
-If any safeguard fails, Codex stops before commit or push and reports the exact
-condition. An explicitly narrower work unit may still direct Codex to stop
-with uncommitted changes or after the local commit.
+All listed safeguards apply to `commit-and-push`; all staging/commit and scope
+safeguards apply to `commit-only`; `no-commit-or-push` prohibits staging,
+commit, and push. If any applicable safeguard fails, Codex stops before the
+prohibited or unsafe action and reports the exact condition.
 
 ### Escalation boundary
 
@@ -172,7 +227,7 @@ Codex stops and returns the exact condition when:
   handling;
 - raw evidence would be modified, deleted, normalized in place, or overwritten;
 - a database migration or destructive database operation is required;
-- an automatic-publication safeguard fails, or any amend, reset, rebase,
+- an applicable publication safeguard fails, or any amend, reset, rebase,
   merge, force-push, destructive Git action, or history rewrite is required; or
 - continuing would otherwise become unsafe or materially ambiguous.
 
@@ -209,11 +264,14 @@ remains governed by its own immutable records.
 
 ### Required completion report
 
-After an authorized normal push, Codex reports the full commit hash and
-subject; every included file; tests and validation; local `HEAD`;
-`origin/main`; ahead/behind and working-tree status; confirmation that the push
-was a normal fast-forward and no protected boundary was crossed; and an
-independent published-repository verification when practical.
+Codex reports the declared publication mode, every changed or included file,
+tests and validation, working-tree state, and confirmation that no protected
+boundary was crossed. For `commit-only`, it also reports the local commit hash
+and subject and confirms no push occurred. For `commit-and-push`, it reports the
+full commit hash and subject, local `HEAD`, `origin/main`, ahead/behind status,
+normal fast-forward publication, and an independent published-repository
+verification when practical. For `no-commit-or-push`, it reports any remaining
+working-tree changes and confirms no staging, commit, or push occurred.
 
 ## Preservation: archive instead of delete
 
@@ -264,13 +322,13 @@ contents, secret arguments, or sensitive runtime output.
 
 ## Git and milestone synchronization
 
-A validated local commit is part of an authorized bounded work unit. Codex
-stages only validated in-scope files. Prefer one tested commit per logical
-change. For an approved repository-only work unit, the canonical workflow above
-authorizes one normal fast-forward push when every safeguard passes. Pushes are
-never forceful under routine authority and are followed by fetch-based
-local/remote synchronization verification. Destructive or exceptional Git
-operations remain always gated.
+The declared publication mode determines whether staging, a local commit, and
+publication are authorized. Codex stages only validated in-scope files and
+prefers one tested commit per logical change. When `commit-and-push` is
+selected, one normal fast-forward push is followed by fetch-based local/remote
+synchronization and published-result verification. Pushes are never forceful
+under routine authority. Destructive or exceptional Git operations remain
+always gated.
 
 ## Recovery
 

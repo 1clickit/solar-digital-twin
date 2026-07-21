@@ -18,6 +18,13 @@ Treat repository documentation and the current bounded task as authoritative.
 Inspect `git status --short` before editing. Stop if the requested checkpoint
 or pre-existing changes differ materially from the work request.
 
+Before beginning write work, identify the request's publication mode and apply
+the canonical policy in `CONTRIBUTING.md` exactly. If the declaration is
+missing, perform only clearly authorized read-only inspection and do not edit,
+stage, commit, or push. A platform confirmation does not change the selected
+mode or expand scope. Include the mode-specific Git and working-tree facts
+required by `CONTRIBUTING.md` in the completion report.
+
 ## Role
 
 Codex is the bounded local implementation agent directed by the ChatGPT project

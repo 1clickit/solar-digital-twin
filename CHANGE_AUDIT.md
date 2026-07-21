@@ -1010,3 +1010,49 @@ or runtime change.
 - **Deferred:** Observation-ID generation, storage schema, lineage digest,
   adapter order, HA transport/attribute limits, backfill, portal/export work,
   persistent ESP32 operation, and reboot/recovery remain separate decisions.
+
+## 2026-07-21T00:03:45Z — Record contract acceptance and Git publication modes
+
+- **Actor and authorization:** Codex, under Chris's bounded repository-only
+  synchronization authorization with declared publication mode
+  `commit-and-push`.
+- **Owner decision:** Final independent ChatGPT review passed, after which Chris
+  explicitly accepted `solar-digital-twin.telemetry-observation.v1` as the
+  project's authoritative telemetry observation and provenance contract. No
+  repository or runtime action occurred during the acceptance chat turn.
+- **Purpose and change:** Changed the contract from proposed/pending to owner-
+  accepted authority, advanced current work to source-adapter planning, and
+  established three explicit Git publication modes plus missing-mode behavior
+  in canonical workflow policy. Added concise ChatGPT, Codex, and startup-chain
+  duties so fresh sessions select and enforce one mode.
+- **Affected:** `docs/TELEMETRY_OBSERVATION_CONTRACT.md`, `PROJECT_STATE.md`,
+  `NEXT_TASK.md`, `CONTRIBUTING.md`, `AI_PROMPT.md`, `AGENTS.md`,
+  `START_HERE.md`, `PROJECT_INDEX.md`, concise acceptance-status references in
+  `docs/Engineering_Bible.md`, `docs/TELEMETRY_SOURCE_ROLES.md`, and
+  `docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md`, and this append-only audit
+  entry.
+- **Publication policy:** `commit-and-push` permits validated exact staging, one
+  normal commit, one fast-forward push, fetch/synchronization, and publication
+  verification; `commit-only` stops after one validated local commit;
+  `no-commit-or-push` prohibits staging, commit, and push. A missing declaration
+  permits only clearly authorized read-only inspection and no write work.
+- **Boundary:** A publication mode controls Git completion only and never
+  expands substantive or operational authority. Destructive/exceptional Git
+  remains gated, and platform confirmation does not change mode or scope.
+- **Untouched:** Source, tests, adapters, schemas, collectors, retention,
+  reporting/portal implementation, Home Assistant, runtime, services, timers,
+  processes, VM state, databases, evidence, credentials, devices, firmware,
+  ESPHome, networking, identities, permissions, installation, and deployment.
+- **Validation:** Owner-acceptance and pending-wording searches, state/task
+  consistency, publication-mode and missing-mode checks, startup-chain review,
+  exact scope/artifact review, `git diff --check`, repository health, shell
+  syntax, Python compilation, and all 218 offline tests passed.
+- **Recovery:** Revert the single normal documentation commit. No operational
+  rollback applies.
+- **Related commit and push:** Planned subject `Record telemetry contract
+  acceptance and Git modes`; selected mode authorizes one normal fast-forward
+  push to expected `origin/main` after safeguards pass.
+- **Deferred:** The HA-import `source.metric_id` fallback when only an HA entity
+  ID is known remains an adapter-planning detail. The unscheduled `solardt` VM
+  reboot/recovery procedure remains a separate future task covering service,
+  collector, timer, dormant-unit, evidence-integrity, and recovery behavior.

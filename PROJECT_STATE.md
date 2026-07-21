@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Telemetry observation contract independent review
+Source-adapter planning
 
 Next Task:
-Independently review and accept or correct the proposed telemetry observation and provenance contract.
+Plan source-specific adapters and select the first bounded offline implementation slice.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,21 +19,30 @@ solardt
 main
 
 ## Current Status
-- The proposed common telemetry observation and provenance contract is complete
-  and revised after independent review in
+- `solar-digital-twin.telemetry-observation.v1` is the owner-accepted
+  authoritative common telemetry observation and provenance contract in
   `docs/TELEMETRY_OBSERVATION_CONTRACT.md`. The six review findings concerning
   record applicability, derived time, identity/lineage, dual classification,
-  unit provenance, and enum evolution are resolved. It defines source-preserving
+  unit provenance, and enum evolution are resolved; final independent ChatGPT
+  review passed and Chris explicitly accepted the contract. It defines source-preserving
   identity, separate time and state axes, freshness evaluation, non-destructive
   normalization, acyclic derivation lineage, Home Assistant loop prevention,
   adapter responsibilities, acceptance gates, compatibility risks, and phased
-  implementation boundaries. The revision remains pending final independent
-  ChatGPT review and explicit owner acceptance; no adapter, schema, portal, Home Assistant, collector,
+  implementation boundaries. Acceptance does not authorize implementation; no
+  adapter, schema/storage, portal, Home Assistant, collector,
   retention, runtime, evidence, device, or network implementation occurred
-- After contract acceptance, separately plan source adapters and select the
-  first bounded offline implementation slice. Persistent or long-duration
+- The current milestone is planning source adapters and selecting the first
+  bounded offline implementation slice. Persistent or long-duration
   ESP32 operation remains an unmade owner decision, with no timer or automatic
   operation authorized
+- Deferred adapter detail: define the HA-import fallback meaning of
+  `source.metric_id` when the root-native identifier is unresolved and only the
+  HA entity identifier is known; do not silently decide it during milestone
+  selection
+- Deferred operational documentation: an unscheduled `solardt` VM reboot and
+  recovery procedure must later cover services, collectors, timers, dormant
+  units, evidence integrity, and automatic-versus-manual recovery verification;
+  it is not part of source-adapter planning
 - ESP32 repository runtime/security hardening is implemented and offline-tested.
   The collector now rejects redirects and environment proxies, classifies HTTP
   failures, validates SSE media type, bounds raw SSE lines at 1 MiB before JSON

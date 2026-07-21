@@ -41,8 +41,8 @@ copied values from being counted as independent evidence, and control-capable
 integrations remain constrained by separate authorization. See
 `docs/HOME_ASSISTANT_INTEROPERABILITY_PLAN.md`. The proposed canonical
 observation and provenance semantics are centralized in
-`docs/TELEMETRY_OBSERVATION_CONTRACT.md`, pending independent review and owner
-acceptance.
+`docs/TELEMETRY_OBSERVATION_CONTRACT.md`, accepted by the project owner after
+final independent review.
 
 ## Operational Completion Baseline
 

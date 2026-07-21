@@ -84,9 +84,9 @@ docs/Engineering_Bible.md
     and custom diagnostic equipment capability and safety guidance.
 
 docs/TELEMETRY_OBSERVATION_CONTRACT.md
-    Proposed single authoritative common telemetry observation, provenance,
+    Owner-accepted authoritative common telemetry observation, provenance,
     timestamp, state, freshness, normalization, derived-lineage, and adapter
-    contract; pending independent review and owner acceptance.
+    contract.
 
 docs/EG4_LOCAL_PORTAL.md
     Current EG4 portal operations and the primary engineering-interface plan.

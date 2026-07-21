@@ -21,6 +21,10 @@ Persistent changes follow the archive-first and append-only audit policy in
 `CONTRIBUTING.md`. Periodic and event-driven read-only VM health reviews are
 recorded in `docs/operations/VM_HEALTH_LOG.md`.
 
+Every bounded Codex work request declares exactly one canonical publication
+mode defined in `CONTRIBUTING.md`; the mode controls staging, commit, and push
+authority without expanding the task or operational scope.
+
 Inspect the current branch, HEAD, and working tree before changing anything.
 Resolve authoritative-document contradictions before new implementation.
 
