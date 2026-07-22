@@ -2,46 +2,56 @@
 
 ## Objective
 
-Select and plan the next telemetry-contract milestone after acceptance of the synthetic SolarAssistant combined-SOC adapter, without authorizing production binding or operational integration.
+Implement and offline-test one synthetic ESP32 generator-frequency root adapter
+that preserves every finite reported value, without production binding or
+operational integration.
 
 ## Accepted baseline
 
-The synthetic offline SolarAssistant combined-SOC adapter is independently
-reviewed and owner-accepted. Its minimal root-observation, source-status, and
-rejection profiles remain unbound to production IDs, storage, collectors,
-runtime, devices, portal, or Home Assistant integration.
+The synthetic SolarAssistant combined-SOC adapter is independently reviewed and
+owner-accepted. The accepted next-milestone review selected an ESP32 frequency
+slice as the smallest test that the common validator and registry generalize to
+a second source. `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md` records the
+forensic reason to retain electrically surprising finite source values.
 
-## Planning task
+## Implementation task
 
-Review the already documented deferred telemetry-contract milestones and
-recommend one bounded next milestone. Record its rationale, dependencies,
-risks, exclusions, acceptance gates, and recovery approach. Resolve only the
-planning detail needed to make that milestone separately reviewable and
-authorizable.
+Add one I/O-free adapter for caller-supplied synthetic ESP32 SSE-shaped records
+from exact entity `sensor-01_gen_frequency`. Generalize the minimal validator
+and immutable registry only as required for strict SolarAssistant and ESP32
+root profiles. Preserve every finite numeric value without plausibility-range
+rejection, clipping, correction, or suppression. Reject malformed, Boolean,
+nonnumeric, and non-finite values with bounded payload-free reasons.
 
 ## Scope
 
-Inspect the accepted contract, adapter plan, current state, and existing
-deferred decisions. Compare candidate milestones and select one without
-implementing it. Preserve unresolved alternatives and identify prerequisites
-that need separate evidence or owner decisions.
+Use synthetic repository fixtures only. Preserve raw `value` and `state`, exact
+native/canonical identity, forensic role, ESPHome/SSE lineage, receipt-only UTC
+time, adapter-specified Hz provenance, ingest ordering, immutable input, and
+raw/retained copies as one source occurrence. Cover values near 60 Hz,
+threshold crossings, multiples of 60 Hz, 5,000 Hz, 30,000 Hz, explicit null,
+`unknown`, `unavailable`, missing, malformed, Boolean, and non-finite input.
+Preserve all accepted SolarAssistant behavior.
 
 ## Protected boundary
 
-Milestone selection does not authorize implementation, production binding,
-schema or storage work, collector or retention changes, live SolarAssistant or
-JK access, evidence or database access, runtime or service action, deployment,
-portal binding, Home Assistant work, device or network activity, or persistent
-ESP32 operation. Each remains separately reviewed and approved.
+This synthetic implementation does not authorize production observation-ID or
+record-ID encoding, production binding, schema/storage/migration/backfill,
+collector or retention changes, historical or operational evidence access,
+runtime/service/timer/deployment action, portal or Home Assistant binding,
+credentials, device/firmware/network activity, weather integrations, or
+persistent/additional ESP32 collection.
 
 The unresolved HA `source.metric_id` fallback and unscheduled `solardt` reboot/
 recovery procedure remain separate deferred tasks.
 
 ## Success
 
-One bounded next telemetry-contract milestone is recommended with explicit
-rationale, dependencies, risks, exclusions, acceptance gates, and recovery.
-The result is a plan only and grants no implementation or operational authority.
+The adapter and focused synthetic tests pass the applicable accepted-contract
+gates; all existing tests remain compatible; no import-time or adaptation-time
+I/O exists; extreme finite readings remain valid source observations; and
+production gate 16 remains explicitly Deferred. Recovery is a normal revert of
+the bounded repository implementation commit with no operational rollback.
 
 ## Deferred Post-Project Investigations
 

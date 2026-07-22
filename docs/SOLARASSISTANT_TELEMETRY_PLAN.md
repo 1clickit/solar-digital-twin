@@ -43,6 +43,14 @@ boundary, not a capture failure.
 Define the smallest safe standalone collector for trusted JK BMS telemetry
 from SolarAssistant.
 
+The accepted future solar-collapse investigation direction is
+`docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`. Its first detector will use an
+exact reviewed SolarAssistant solar-production metric as trigger authority, but
+that metric is not part of this battery-only collector or its current allowlist.
+Identifying it requires a separate sanitized fixture or authorized source
+inventory. Do not substitute the qualified EG4 aggregate AC-use/load display
+field described below.
+
 ## Source
 
 - host: `192.168.3.12`

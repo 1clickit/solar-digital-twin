@@ -11,6 +11,14 @@ comparison. Correlation did not establish causation.
 Future work remains read-only and bounded unless a risk-classified operation is
 explicitly authorized under `CONTRIBUTING.md`.
 
+The existing analyzer and completed reports retain their historical EG4-based
+candidate semantics for reproducibility. The accepted direction for a future
+source-neutral detector is now
+`docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`: after exact native-metric review,
+SolarAssistant supplies the initial collapse/recovery timeline and EG4 becomes
+corroborating, contradictory, and explanatory context. This does not reinterpret
+or rerun prior evidence.
+
 The proposed work must remain:
 
 - read-only

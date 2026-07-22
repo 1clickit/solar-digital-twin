@@ -181,6 +181,11 @@ docs/IRRADIANCE_MEASUREMENT_PLAN.md
 docs/TELEMETRY_SOURCE_ROLES.md
     Agreed authority, comparison, forensic, and display roles for telemetry sources.
 
+docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md
+    Authoritative semantics, source boundaries, research defaults, episode
+    hierarchy, recovery observations, and phased implementation plan for
+    abrupt daytime solar-production collapse investigation.
+
 docs/SOLARASSISTANT_TELEMETRY_PLAN.md
     Read-only SolarAssistant collection, evidence, cadence, and retained-output policy.
 

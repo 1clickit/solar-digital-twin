@@ -44,6 +44,16 @@ deferred until explicitly promoted and approved.
   installation authorization.
 
 ### AC-Couple Forensic Investigation
+- Follow the separately gated sequence in
+  `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`: synthetic ESP32 frequency
+  adapter, finalized source-neutral event specification with an exact reviewed
+  SolarAssistant production trigger, synthetic detector, approved historical
+  analysis, and only later live detection and portal controls.
+- Separately characterize 6000XP and 12000XP nighttime AC-coupling voltage,
+  frequency, shutdown/restoration, and microinverter reconnection behavior;
+  do not confuse normal nighttime shutdown with daytime collapse.
+- Plan KVBT/METAR and National Weather Service alert integrations only as later
+  provenance-preserving contextual sources under separate authorization.
 - Develop an AC-Couple Microinverter Dropout Signature Review.
 - Distinguish full dropouts, partial collapses, rebounds, slow-ramp recoveries, volatility, and repeated drop-size patterns.
 - State clearly that cloud cover and individual microinverter dropout can look similar in aggregate EG4 data.

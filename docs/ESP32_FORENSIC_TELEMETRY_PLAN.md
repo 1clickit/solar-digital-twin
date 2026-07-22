@@ -58,6 +58,16 @@ Collect estimated power, active microinverters, curtailment, frequency, L1 curre
 
 Voltage ramp is not a separate public entity. Calculate it from consecutive voltage updates while preserving voltage deltas embedded in forensic text.
 
+For canonical adaptation, approved `sensor-01_gen_frequency` records preserve
+every finite reported number even when electrically surprising. Operator
+history from the 6000XP systems includes slow extreme values, multiples or
+harmonics of 60 Hz, readings above 5,000 Hz, and readings near 30,000 Hz; the
+12000XP remains unqualified. Firmware low/high/step settings are forensic-event
+thresholds, not record-validity limits. The adapter may flag anomalies
+separately but must not clip, correct, suppress, or claim an extreme value is
+the actual AC fundamental. Detailed semantics and future synthetic cases are
+in `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`.
+
 ## Raw Evidence and Retained Output
 The existing timestamped `esp32_sse_*.ndjson` file is complete raw evidence for every approved SSE update. Collection writes and flushes each raw record before applying retention policy, and selective retention never removes or changes a raw record.
 

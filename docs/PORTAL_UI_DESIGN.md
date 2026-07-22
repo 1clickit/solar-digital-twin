@@ -186,6 +186,22 @@ and discharged today. Self-consumption percentage is shown only after its
 accounting can be calculated reliably; the prototype must not present a
 fabricated percentage as trustworthy.
 
+## Future Forensics Controls
+
+The future `Forensics` tab will reanalyze retained historical observations
+without changing raw evidence. The authoritative event and episode semantics
+are `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`. Planned controls include
+minimum near-zero duration, drop percentage or amount, near-zero ceiling,
+minimum pre-event production, pre/post windows, and optional recovery/relapse
+thresholds.
+
+Initial displayed research defaults are more than 30 seconds near zero, a
+2-minute pre-event window, a 20-minute post-collapse window, approximately
+250 W minimum baseline, approximately 90% collapse, and approximately 50 W
+near-zero ceiling. They are adjustable analysis parameters, not proven
+physical limits. Controls must not alter collectors, erase evidence, rewrite
+historical records, or imply causation.
+
 ## Complete Source-Data Tabs
 
 Production binding must consume the accepted version of

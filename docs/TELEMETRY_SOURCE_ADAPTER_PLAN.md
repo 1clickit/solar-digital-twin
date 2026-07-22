@@ -299,13 +299,13 @@ missing/empty unit.
 | Native input | Caller-supplied accepted record plus explicit manifest/capture metadata; native SSE framing remains collector responsibility |
 | Identity/role | Root `esp32`, acquisition `esphome`, exact allowlisted entity ID, forensic role |
 | Time/order | No complete source event time; receipt time is observation time; equal millisecond times remain distinct through ingest/file sequence |
-| Value/unit | Preserve `id`, name, domain, value, state; current evidence has no unit field, so approved entity mapping is adapter-specified only after qualification |
+| Value/unit | Preserve `id`, name, domain, value, and state. Current records have no unit field, so reviewed firmware mapping supplies adapter-specified `Hz`. Preserve every finite numeric generator-frequency value, including surprising extremes; reject structure/type/non-finite defects rather than applying electrical plausibility limits |
 | State | Entity-local null/`unknown`/`unavailable`; availability transitions are distinct from transport health; unapproved IDs reject |
 | Capability | Fixed 17-entity allowlist for current probe/version; version changes require registry review |
 | Evidence | Capture ID, manifest schema/file, collector version, file/line, source URL |
 | Retention | Raw/current/conservative/canary copies reference one root event; stream and policy retained; copies never count independently |
 | Lineage | ESP32 root and ESPHome/SSE acquisition hop; `solardt` retained-copy selection is provenance, not physical source |
-| Risks/fixtures | Units absent, retained duplicate detection, manifest/record split, equal timestamps, availability strings, policy evolution |
+| Risks/fixtures | Units absent, retained duplicate detection, manifest/record split, equal timestamps, availability strings, policy evolution, and confusing estimator anomalies with invalid records. Frequency fixtures include values near 60 Hz, firmware threshold crossings, multiples of 60 Hz, 5,000 Hz, 30,000 Hz, state values, malformed, Boolean, and non-finite input |
 | Gates | Synthetic fixtures can pass most; real manifest/evidence references and device-version capability remain later qualification |
 
 The installed runtime remains static/dormant after its completed finite
@@ -585,6 +585,12 @@ of the applicable implementation or correction commit; no operational rollback
 applies.
 
 ## 13. Deferred decisions and milestone sequence
+
+The accepted next bounded implementation milestone is one synthetic ESP32
+generator-frequency root adapter. It tests source-neutral validation and must
+follow the value-preservation semantics in
+`docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`; it does not implement the later
+collapse detector or production binding.
 
 Still deferred:
 

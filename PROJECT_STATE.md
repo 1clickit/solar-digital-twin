@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Synthetic SolarAssistant SOC adapter independently reviewed and owner-accepted
+Synthetic ESP32 generator-frequency root adapter planning accepted
 
 Next Task:
-Select and plan the next telemetry-contract milestone after acceptance of the synthetic SolarAssistant combined-SOC adapter, without authorizing production binding or operational integration.
+Implement and offline-test one synthetic ESP32 generator-frequency root adapter that preserves every finite reported value, without production binding or operational integration.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,6 +19,25 @@ solardt
 main
 
 ## Current Status
+- `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md` is the authoritative accepted
+  direction for investigating abrupt daytime AC-coupled production collapse.
+  SolarAssistant will supply the initial collapse/recovery trigger only after
+  one exact solar-production native metric is identified and reviewed; its
+  current tracked collector is battery-only, so that identity remains a
+  prerequisite rather than a guessed display field. EG4 and ESP32 remain
+  corroborating/explanatory sources, and weather/Volcast remain context. The
+  plan records configurable 2-minute/250 W/90%/50 W/30-second research
+  defaults, 20-minute extendable episodes, recovery observations, competing
+  hypotheses, and a separately gated milestone sequence. Nothing was
+  implemented or operationally authorized by accepting the direction
+- The next bounded telemetry-contract milestone is the synthetic ESP32
+  generator-frequency root adapter. It must preserve every finite value from
+  `sensor-01_gen_frequency`, including reported multiples/harmonics and values
+  near 5,000 or 30,000 Hz, while rejecting malformed, Boolean, nonnumeric, and
+  non-finite input. Firmware frequency thresholds are analytic thresholds, not
+  validity bounds. The 6000XP extreme-value history is operator-reported; the
+  12000XP remains unqualified. Production IDs, live evidence, collectors,
+  storage, portal binding, and runtime remain Deferred
 - `solar-digital-twin.telemetry-observation.v1` is the owner-accepted
   authoritative common telemetry observation and provenance contract in
   `docs/TELEMETRY_OBSERVATION_CONTRACT.md`. The six review findings concerning

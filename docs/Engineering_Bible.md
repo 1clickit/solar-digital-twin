@@ -27,6 +27,12 @@ software expansion must not obscure the original problem. When professional
 electrical testing is necessary, identify the narrowest useful test rather
 than recommending open-ended expensive troubleshooting.
 
+The accepted semantic direction for abrupt daytime production-collapse cases,
+episode/recovery tracking, multi-source context, and cautious competing-
+hypothesis handling is centralized in
+`docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`. That plan does not itself
+authorize implementation or operational access.
+
 ## Primary User and Intended Use
 
 Chris is the primary user, project owner, and system operator. The dedicated

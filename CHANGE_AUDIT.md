@@ -1417,3 +1417,32 @@ or runtime change.
   must pass before one normal fast-forward commit titled `Document work modes
   and telemetry interpretation`. Recovery is a later normal revert of this
   documentation commit; no operational rollback applies.
+
+## 2026-07-22T04:05:10Z — Accept solar-collapse forensic investigation direction
+
+- **Actor and authorization:** ChatGPT-directed Codex under Chris's bounded
+  documentation-only authorization with publication mode
+  `no-commit-or-push`.
+- **Decision:** Centralized the accepted abrupt daytime solar-collapse
+  investigation semantics in `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`:
+  SolarAssistant-triggered collapse/recovery after exact metric review,
+  configurable 2-minute/250 W/90%/50 W/30-second research defaults,
+  solar-day/case/episode/relapse behavior, extendable 20-minute recovery
+  windows, multi-source electrical and environmental context, recovery
+  descriptions, competing hypotheses, and future Forensics controls.
+- **ESP32 correction:** Recorded that the synthetic generator-frequency root
+  adapter must retain every finite approved-source value, including reported
+  multiples/harmonics and 5,000/30,000 Hz extremes. Firmware frequency
+  thresholds are analysis thresholds, not validity limits; surprising values
+  do not automatically prove the AC fundamental.
+- **Milestones:** Made the synthetic ESP32 generator-frequency root adapter the
+  next bounded implementation, followed by final source-neutral event
+  specification, synthetic detector, separately approved historical analysis,
+  and only later live detection, portal controls, nighttime characterization,
+  and weather integrations.
+- **Boundary:** Documentation only. No source, tests, adapter, detector,
+  collector, evidence, database, credential, runtime, service, timer, portal,
+  Home Assistant, Volcast, weather, device, firmware, permission, or network
+  state changed or was accessed. No causal, safety, code, or warranty finding
+  was made. Recovery is a normal revert of the eventual documentation commit;
+  no operational rollback applies.
