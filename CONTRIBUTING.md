@@ -15,6 +15,55 @@ risk classification, approvals, preservation, audit, commits, and pushes.
   document only when the work unit authorizes that edit.
 - Stop scope drift and return to the current objective.
 
+## Chris–ChatGPT conversation modes
+
+Conversation modes govern whether Chris and ChatGPT are discussing possible
+work or advancing an agreed work unit. They are distinct from the Git
+publication modes below, which govern staging, commit, and push authority for
+an already authorized Codex request.
+
+### Discussion Mode
+
+Discussion Mode is for questions, explanation, brainstorming, project
+direction, alternatives, and general conversation. Discussion may describe
+tentative future work, but it does not authorize Codex work, repository edits,
+commands, implementation, publication, runtime action, or a change to
+`NEXT_TASK.md`. A discussion conclusion is not silently promoted into project
+work. Moving a topic into Work Mode requires explicit agreement between Chris
+and ChatGPT about one bounded work unit.
+
+### Work Mode
+
+Work Mode advances one bounded project task, normally through Codex. ChatGPT
+identifies the exact objective, prepares one complete self-contained Codex
+request, explicitly tells Chris to copy it into Codex, and declares exactly one
+Git publication mode: `commit-and-push`, `commit-only`, or
+`no-commit-or-push`. Chris returns Codex's complete result to ChatGPT; ChatGPT
+independently reviews it and accepts it, corrects it, or defines the smallest
+next step. After a work unit closes, ChatGPT selects the next logical bounded
+task rather than asking Chris to design the routine software workflow.
+
+When Chris must personally perform an operation, ChatGPT labels it an
+**Owner/Admin Step**, identifies the exact host and shell, provides one
+manageable executable step, and waits for its result when later action depends
+on it. Work Mode itself grants no protected operational authority: the bounded
+request and the risk rules in this document continue to control every action.
+
+### Selecting and changing modes
+
+- The literal labels `Discussion Mode` and `Work Mode` explicitly select the
+  conversation mode, which persists until explicitly changed.
+- At the beginning of a fresh session, ChatGPT identifies the mode.
+- If no mode is stated and there is no accepted active-work-unit handoff, the
+  conversation starts in Discussion Mode; implementation authority is not
+  inferred.
+- A valid handoff that explicitly states Work Mode and the accepted next work
+  unit may resume in Work Mode.
+- Moving from Discussion Mode to Work Mode requires ChatGPT to state the
+  proposed bounded work unit and Chris to agree.
+- Either participant may return to Discussion Mode when a consequential
+  decision, ambiguity, risk, or architectural question needs conversation.
+
 ## Practical risk and security
 
 Risk is managed, not eliminated. Security protects credentials, evidence,

@@ -51,6 +51,38 @@ from SolarAssistant.
 - software version verified: `2026-07-02`
 - interface is read-only for this task
 
+## Qualified EG4 aggregate AC-use interpretation
+
+Chris reports that, in this EG4 AC-coupled installation, SolarAssistant
+displays the aggregate AC-use value supplied through EG4 telemetry. He also
+reports that a SolarAssistant developer explained that EG4 calculates and
+reports total AC use without separating the included AC-coupled solar
+contribution from actual household AC loads. This is operator/developer-
+reported source-semantic information, not independently proven protocol
+documentation.
+
+The native reported value must remain unchanged, source-labeled, and
+provenance-preserving. It must not automatically be labeled or interpreted as
+actual household load. During beta portal testing, label it as an
+**EG4-reported aggregate AC-use** metric, or use an equally explicit
+source-semantic label, rather than simply **Home Load**.
+
+A candidate estimate is:
+
+    estimated household load =
+      EG4-reported aggregate AC use - included AC-coupled solar contribution
+
+This subtraction is not an approved universal canonical transformation. Do not
+apply it automatically to historical data, canonical records, storage,
+reports, or portal values. Existing and future synchronized logs must first be
+reviewed across grid import or bypass, off-grid operation, battery charging and
+discharging, solar curtailment or collapse, inverter operating-mode
+transitions, and telemetry timing differences. The project may find the
+subtraction unnecessary or applicable only in specific modes.
+
+This known display/source-semantic issue is not warranty evidence and must
+remain separate from causal claims about inverter behavior.
+
 ## Credential Handling
 
 The existing collector can read `SOLARASSISTANT_PASSWORD` from the environment.

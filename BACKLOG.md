@@ -25,6 +25,13 @@ deferred until explicitly promoted and approved.
   authoritative evidence/history, enable control, or count copied data twice.
 
 ### Portal Improvements
+- Analyze existing and future synchronized SolarAssistant/EG4 logs to determine
+  whether a reliable household-load derivation is possible from the native
+  EG4-reported aggregate AC-use metric and its included AC-coupled solar
+  contribution. Define operating-mode applicability, timing alignment,
+  provenance, and source-semantic portal labels before any implementation; do
+  not approve or apply the subtraction as a universal transformation merely by
+  recording this backlog item.
 - Add a future secured `Refresh data now` workflow so F5 or an explicit portal control can request one bounded EG4 collection, report, and portal-generation cycle before displaying newly generated data. Prevent overlapping jobs, rapid repeated requests, uncontrolled command execution, and credential exposure; report in-progress, success, failure, and last-completed status clearly.
 - Add an optional local portal-development live-reload mode so Chris can watch visible changes while Codex works. Keep it separate from the production portal and from telemetry collection.
 

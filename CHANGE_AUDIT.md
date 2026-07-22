@@ -1384,3 +1384,36 @@ or runtime change.
   `Record ESP32 endurance capture integrity`. Recovery is a later normal revert
   of this documentation commit only; preserve the evidence unchanged. No
   operational rollback applies.
+
+## 2026-07-22T02:22:13Z — Conversation modes and telemetry interpretation
+
+- **Actor and authorization:** ChatGPT-directed Codex, under Chris's bounded
+  documentation-only authorization with publication mode `commit-and-push`.
+- **Workflow:** Defined persistent Discussion Mode and Work Mode for
+  Chris–ChatGPT conversation, their explicit transitions and safe default, the
+  complete Codex request-and-review cycle, and the Owner/Admin Step format.
+  Kept conversation modes distinct from the existing Git publication modes and
+  preserved all risk and protected-action controls.
+- **Source interpretation:** Recorded the qualified operator/developer-reported
+  explanation that SolarAssistant's EG4 aggregate AC-use display may include
+  AC-coupled solar contribution. The native metric retains provenance and an
+  explicit source-semantic label; candidate household-load subtraction is not
+  approved or implemented. Deferred log analysis must establish applicability,
+  timing, provenance, and labels first.
+- **Operating context:** Preserved Chris's July 21 cloudless-condition,
+  no-export, overnight grid-use, battery-charging, and solar-dip observations
+  for future synchronized correlation, separately identifying his comparison
+  with prior 6000XP behavior as a hypothesis. No causal conclusion, component
+  failure finding, or warranty determination was made.
+- **Affected and untouched:** Documentation only: `CONTRIBUTING.md`,
+  `AI_PROMPT.md`, `START_HERE.md`,
+  `docs/SOLARASSISTANT_TELEMETRY_PLAN.md`, `BACKLOG.md`,
+  `docs/EG4_FORENSIC_CORRELATION.md`, `PROJECT_STATE.md`, and this audit. The
+  existing Engineering Bible mission was adequate and unchanged. `NEXT_TASK.md`,
+  source, tests, evidence, telemetry behavior, databases, credentials,
+  permissions, runtime, services, devices, and networking remained unchanged.
+- **Validation, publication, and recovery:** Documentation consistency, exact
+  scope, unchanged `NEXT_TASK.md`, `git diff --check`, and repository health
+  must pass before one normal fast-forward commit titled `Document work modes
+  and telemetry interpretation`. Recovery is a later normal revert of this
+  documentation commit; no operational rollback applies.

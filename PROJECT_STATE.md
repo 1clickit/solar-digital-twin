@@ -230,6 +230,13 @@ main
   related telemetry from `solardt`. Its existing direct ESPHome path remains
   until the replacement survives explicit lineage, freshness, availability,
   restart, and interruption validation
+- Known beta/portal interpretation boundary: Chris reports that the
+  SolarAssistant-displayed EG4 aggregate AC-use value includes AC-coupled solar
+  contribution and therefore must not be labeled directly as household load.
+  Preserve the native value and provenance and use an explicit
+  EG4-reported-aggregate label. A possible subtraction remains an unapproved,
+  deferred, mode- and timing-sensitive log-analysis question; it is neither an
+  implemented canonical transformation nor warranty evidence
 - After ESP32 hardening, define a common telemetry observation, provenance,
   source-lineage, timestamp, freshness, availability, and normalization
   contract before production multi-source portal binding or reciprocal Home

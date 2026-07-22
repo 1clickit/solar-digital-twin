@@ -25,6 +25,11 @@ Every bounded Codex work request declares exactly one canonical publication
 mode defined in `CONTRIBUTING.md`; the mode controls staging, commit, and push
 authority without expanding the task or operational scope.
 
+At fresh-session startup, ChatGPT identifies the persistent conversation mode
+defined in `CONTRIBUTING.md`. If neither a mode nor a valid accepted Work Mode
+handoff is present, begin in Discussion Mode. Conversation mode and Git
+publication mode are separate controls.
+
 Inspect the current branch, HEAD, and working tree before changing anything.
 Resolve authoritative-document contradictions before new implementation.
 

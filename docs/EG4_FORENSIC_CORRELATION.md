@@ -20,6 +20,31 @@ The proposed work must remain:
 - explicit about uncertainty
 - separate from normal portal and collector behavior until tested
 
+## July 21, 2026 operator-reported operating context
+
+The following is context supplied by Chris for later synchronized-log
+correlation, not a telemetry result or causal finding. Chris reported
+cloudless conditions on July 21, 2026. The installation does not permit grid
+export. During the preceding night, the system had been switched to grid use
+to preserve battery energy and give the batteries an opportunity to reach full
+charge from solar the following day. The batteries still required charging
+during daylight, yet solar production experienced several large dips, creating
+concern that they might not reach full charge despite available sunlight.
+
+Chris's hypothesis is that this resembles behavior he observed with the
+earlier 6000XP inverters and now with the 12000XP. That comparison remains an
+operator hypothesis for future analysis. The SolarAssistant display behavior
+documented in `docs/SOLARASSISTANT_TELEMETRY_PLAN.md` means its EG4-reported
+aggregate AC-use trace cannot be treated directly as actual household demand.
+
+Future analysis may correlate the relevant synchronized logs while preserving
+the distinctions among reported observation, operator hypothesis, and analytic
+conclusion. Neither this context nor any referenced display proves an internal
+component failure, a frequency-shift cause, microinverter failure, or warranty
+liability. The event is not characterized here as cloud-caused or
+export-limited; no screenshot identity, precise event timestamp, weather
+measurement, or telemetry conclusion is asserted.
+
 ## July 16-17 EG4 Evidence Availability
 
 Read-only inventory confirms **Complete** EG4 coverage for the full ESP32
