@@ -114,6 +114,12 @@ docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md
     credentialless runtime, completed finite passive verification, and the
     separately gated persistent-operation decision.
 
+docs/capture_analyses/esp32_sse_20260721_041439Z-integrity.md
+    Immutable evidence identities, deterministic current-retention replay,
+    ownership reconciliation, runtime closure, and accepted PASS WITH ONE
+    QUALIFICATION result for the completed post-hardening ESP32 endurance
+    capture.
+
 docs/ESP32_RETENTION_ASSESSMENT.md
     Reproducible full-capture ESP32 retention measurements, candidate comparison, and policy recommendation.
 

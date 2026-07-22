@@ -103,6 +103,16 @@ main
   CPU, 40.9 MiB peak memory, no swap, and zero restarts. The service returned
   static/inactive/dead with no timer, trigger, process, credential path,
   persistent activation, conservative output, or device/configuration change
+- Post-hardening endurance capture `esp32_sse_20260721_041439Z` completed from
+  `2026-07-21T04:14:39.139Z` through `2026-07-21T16:00:01.177Z` with 422,744
+  raw and 391,241 current-retained records. Exact JSON, count, UTC chronology,
+  17-entity allowlist, raw/retained order, manifest, identity, ownership, and
+  deterministic `esp32-frequency-v1` replay checks passed. Chris accepted the
+  capture as **PASS WITH ONE QUALIFICATION**: `RuntimeMaxSec` was ineffective
+  with transient `Type=oneshot`, so clean automatic completion relied on the
+  collector's finite `--duration`. Evidence remains suitable for later
+  forensic analysis; the full record is
+  `docs/capture_analyses/esp32_sse_20260721_041439Z-integrity.md`
 - The static ESP32 runtime/security review and implementation-ready plan are
   complete in `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`. No collector,
   test, installer, unit, runtime, identity, permission, service, device,

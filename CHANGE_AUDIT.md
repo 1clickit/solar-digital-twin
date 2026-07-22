@@ -1347,3 +1347,40 @@ or runtime change.
   one normal fast-forward commit with subject `Accept synthetic SolarAssistant
   SOC adapter`. Recovery is a later normal revert of this documentation commit
   only; no operational rollback applies.
+
+## 2026-07-22T02:04:15Z — ESP32 endurance capture integrity closure
+
+- **Actor and authorization:** Chris authorized the finite passive endurance
+  capture separately; ChatGPT-directed Codex performed bounded read-only
+  integrity review and this documentation-only closure with publication mode
+  `commit-and-push`.
+- **Operational record:** Transient unit
+  `esp32-forensic-overnight-20260721.service` created immutable capture
+  `esp32_sse_20260721_041439Z` from `2026-07-21T04:14:39.139Z` through
+  `2026-07-21T16:00:01.177Z` using collector
+  `7f2274b9011c4bb85f3099eb80c8bb86a21f0e04`, current retention mode, and
+  `esp32-frequency-v1`. It wrote 422,744 raw records, 391,241 retained records,
+  and a two-record manifest, then stopped normally for duration.
+- **Integrity and decision:** JSON, counts, canonical nondecreasing UTC,
+  final-newline state, fixed source, all 17 approved IDs, byte-identical ordered
+  retention, complete manifest, stable pre/post SHA-256 identities, restrictive
+  ownership/modes, and deterministic retention replay passed. Chris accepted
+  the result as **PASS WITH ONE QUALIFICATION** and suitable for later forensic
+  analysis. The complete record is
+  `docs/capture_analyses/esp32_sse_20260721_041439Z-integrity.md`.
+- **Qualification and reconciliation:** Systemd ignored `RuntimeMaxSec` because
+  the transient unit used `Type=oneshot`; the collector's finite `--duration`
+  nevertheless completed normally. Host ownership is correctly
+  `solardt-telemetry:solardt-telemetry` mode `0640`; the earlier
+  `nobody:nogroup` view was only Bubblewrap overflow-ID mapping, not a file or
+  permission anomaly.
+- **Documentation-only scope:** Created the integrity report and updated
+  `docs/ESP32_RUNTIME_SECURITY_HARDENING_PLAN.md`, `PROJECT_STATE.md`,
+  `PROJECT_INDEX.md`, and this append-only audit entry. No evidence content,
+  source, tests, dependencies, runtime, services, timers, permissions,
+  credentials, devices, networking, or selected telemetry-contract next task
+  changed. No persistent service or timer was created or authorized.
+- **Publication and recovery:** Publish one normal fast-forward commit titled
+  `Record ESP32 endurance capture integrity`. Recovery is a later normal revert
+  of this documentation commit only; preserve the evidence unchanged. No
+  operational rollback applies.

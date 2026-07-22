@@ -67,6 +67,25 @@ inactive, and dead with no timer, trigger, process, credential path, or
 automatic activation. No firmware, ESPHome, network, authentication, or device
 configuration changed. Evidence is preserved under the installed evidence path.
 
+## Post-hardening endurance-capture result
+
+Finite capture `esp32_sse_20260721_041439Z` ran from
+`2026-07-21T04:14:39.139Z` through `2026-07-21T16:00:01.177Z` using installed
+collector version `7f2274b9011c4bb85f3099eb80c8bb86a21f0e04` and current policy
+`esp32-frequency-v1`. It produced 422,744 raw and 391,241 retained records.
+Read-only integrity review and deterministic replay passed, and Chris accepted
+the result as **PASS WITH ONE QUALIFICATION**. The complete evidence identities,
+checks, ownership reconciliation, and result are recorded in
+`docs/capture_analyses/esp32_sse_20260721_041439Z-integrity.md`.
+
+The qualification is that systemd ignored `RuntimeMaxSec` for the transient
+`Type=oneshot` unit, leaving the collector's successfully completed finite
+`--duration` as the automatic stop mechanism. This does not invalidate the
+evidence. A host-enforced ceiling requires separate design review before any
+future endurance launch. This finite result creates no timer, enablement, or
+persistent service authority; the persistent-operation owner decision remains
+unmade.
+
 ## Repository implementation result
 
 The implemented client uses a dedicated Requests session with environment
