@@ -1446,3 +1446,39 @@ or runtime change.
   state changed or was accessed. No causal, safety, code, or warranty finding
   was made. Recovery is a normal revert of the eventual documentation commit;
   no operational rollback applies.
+
+## 2026-07-23T16:45:30Z — Implement synthetic ESP32 frequency adapter
+
+- **Actor and authorization:** ChatGPT-directed Codex under Chris's bounded
+  repository-only authorization with publication mode `commit-and-push`.
+- **Implementation:** Added one I/O-free adapter for exact ESPHome entity
+  `sensor-01_gen_frequency`, canonical metric
+  `esp32.esphome.forensic_probe.generator_frequency`, ESP32
+  `forensic_probe`/forensic/HTTP-SSE identity, receipt-only time, and exact root
+  lineage. Registry version `1` now has exactly the accepted SolarAssistant SOC
+  and ESP32 frequency entries; the minimal validator dispatches strict exact
+  profiles and rejects cross-source substitutions.
+- **Value and provenance:** Every finite integer or float remains valid without
+  electrical plausibility limits, clipping, correction, or suppression.
+  Adapter-specified `Hz` uses mapping
+  `esp32.esphome.sensor-01_gen_frequency.unit` version `1`.
+  `value.raw` remains the original collector `value`, while validated
+  `evidence.source_fields` losslessly preserves the separate raw `value` and
+  `state`. Caller-supplied semantic occurrence identity distinguishes equal
+  timestamps and remains independent of copy-local retention/evidence.
+- **Tests and files:** Added the adapter, one synthetic fixture, and focused
+  tests; narrowly generalized the model, registry, exports, model tests, and
+  registry expectation in the accepted SolarAssistant tests. Updated
+  `PROJECT_STATE.md`, `NEXT_TASK.md`,
+  `docs/TELEMETRY_SOURCE_ADAPTER_PLAN.md`, `PROJECT_INDEX.md`, and this audit.
+  All 33 focused telemetry tests and all 251 offline repository tests passed.
+- **Status and boundary:** Implementation is pending independent ChatGPT/owner
+  review and is not owner-accepted. Production gate 16 remains Deferred.
+  Production IDs, storage, migration/backfill, historical/operational evidence,
+  collectors, retention, firmware, devices, runtime, services, credentials,
+  databases, portal, Home Assistant, weather, and collapse detection were not
+  accessed or changed.
+- **Publication and recovery:** Planned subject `Add synthetic ESP32 frequency
+  adapter`; one normal fast-forward push to `origin/main` is authorized after
+  final safeguards. Recovery is a normal revert of this one repository commit;
+  no operational rollback applies.

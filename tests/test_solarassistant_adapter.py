@@ -83,8 +83,8 @@ class SolarAssistantSocAdapterTests(unittest.TestCase):
             **kwargs,
         )
 
-    def test_registry_contains_exactly_the_accepted_metric(self):
-        self.assertEqual(tuple(REGISTRY_V1), ("total/battery_state_of_charge",))
+    def test_registry_preserves_the_exact_accepted_metric(self):
+        self.assertIn("total/battery_state_of_charge", REGISTRY_V1)
         metric = REGISTRY_V1["total/battery_state_of_charge"]
         self.assertEqual(metric.metric_id, "solarassistant.jk_bms.combined.state_of_charge")
         self.assertEqual(metric.source_system, "solarassistant")

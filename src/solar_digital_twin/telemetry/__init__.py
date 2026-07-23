@@ -13,6 +13,9 @@ from solar_digital_twin.telemetry.model import (
     LineageHop,
     validate_record,
 )
+from solar_digital_twin.telemetry.esp32_adapter import (
+    Esp32GeneratorFrequencyAdapter,
+)
 from solar_digital_twin.telemetry.solarassistant_adapter import (
     SolarAssistantSocAdapter,
 )
@@ -22,6 +25,7 @@ __all__ = [
     "AdapterError",
     "CONTRACT_VERSION",
     "ContractValidationError",
+    "Esp32GeneratorFrequencyAdapter",
     "LineageHop",
     "ObservationIdProvider",
     "RecordIdProvider",

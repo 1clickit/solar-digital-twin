@@ -248,6 +248,18 @@ src/solar_digital_twin/collectors/esp32_retention.py
     Versioned current and conservative ESP32 retention policies, canonical
     deadbands, and entity-local availability normalization.
 
+src/solar_digital_twin/telemetry/esp32_adapter.py
+    Synthetic-only, I/O-free exact ESP32 generator-frequency root adapter with
+    strict registry identity, lossless source fields, and copy provenance.
+
+tests/fixtures/telemetry/esp32_generator_frequency.json
+    Synthetic ESP32 SSE-shaped frequency values, states, occurrences, and
+    raw/current/conservative copy references.
+
+tests/test_esp32_adapter.py
+    Focused finite-value, identity, state, provenance, rejection, immutability,
+    and I/O-boundary tests for the synthetic ESP32 adapter.
+
 scripts/coordinated_capture.py
     Three-source isolated capture supervisor, synthetic rehearsal, compact
     status, duration control, and prior-unit restoration.

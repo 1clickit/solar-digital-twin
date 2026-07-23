@@ -661,11 +661,16 @@ Refresh command:
 
 ## Current Restrictions
 
-- The next task is repository review and owner acceptance only. This state
-  document does not authorize adapter implementation, installation, user/group
+- The synthetic ESP32 generator-frequency root adapter is implemented and
+  offline-validated, but remains pending independent ChatGPT/owner review and
+  is not owner-accepted. Production gate 16 remains Deferred.
+- The next task is independent repository review only. This state document
+  does not authorize further adapter implementation, installation, user/group
   or permission changes, daemon reload, unit copying, service action, live
   contact, firmware change, capture, credential, evidence, database/schema,
   portal, Home Assistant, or network change
+- Production IDs, storage, historical binding, live-device/runtime binding,
+  portal work, weather integration, and collapse detection remain unauthorized
 - Do not change EG4 collector behavior, SQLite schema, Home Assistant
   integration, production retention policy, or other collectors without a new
   bounded work unit

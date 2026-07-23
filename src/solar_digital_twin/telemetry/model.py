@@ -10,6 +10,11 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Mapping
 
+from solar_digital_twin.telemetry.registry import (
+    ESP32_FREQUENCY_ENTITY,
+    REGISTRY_VERSION,
+    metric_for,
+)
 
 CONTRACT_VERSION = "solar-digital-twin.telemetry-observation.v1"
 SUPPORTED_RECORD_KINDS = frozenset({"observation", "status", "rejection"})
@@ -191,24 +196,25 @@ def _validate_root(record: Mapping[str, Any]) -> None:
     )
     for field in ("device", "metric_id", "role", "transport"):
         _nonempty_string(source.get(field), f"invalid_source_{field}")
-    if source.get("system") != "solarassistant":
-        _fail("invalid_source_system")
-    if source.get("device") != "jk_bms_bank":
-        _fail("invalid_source_device")
-    if source.get("metric_id") != "total/battery_state_of_charge":
+    metric = metric_for(REGISTRY_VERSION, source.get("metric_id"))
+    if metric is None:
         _fail("invalid_source_metric_id")
-    if source.get("role") != "authority":
+    if source.get("system") != metric.source_system:
+        _fail("invalid_source_system")
+    if source.get("device") != metric.source_device:
+        _fail("invalid_source_device")
+    if source.get("role") != metric.source_role:
         _fail("invalid_source_role")
-    if source.get("transport") != "solarassistant_rest_v1":
+    if source.get("transport") != metric.source_transport:
         _fail("invalid_source_transport")
-    if record.get("metric_id") != "solarassistant.jk_bms.combined.state_of_charge":
+    if record.get("metric_id") != metric.metric_id:
         _fail("invalid_metric_id")
     if source.get("lineage") != [
         {
-            "system": "solarassistant",
-            "instance": "jk_bms_bank",
+            "system": metric.source_system,
+            "instance": metric.source_device,
             "role": "root",
-            "reference": "total/battery_state_of_charge",
+            "reference": metric.native_metric_id,
             "transformation_id": None,
             "unresolved": False,
         }
@@ -289,9 +295,10 @@ def _validate_root(record: Mapping[str, Any]) -> None:
             isinstance(raw, bool)
             or not isinstance(raw, (int, float))
             or not math.isfinite(raw)
-            or not 0 <= raw <= 100
             or normalized != raw
         ):
+            _fail("invalid_root_value")
+        if metric.native_metric_id != ESP32_FREQUENCY_ENTITY and not 0 <= raw <= 100:
             _fail("invalid_root_value")
         expected_source_nature = "measured"
         expected_availability = "available"
@@ -306,16 +313,49 @@ def _validate_root(record: Mapping[str, Any]) -> None:
         expected_reason = f"source_{raw}"
     else:
         _fail("invalid_root_value")
-    if value.get("raw_unit") != "%" or value.get("canonical_unit") != "%":
+    if (
+        value.get("raw_unit") != metric.raw_unit
+        or value.get("canonical_unit") != metric.raw_unit
+    ):
         _fail("invalid_root_unit")
-    if value.get("raw_unit_basis") != "source_supplied":
+    if value.get("raw_unit_basis") != metric.raw_unit_basis:
         _fail("invalid_raw_unit_basis")
-    if value.get("raw_unit_mapping") is not None:
-        _fail("unexpected_unit_mapping")
+    if metric.raw_unit_basis == "source_supplied":
+        if value.get("raw_unit_mapping") is not None:
+            _fail("unexpected_unit_mapping")
+    elif value.get("raw_unit_mapping") != {
+        "id": metric.raw_unit_mapping_id,
+        "version": metric.raw_unit_mapping_version,
+    }:
+        _fail("invalid_unit_mapping")
     if value.get("source_nature") != expected_source_nature:
         _fail("invalid_source_nature")
-    if value.get("result_nature") != "source_value":
+    if value.get("result_nature") != metric.result_nature:
         _fail("invalid_result_nature")
+
+    if metric.native_metric_id == ESP32_FREQUENCY_ENTITY:
+        evidence = _mapping(record.get("evidence"), "invalid_evidence")
+        source_fields = _mapping(
+            evidence.get("source_fields"), "invalid_source_fields"
+        )
+        _require_fields(
+            source_fields,
+            ("id", "name", "domain", "value", "state", "source_url"),
+            "incomplete_source_fields",
+        )
+        if (
+            source_fields.get("id") != metric.native_metric_id
+            or not isinstance(source_fields.get("name"), str)
+            or source_fields.get("domain") != "sensor"
+            or source_fields.get("source_url") != "http://synthetic.invalid/events"
+        ):
+            _fail("invalid_source_fields")
+        if source_fields.get("value") != raw:
+            _fail("source_value_mismatch")
+        if source_fields.get("state") is not None and not isinstance(
+            source_fields.get("state"), str
+        ):
+            _fail("invalid_source_state")
 
     if record.get("availability") != expected_availability:
         _fail("invalid_availability")

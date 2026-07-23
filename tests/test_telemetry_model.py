@@ -133,6 +133,68 @@ class TelemetryModelTests(unittest.TestCase):
         record["status"] = {"scope": "source", "state": "unreachable"}
         self.assert_reason(record, "invalid_root_profile")
 
+    def test_exact_registry_profiles_reject_cross_source_substitution(self):
+        esp32 = deepcopy(self.record)
+        esp32["metric_id"] = "esp32.esphome.forensic_probe.generator_frequency"
+        esp32["source"] = {
+            "system": "esp32",
+            "device": "forensic_probe",
+            "metric_id": "sensor-01_gen_frequency",
+            "role": "forensic",
+            "transport": "http_sse",
+            "lineage": [
+                {
+                    "system": "esp32",
+                    "instance": "forensic_probe",
+                    "role": "root",
+                    "reference": "sensor-01_gen_frequency",
+                    "transformation_id": None,
+                    "unresolved": False,
+                }
+            ],
+        }
+        esp32["value"].update(
+            {
+                "raw": 30000,
+                "normalized": 30000,
+                "raw_unit": "Hz",
+                "canonical_unit": "Hz",
+                "raw_unit_basis": "adapter_specified",
+                "raw_unit_mapping": {
+                    "id": "esp32.esphome.sensor-01_gen_frequency.unit",
+                    "version": "1",
+                },
+            }
+        )
+        esp32["evidence"]["source_fields"] = {
+            "id": "sensor-01_gen_frequency",
+            "name": "01 GEN Frequency",
+            "domain": "sensor",
+            "value": 30000,
+            "state": "30000 Hz",
+            "source_url": "http://synthetic.invalid/events",
+        }
+        validate_record(esp32)
+
+        mixed = deepcopy(esp32)
+        mixed["source"]["role"] = "authority"
+        self.assert_reason(mixed, "invalid_source_role")
+
+        mixed = deepcopy(esp32)
+        mixed["value"]["raw_unit_basis"] = "source_supplied"
+        self.assert_reason(mixed, "invalid_raw_unit_basis")
+
+        mixed = deepcopy(self.record)
+        mixed["source"]["system"] = "esp32"
+        self.assert_reason(mixed, "invalid_source_system")
+
+        mixed = deepcopy(self.record)
+        mixed["value"]["raw_unit_mapping"] = {
+            "id": "esp32.esphome.sensor-01_gen_frequency.unit",
+            "version": "1",
+        }
+        self.assert_reason(mixed, "unexpected_unit_mapping")
+
     def test_invalid_json_value_and_time_are_bounded(self):
         record = deepcopy(self.record)
         record["value"]["raw"] = float("nan")

@@ -1,0 +1,64 @@
+{
+  "base_record": {
+    "received_at_utc": "2026-01-15T18:00:01.123Z",
+    "source_occurrence_id": "synthetic-esp32-occurrence-001",
+    "source_url": "http://synthetic.invalid/events",
+    "id": "sensor-01_gen_frequency",
+    "name": "01 GEN Frequency",
+    "domain": "sensor",
+    "value": 60.01,
+    "state": "60.01 Hz"
+  },
+  "numeric_values": [
+    60.01,
+    0.08,
+    0,
+    -1.25,
+    58.99,
+    59,
+    62,
+    62.01,
+    120,
+    600,
+    5000,
+    30000
+  ],
+  "states": [
+    {
+      "value": null,
+      "state": null
+    },
+    {
+      "value": "unknown",
+      "state": "unknown"
+    },
+    {
+      "value": "unavailable",
+      "state": "unavailable"
+    }
+  ],
+  "raw_evidence": {
+    "synthetic": true,
+    "capture_id": "synthetic-esp32-capture-001",
+    "manifest_ref": "synthetic-manifest-001",
+    "file_ref": "synthetic-raw-stream-001",
+    "record_ref": "synthetic-raw-record-001",
+    "source_occurrence_id": "synthetic-esp32-occurrence-001"
+  },
+  "current_retained_evidence": {
+    "synthetic": true,
+    "capture_id": "synthetic-esp32-capture-001",
+    "manifest_ref": "synthetic-manifest-001",
+    "file_ref": "synthetic-current-retained-stream-001",
+    "record_ref": "synthetic-current-retained-record-001",
+    "source_occurrence_id": "synthetic-esp32-occurrence-001"
+  },
+  "conservative_retained_evidence": {
+    "synthetic": true,
+    "capture_id": "synthetic-esp32-capture-001",
+    "manifest_ref": "synthetic-manifest-001",
+    "file_ref": "synthetic-conservative-retained-stream-001",
+    "record_ref": "synthetic-conservative-retained-record-001",
+    "source_occurrence_id": "synthetic-esp32-occurrence-001"
+  }
+}

@@ -520,7 +520,8 @@ HA ambiguity, live paths, storage, and credentials.
 - Frozen context/lineage/registry dataclasses and JSON-compatible output.
 - Minimal adapter `Protocol` and separate injected deterministic fixture methods
   for observation IDs and record IDs.
-- Registry version `1` entries only for combined SolarAssistant SOC.
+- Registry version `1` entries only for combined SolarAssistant SOC and exact
+  ESP32 generator frequency.
 - One completed synthetic poll group with `total/battery_state_of_charge`.
 - Exactly one normal valid root observation with metric ID
   `solarassistant.jk_bms.combined.state_of_charge`, source system
@@ -586,11 +587,20 @@ applies.
 
 ## 13. Deferred decisions and milestone sequence
 
-The accepted next bounded implementation milestone is one synthetic ESP32
-generator-frequency root adapter. It tests source-neutral validation and must
-follow the value-preservation semantics in
-`docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`; it does not implement the later
-collapse detector or production binding.
+The synthetic ESP32 generator-frequency root adapter is implemented and
+offline-validated but remains pending independent ChatGPT/owner review and is
+not owner-accepted. It adds exact entity `sensor-01_gen_frequency`, canonical
+metric `esp32.esphome.forensic_probe.generator_frequency`, ESP32 forensic
+identity, ESPHome namespace, HTTP-SSE transport, adapter-specified versioned Hz
+mapping, receipt-only time, and unrestricted finite numeric preservation.
+`value.raw` preserves the collector `value`; validated
+`evidence.source_fields` preserves the exact separate `value` and `state`.
+Explicit source-occurrence identity keeps equal-timestamp events distinct,
+while raw/current/conservative copies share one observation ID and retain
+distinct record IDs and copy provenance. The minimal validator now dispatches
+only exact registered SolarAssistant and ESP32 root profiles. Thirty-three
+focused telemetry tests and all 251 offline repository tests passed. This does
+not implement the later collapse detector or production binding.
 
 Still deferred:
 
@@ -598,7 +608,7 @@ Still deferred:
 - production record/observation ID encoding;
 - exact persistent serialization and database schema;
 - historical backfill and EG4 missing-receipt policy;
-- ESP32 unit-specification qualification;
+- production ESP32 unit binding beyond the reviewed synthetic firmware mapping;
 - HA transport, credentials, reconciliation, and export metadata surface;
 - portal binding and replacement of current reports;
 - persistent or long-duration ESP32 operation; and

@@ -2,9 +2,9 @@
 
 ## Objective
 
-Implement and offline-test one synthetic ESP32 generator-frequency root adapter
-that preserves every finite reported value, without production binding or
-operational integration.
+Independently review the implemented synthetic ESP32 generator-frequency root
+adapter and decide whether it is owner-accepted or requires one bounded
+correction.
 
 ## Accepted baseline
 
@@ -14,24 +14,20 @@ slice as the smallest test that the common validator and registry generalize to
 a second source. `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md` records the
 forensic reason to retain electrically surprising finite source values.
 
-## Implementation task
+## Review task
 
-Add one I/O-free adapter for caller-supplied synthetic ESP32 SSE-shaped records
-from exact entity `sensor-01_gen_frequency`. Generalize the minimal validator
-and immutable registry only as required for strict SolarAssistant and ESP32
-root profiles. Preserve every finite numeric value without plausibility-range
-rejection, clipping, correction, or suppression. Reject malformed, Boolean,
-nonnumeric, and non-finite values with bounded payload-free reasons.
+Review the exact source, registry, validator, synthetic fixture, and focused
+tests. Confirm lossless raw `value`/`state` preservation, exact ESP32 identity,
+adapter-specified Hz mapping, unrestricted finite numeric values, semantic
+occurrence/copy identity, bounded rejection behavior, strict cross-profile
+validation, and unchanged SolarAssistant behavior.
 
 ## Scope
 
-Use synthetic repository fixtures only. Preserve raw `value` and `state`, exact
-native/canonical identity, forensic role, ESPHome/SSE lineage, receipt-only UTC
-time, adapter-specified Hz provenance, ingest ordering, immutable input, and
-raw/retained copies as one source occurrence. Cover values near 60 Hz,
-threshold crossings, multiples of 60 Hz, 5,000 Hz, 30,000 Hz, explicit null,
-`unknown`, `unavailable`, missing, malformed, Boolean, and non-finite input.
-Preserve all accepted SolarAssistant behavior.
+Review is repository-only and read-only unless a separate bounded correction is
+authorized. The implementation passed 33 focused telemetry tests and all 251
+offline repository tests before publication. It is pending review and is not
+owner-accepted.
 
 ## Protected boundary
 
@@ -47,11 +43,10 @@ recovery procedure remain separate deferred tasks.
 
 ## Success
 
-The adapter and focused synthetic tests pass the applicable accepted-contract
-gates; all existing tests remain compatible; no import-time or adaptation-time
-I/O exists; extreme finite readings remain valid source observations; and
-production gate 16 remains explicitly Deferred. Recovery is a normal revert of
-the bounded repository implementation commit with no operational rollback.
+The review either records explicit acceptance or identifies the smallest exact
+correction. Production gate 16 remains explicitly Deferred. Recovery is a
+normal revert of the one bounded implementation commit with no operational
+rollback.
 
 ## Deferred Post-Project Investigations
 
