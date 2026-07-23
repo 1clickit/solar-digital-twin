@@ -56,7 +56,7 @@ ESP32_GENERATOR_FREQUENCY: Final = MetricDefinition(
     raw_unit="Hz",
     raw_unit_basis="adapter_specified",
     source_nature="measured",
-    result_nature="source_value",
+    result_nature="normalized_source_value",
     raw_unit_mapping_id="esp32.esphome.sensor-01_gen_frequency.unit",
     raw_unit_mapping_version="1",
 )

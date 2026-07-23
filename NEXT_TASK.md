@@ -20,13 +20,17 @@ Review the exact source, registry, validator, synthetic fixture, and focused
 tests. Confirm lossless raw `value`/`state` preservation, exact ESP32 identity,
 adapter-specified Hz mapping, unrestricted finite numeric values, semantic
 occurrence/copy identity, bounded rejection behavior, strict cross-profile
-validation, and unchanged SolarAssistant behavior.
+validation, and unchanged SolarAssistant behavior. Confirm specifically that
+stream-local ingest order is absent from observation identity and that the
+adapter-specified Hz root uses `normalized_source_value` plus normalized
+quality.
 
 ## Scope
 
 Review is repository-only and read-only unless a separate bounded correction is
-authorized. The implementation passed 33 focused telemetry tests and all 251
-offline repository tests before publication. It is pending review and is not
+authorized. The two review findings concerning copy identity and normalized Hz
+semantics were corrected, and the implementation passed 33 focused telemetry
+tests and all 251 offline repository tests. It is pending review and is not
 owner-accepted.
 
 ## Protected boundary

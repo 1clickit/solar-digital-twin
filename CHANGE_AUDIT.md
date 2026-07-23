@@ -1482,3 +1482,32 @@ or runtime change.
   adapter`; one normal fast-forward push to `origin/main` is authorized after
   final safeguards. Recovery is a normal revert of this one repository commit;
   no operational rollback applies.
+
+## 2026-07-23T16:55:48Z — Correct ESP32 frequency adapter semantics
+
+- **Actor and authorization:** ChatGPT-directed Codex under Chris's bounded
+  repository-only correction authorization with publication mode
+  `commit-and-push`.
+- **Identity correction:** Removed stream-local `ingest_sequence` from the
+  observation-ID descriptor. Raw, current-retained, and
+  conservative-retained copies with one source occurrence and receipt time now
+  pass identical semantic descriptors despite different per-record ingest
+  positions; record IDs and copy provenance remain distinct.
+- **Normalization correction:** Changed only the ESP32 generator-frequency
+  registry profile to `result_nature=normalized_source_value`. Its exact
+  adapter-specified Hz mapping remains version `1`, numeric raw and normalized
+  values remain equal, and quality now includes `normalized` in accepted order.
+  SolarAssistant remains `source_value` with source-supplied percent and its
+  unchanged quality categories.
+- **Validation and status:** All 33 focused telemetry tests and all 251 offline
+  repository tests passed. The implementation remains pending independent
+  ChatGPT/owner review and is not owner-accepted. Production gate 16 remains
+  Deferred.
+- **Boundary and recovery:** No production IDs, storage, evidence, collectors,
+  retention implementation, runtime, devices, credentials, database, portal,
+  Home Assistant, weather, or collapse detection changed or was accessed.
+  Recovery is a normal revert of the correction commit with no operational
+  rollback.
+- **Publication:** Planned subject `Correct ESP32 frequency adapter semantics`;
+  one normal fast-forward push to `origin/main` is authorized after final
+  safeguards.

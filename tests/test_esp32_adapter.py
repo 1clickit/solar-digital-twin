@@ -160,7 +160,14 @@ class Esp32GeneratorFrequencyAdapterTests(unittest.TestCase):
                 "version": "1",
             },
         )
-        self.assertEqual(record["value"]["result_nature"], "source_value")
+        self.assertEqual(
+            record["value"]["result_nature"], "normalized_source_value"
+        )
+        self.assertEqual(
+            record["quality"]["categories"],
+            ["direct", "normalized", "clock_uncertain"],
+        )
+        self.assertEqual(record["quality"]["reasons"], ["source_time_absent"])
         self.assertEqual(
             record["transformation"], {"id": None, "version": None, "method": None}
         )
@@ -219,6 +226,13 @@ class Esp32GeneratorFrequencyAdapterTests(unittest.TestCase):
             self.assertEqual(record["availability"], availability)
             self.assertEqual(record["diagnostics"]["reason_codes"], [reason])
             self.assertEqual(
+                record["quality"]["categories"],
+                ["direct", "normalized", "clock_uncertain"],
+            )
+            self.assertEqual(
+                record["quality"]["reasons"], ["source_time_absent", reason]
+            )
+            self.assertEqual(
                 record["evidence"]["source_fields"]["value"], source_state["value"]
             )
             self.assertEqual(
@@ -239,14 +253,16 @@ class Esp32GeneratorFrequencyAdapterTests(unittest.TestCase):
 
     def test_raw_current_and_conservative_copies_share_observation_not_record(self):
         copies = [
-            self.adapt()[0],
+            self.adapt(ingest_sequence=7)[0],
             self.adapt(
                 evidence=self.fixture["current_retained_evidence"],
+                ingest_sequence=3,
                 retention_stream="retained",
                 retention_policy_id="esp32-frequency-v1",
             )[0],
             self.adapt(
                 evidence=self.fixture["conservative_retained_evidence"],
+                ingest_sequence=1,
                 retention_stream="retained",
                 retention_policy_id="esp32-conservative-v1",
             )[0],
@@ -257,12 +273,17 @@ class Esp32GeneratorFrequencyAdapterTests(unittest.TestCase):
             [item["retention"]["policy_id"] for item in copies],
             [None, "esp32-frequency-v1", "esp32-conservative-v1"],
         )
+        self.assertEqual(
+            [item["sequence"]["ingest"] for item in copies],
+            [7, 3, 1],
+        )
         observation_descriptors = self.observation_ids.descriptors[-3:]
         self.assertEqual(
             observation_descriptors,
             [observation_descriptors[0]] * 3,
         )
         for descriptor in observation_descriptors:
+            self.assertNotIn("ingest_sequence", descriptor)
             self.assertNotIn("retention", descriptor)
             self.assertNotIn("evidence", descriptor)
         for descriptor, copy in zip(self.record_ids.descriptors[-3:], copies):

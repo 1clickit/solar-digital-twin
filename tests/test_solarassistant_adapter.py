@@ -127,6 +127,9 @@ class SolarAssistantSocAdapterTests(unittest.TestCase):
         self.assertEqual(record["value"]["raw_unit_basis"], "source_supplied")
         self.assertEqual(record["value"]["source_nature"], "measured")
         self.assertEqual(record["value"]["result_nature"], "source_value")
+        self.assertEqual(
+            record["quality"]["categories"], ["direct", "clock_uncertain"]
+        )
         self.assertEqual(record["transformation"], {"id": None, "version": None, "method": None})
         self.assertEqual(record["sequence"]["ingest"], 7)
         self.assertEqual(record["evidence"]["poll_group_id"], "synthetic-poll-001")

@@ -169,7 +169,6 @@ class Esp32GeneratorFrequencyAdapter:
             "transport": metric.source_transport,
             "source_occurrence_id": input_record["source_occurrence_id"],
             "observed_at": input_record["received_at_utc"],
-            "ingest_sequence": ingest_sequence,
         }
         observation_id = context.observation_id_provider.observation_id_for(
             deepcopy(observation_descriptor)
@@ -368,7 +367,7 @@ class Esp32GeneratorFrequencyAdapter:
             "validity": "valid",
             "capability": "supported",
             "quality": {
-                "categories": ["direct", "clock_uncertain"],
+                "categories": ["direct", "normalized", "clock_uncertain"],
                 "reasons": [
                     "source_time_absent",
                     *([state_reason] if state_reason is not None else []),

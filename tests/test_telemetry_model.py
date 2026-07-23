@@ -164,8 +164,14 @@ class TelemetryModelTests(unittest.TestCase):
                     "id": "esp32.esphome.sensor-01_gen_frequency.unit",
                     "version": "1",
                 },
+                "result_nature": "normalized_source_value",
             }
         )
+        esp32["quality"]["categories"] = [
+            "direct",
+            "normalized",
+            "clock_uncertain",
+        ]
         esp32["evidence"]["source_fields"] = {
             "id": "sensor-01_gen_frequency",
             "name": "01 GEN Frequency",
@@ -183,6 +189,14 @@ class TelemetryModelTests(unittest.TestCase):
         mixed = deepcopy(esp32)
         mixed["value"]["raw_unit_basis"] = "source_supplied"
         self.assert_reason(mixed, "invalid_raw_unit_basis")
+
+        mixed = deepcopy(esp32)
+        mixed["value"]["result_nature"] = "source_value"
+        self.assert_reason(mixed, "invalid_result_nature")
+
+        mixed = deepcopy(esp32)
+        mixed["quality"]["categories"] = ["direct", "clock_uncertain"]
+        self.assert_reason(mixed, "invalid_quality")
 
         mixed = deepcopy(self.record)
         mixed["source"]["system"] = "esp32"

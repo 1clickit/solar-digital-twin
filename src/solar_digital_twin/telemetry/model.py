@@ -365,7 +365,10 @@ def _validate_root(record: Mapping[str, Any]) -> None:
         _fail("invalid_capability")
     quality = _mapping(record.get("quality"), "invalid_quality")
     _require_fields(quality, ("categories", "reasons"), "incomplete_root_quality")
-    if quality.get("categories") != ["direct", "clock_uncertain"]:
+    expected_quality_categories = ["direct", "clock_uncertain"]
+    if metric.result_nature == "normalized_source_value":
+        expected_quality_categories = ["direct", "normalized", "clock_uncertain"]
+    if quality.get("categories") != expected_quality_categories:
         _fail("invalid_quality")
     expected_quality_reasons = ["source_time_absent"]
     if expected_reason is not None:

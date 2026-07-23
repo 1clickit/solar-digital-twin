@@ -597,10 +597,18 @@ mapping, receipt-only time, and unrestricted finite numeric preservation.
 `evidence.source_fields` preserves the exact separate `value` and `state`.
 Explicit source-occurrence identity keeps equal-timestamp events distinct,
 while raw/current/conservative copies share one observation ID and retain
-distinct record IDs and copy provenance. The minimal validator now dispatches
-only exact registered SolarAssistant and ESP32 root profiles. Thirty-three
-focused telemetry tests and all 251 offline repository tests passed. This does
-not implement the later collapse detector or production binding.
+distinct record IDs and copy provenance even when their stream-local ingest
+positions differ; ingest order is excluded from the observation-ID descriptor
+and remains on each canonical record. Adapter-specified Hz is classified as
+`normalized_source_value` with quality categories
+`direct`, `normalized`, and `clock_uncertain`, while the root product and null
+transformation metadata remain unchanged. The minimal validator dispatches only
+exact registered SolarAssistant and ESP32 root profiles. These two review
+findings are corrected, and 33 focused telemetry tests plus all 251 offline
+repository tests passed. The implementation remains pending independent
+ChatGPT/owner review and is not owner-accepted. This does not implement the
+later collapse detector or production binding; production gate 16 remains
+Deferred.
 
 Still deferred:
 

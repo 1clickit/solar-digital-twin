@@ -662,8 +662,11 @@ Refresh command:
 ## Current Restrictions
 
 - The synthetic ESP32 generator-frequency root adapter is implemented and
-  offline-validated, but remains pending independent ChatGPT/owner review and
-  is not owner-accepted. Production gate 16 remains Deferred.
+  offline-validated. Review corrections removed stream-local ingest order from
+  semantic observation identity and classified adapter-specified Hz as
+  `normalized_source_value` with normalized quality. It remains pending
+  independent ChatGPT/owner review and is not owner-accepted. Production gate
+  16 remains Deferred.
 - The next task is independent repository review only. This state document
   does not authorize further adapter implementation, installation, user/group
   or permission changes, daemon reload, unit copying, service action, live
