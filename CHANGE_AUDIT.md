@@ -1511,3 +1511,34 @@ or runtime change.
 - **Publication:** Planned subject `Correct ESP32 frequency adapter semantics`;
   one normal fast-forward push to `origin/main` is authorized after final
   safeguards.
+
+## 2026-07-23T17:03:21Z — Accept synthetic ESP32 frequency adapter
+
+- **Owner acceptance:** After independent ChatGPT review, Chris explicitly
+  owner-accepted the corrected synthetic ESP32 generator-frequency adapter
+  sequence: `64949db0ec5b65443679fa3a05c744d820274e81` (`Add synthetic
+  ESP32 frequency adapter`) and
+  `efa6fe453bc2b0184aba7f235bf830f89bb85aa0` (`Correct ESP32 frequency
+  adapter semantics`).
+- **Review and validation:** Review confirmed exact registry/source/lineage,
+  lossless raw `value` and `state`, unrestricted finite values, versioned
+  adapter-specified Hz normalization, source-occurrence/copy identity,
+  strict cross-source validation, unchanged SolarAssistant behavior, and no
+  operational I/O. All 33 focused telemetry tests and all 251 offline tests,
+  compilation, diff checks, and repository health passed for the accepted
+  implementation sequence.
+- **Scope and boundary:** Documentation only. Acceptance closes the synthetic
+  offline adapter milestone and does not grant production IDs or binding,
+  storage, historical adaptation, collector/retention, runtime, service,
+  device, firmware, network, evidence, database, portal, Home Assistant,
+  weather, or collapse-detection authority. Production gate 16 remains
+  Deferred.
+- **Next milestone:** Advance to source-neutral solar-collapse event
+  specification and the unresolved prerequisite for exact SolarAssistant
+  solar-production trigger identity; do not substitute the ambiguous aggregate
+  AC-use/load field or contact live sources in this work unit.
+- **Publication and recovery:** Planned subject `Accept synthetic ESP32
+  frequency adapter`; one normal fast-forward push to `origin/main` is
+  authorized after documentation checks. Recovery is a normal revert of this
+  acceptance documentation commit or the applicable implementation/correction
+  commit; no operational rollback applies.

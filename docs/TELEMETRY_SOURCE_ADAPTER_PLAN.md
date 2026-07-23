@@ -457,9 +457,9 @@ Qualified Pass and makes no readiness claim.
 
 Every source and producer remains **Deferred** for production binding. Most
 canonical adapters and their required evidence do not yet exist. The selected
-SolarAssistant slice is now implemented and offline-tested with
-synthetic fixtures, but remains Deferred until the implementation is
-independently reviewed and accepted and production binding is separately
+SolarAssistant combined-SOC and ESP32 generator-frequency slices are
+implemented, offline-tested, independently reviewed, and owner-accepted.
+Production gate 16 remains Deferred until production binding is separately
 approved. Other source adapters remain unimplemented.
 
 Known likely qualifications must remain visible during later evaluation: EG4
@@ -587,9 +587,11 @@ applies.
 
 ## 13. Deferred decisions and milestone sequence
 
-The synthetic ESP32 generator-frequency root adapter is implemented and
-offline-validated but remains pending independent ChatGPT/owner review and is
-not owner-accepted. It adds exact entity `sensor-01_gen_frequency`, canonical
+The synthetic ESP32 generator-frequency root adapter is implemented,
+independently reviewed, and owner-accepted in commits
+`64949db0ec5b65443679fa3a05c744d820274e81` and
+`efa6fe453bc2b0184aba7f235bf830f89bb85aa0`. It adds exact entity
+`sensor-01_gen_frequency`, canonical
 metric `esp32.esphome.forensic_probe.generator_frequency`, ESP32 forensic
 identity, ESPHome namespace, HTTP-SSE transport, adapter-specified versioned Hz
 mapping, receipt-only time, and unrestricted finite numeric preservation.
@@ -605,10 +607,9 @@ and remains on each canonical record. Adapter-specified Hz is classified as
 transformation metadata remain unchanged. The minimal validator dispatches only
 exact registered SolarAssistant and ESP32 root profiles. These two review
 findings are corrected, and 33 focused telemetry tests plus all 251 offline
-repository tests passed. The implementation remains pending independent
-ChatGPT/owner review and is not owner-accepted. This does not implement the
-later collapse detector or production binding; production gate 16 remains
-Deferred.
+repository tests passed. Acceptance closes only this synthetic offline slice;
+it does not make the adapter production-ready, implement the later collapse
+detector, or authorize production binding. Production gate 16 remains Deferred.
 
 Still deferred:
 

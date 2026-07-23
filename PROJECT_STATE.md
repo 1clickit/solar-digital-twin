@@ -664,11 +664,17 @@ Refresh command:
 - The synthetic ESP32 generator-frequency root adapter is implemented and
   offline-validated. Review corrections removed stream-local ingest order from
   semantic observation identity and classified adapter-specified Hz as
-  `normalized_source_value` with normalized quality. It remains pending
-  independent ChatGPT/owner review and is not owner-accepted. Production gate
-  16 remains Deferred.
-- The next task is independent repository review only. This state document
-  does not authorize further adapter implementation, installation, user/group
+  `normalized_source_value` with normalized quality. Independent ChatGPT review
+  passed, and Chris explicitly owner-accepted the corrected sequence
+  `64949db0ec5b65443679fa3a05c744d820274e81` followed by
+  `efa6fe453bc2b0184aba7f235bf830f89bb85aa0`. Production gate 16 remains
+  Deferred.
+- The next milestone is source-neutral solar-collapse event specification and
+  resolution of the prerequisite for identifying the exact SolarAssistant
+  solar-production trigger metric. The tracked battery-only collector does not
+  establish that metric, and the ambiguous aggregate AC-use/load field must not
+  be substituted. This state document does not authorize detector
+  implementation, live inventory/access, installation, user/group
   or permission changes, daemon reload, unit copying, service action, live
   contact, firmware change, capture, credential, evidence, database/schema,
   portal, Home Assistant, or network change
