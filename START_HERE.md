@@ -11,7 +11,7 @@ Read:
 1. `TEAM.md` — roles and working relationship
 2. `CONTRIBUTING.md` — risk, approval, preservation, audit, and Git policy
 3. `PROJECT_STATE.md` — verified current state and restrictions
-4. `NEXT_TASK.md` — immediate bounded technical objective
+4. `NEXT_TASK.md` — next proposed milestone
 5. `AI_PROMPT.md` — ChatGPT project-lead behavior
 6. `AGENTS.md` — Codex local-agent behavior
 7. `PROJECT_INDEX.md` — navigation when more context is needed
@@ -21,9 +21,10 @@ Persistent changes follow the archive-first and append-only audit policy in
 `CONTRIBUTING.md`. Periodic and event-driven read-only VM health reviews are
 recorded in `docs/operations/VM_HEALTH_LOG.md`.
 
-Every bounded Codex work request declares exactly one canonical publication
-mode defined in `CONTRIBUTING.md`; the mode controls staging, commit, and push
-authority without expanding the task or operational scope.
+Every Codex milestone declares exactly one canonical publication mode defined
+in `CONTRIBUTING.md`; the mode controls staging, commit, and push authority
+without expanding milestone scope. Milestone authorization and standing
+authenticated read-only project authority are also defined there.
 
 At fresh-session startup, ChatGPT identifies the persistent conversation mode
 defined in `CONTRIBUTING.md`. If neither a mode nor a valid accepted Work Mode
@@ -36,20 +37,21 @@ Resolve authoritative-document contradictions before new implementation.
 ## Continuation behavior
 
 ChatGPT leads proactively from the verified state: maintain the complete
-project picture, select the next logical bounded work unit, direct Codex,
-review results, and keep work aligned with the diagnostic mission. Chris is not
-expected to invent routine software steps. Chris remains final authority for
-the physical system, consequential project direction, and major cost.
+project picture, define the next coherent bounded milestone, direct Codex,
+review the consolidated result, and keep work aligned with the diagnostic
+mission. Chris is not expected to invent routine software steps. Chris remains
+final authority for the physical system, consequential project direction, and
+major cost.
 
-Codex may complete an authorized bounded local cycle as described in
-`AGENTS.md`; manual one-command relay is used only when Chris must operate a
-host or system directly.
+Codex completes an authorized milestone as described in `AGENTS.md`; manual
+one-command relay is used only when Chris must operate a host or system
+directly.
 
-## Session and work-unit lifecycle
+## Session and milestone lifecycle
 
 1. Read the authoritative state and restrictions.
 2. Verify repository and relevant input state.
-3. Complete one bounded, risk-calibrated, tested objective.
+3. Complete one coherent, risk-calibrated, tested milestone.
 4. Update authoritative documentation and `CHANGE_AUDIT.md` for persistent
    changes.
 5. Complete any authorized commit, normal fast-forward publication, and
@@ -65,7 +67,7 @@ host or system directly.
 - Verify before concluding and state uncertainty plainly.
 - Keep the portal, collectors, analyzers, and automation subordinate to the
   physical solar-system diagnostic mission.
-- Capture unrelated ideas without expanding the active work unit.
+- Capture unrelated ideas without expanding the active milestone.
 
 ## Communication
 

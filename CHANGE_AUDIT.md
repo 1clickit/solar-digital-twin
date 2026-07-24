@@ -1542,3 +1542,114 @@ or runtime change.
   authorized after documentation checks. Recovery is a normal revert of this
   acceptance documentation commit or the applicable implementation/correction
   commit; no operational rollback applies.
+
+## 2026-07-23T17:23:46Z — Finalize source-neutral solar-collapse event plan
+
+- **Actor and authorization:** ChatGPT-directed Codex under Chris's bounded
+  documentation/planning-only authorization with publication mode
+  `no-commit-or-push`; all changes remain unstaged for review.
+- **Repository conclusion:** Tracked approved SolarAssistant material
+  establishes the battery-only `GET /api/v1/metrics` family and combined-SOC
+  slice but not an exact AC-coupled solar-production topic, scope, unit, sign,
+  quantity, exclusions, state behavior, or provenance. Trigger binding remains
+  `solar_production_trigger_metric`; no ambiguous aggregate field was
+  substituted. One later read-only inventory and narrowly sanitized candidate
+  fixture are proposed but not authorized.
+- **Specification:** Refined
+  `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md` as the single detailed
+  authority. Before this planning work, Chris replaced the earlier
+  approximately 250 W research default with a 1,500 W immediate two-minute
+  median requirement for creating a new primary episode. Valid lower-baseline
+  declines remain subthreshold observations, while lower-power recovery and
+  relapse remain evidence inside an already qualified episode. The threshold
+  is not a physical, safety, equipment, manufacturer, or regulatory limit.
+- **Scope and status:** Updated `PROJECT_STATE.md`, `NEXT_TASK.md`,
+  `docs/SOLARASSISTANT_TELEMETRY_PLAN.md`, and
+  `docs/PORTAL_UI_DESIGN.md` for the unresolved prerequisite, independent
+  review task, and versioned 1,500 W portal default. No source, test, fixture,
+  collector, retention, evidence, storage, runtime, service, device,
+  credential, network, detector, or portal implementation changed or was
+  accessed. Production gate 16 remains Deferred.
+- **Validation and recovery:** Repository-local documentation checks include
+  diff whitespace, repository health/reference checks, credential-pattern and
+  exact-file review, and searches for obsolete active threshold defaults and
+  low-output qualifying examples. Recovery is a normal revert of a future
+  documentation commit; no operational rollback applies.
+
+## 2026-07-23T20:15:32Z — Adopt milestone authorization governance draft
+
+- **Decision:** Chris adopted coherent milestone authorization in place of
+  routine small-step approval. One bounded milestone approval covers every
+  explicitly included design, implementation, validation, correction,
+  documentation, analysis, operational, and publication activity through
+  completion, while consequential owner decisions and protected boundaries
+  remain gated.
+- **Read-only and credential policy:** Added task-local standing authenticated
+  read-only authority using existing approved credentials/runtime identities,
+  including behaviorally read-only use of a broader-capability credential when
+  necessary. Non-disruption, least exposure, limited authentication attempts,
+  protected temporary handling, sanitized access records, and strict
+  public/accidental-disclosure prevention remain mandatory.
+- **Boundaries and workflow:** Preserved immediate owner gates for public/WAN
+  exposure, physical/safety control, inverter/battery configuration,
+  destructive evidence/database/Git activity, credential disclosure/movement/
+  permission weakening, major cost, and consequential architecture. Added
+  exact known-dirty-tree handling, milestone-level review, and either one final
+  commit or an explicitly authorized bounded logical series followed by one
+  normal push.
+- **Files and transitional state:** Governance edits changed
+  `CONTRIBUTING.md`, `AGENTS.md`, `AI_PROMPT.md`, `TEAM.md`, and
+  `START_HERE.md`, plus this append-only entry. The six-file solar-collapse
+  planning draft was preserved as the known pre-existing unstaged state; its
+  five other files were not edited during governance work.
+- **Operational/publication boundary and recovery:** No credential, live
+  source, protected runtime, device, service, database, evidence, or other
+  operational access occurred. Nothing was staged, committed, or pushed.
+  After eventual publication, recovery is a normal Git revert of the
+  governance commit; no operational rollback applies.
+
+## 2026-07-24T04:05:24Z — Plan reusable solar-collapse calibration
+
+- **Owner decisions and architecture:** Chris retained the owner-selected
+  1,500 W immediate two-minute median for a new primary episode and required a
+  reusable production-shaped calibration path. Canonical append-only
+  collection is separate from non-mutating rerunnable analysis; pilot,
+  calibration, reanalysis, shadow validation, and production forensics reuse
+  the same source adapters, evidence, lifecycle, checkpoint, weather,
+  reporting, prompt, and portal foundations.
+- **Intervals and learning:** Analysis supports one through 30 days with
+  convenient one-, three-, seven-, 14-, and 30-day selections; the initial
+  pilot is approximately three days and must not silently overrun. Calibration
+  seeks clear and variable-weather conditions, uses robust distributions, and
+  excludes suspected failures from normal-envelope training without deleting
+  them from forensic evidence.
+- **Context and checkpoints:** KVBT begins with the pilot as nearby ambient
+  context approximately 0.5 to 1 kilometre away, never an electrical veto or
+  panel irradiance sensor. Volcast is optional and non-blocking. Durable
+  checkpoints occur at least every five minutes and on pause/stop/completion,
+  preserving run state, per-source success, counts, gaps, freshness, storage,
+  configuration, candidates, and interruption history.
+- **Recovery, portal, and prompts:** Defined explicit run lifecycle,
+  pause/resume/stop, incomplete-run and partial-report behavior, and honest
+  unavailable interruption gaps. The planned LAN-only unprivileged portal
+  reuses existing architecture for narrow lifecycle, checkpoint, reporting,
+  interval, threshold-comparison, and sanitized prompt controls without shell,
+  credential, raw authenticated response, device control, or WAN access.
+- **Trigger and threshold status:** Exact SolarAssistant AC-coupled production
+  remains **Conclusion B — Unresolved**; no friendly name, Home Assistant
+  entity, or ambiguous AC-use/load field was substituted. Standing
+  authenticated read-only authority may support the next separately
+  owner-authorized inventory. Threshold recommendations remain versioned and
+  require owner acceptance; lower-power in-episode recovery/relapse and
+  subthreshold preservation remain unchanged.
+- **Files, validation, boundary, and recovery:** Refined
+  `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`,
+  `docs/SOLARASSISTANT_TELEMETRY_PLAN.md`,
+  `docs/PORTAL_UI_DESIGN.md`, `PROJECT_STATE.md`, `NEXT_TASK.md`,
+  `SESSION_END.md`, `docs/operations/VM_HEALTH_LOG.md`, and this audit.
+  Repository-local documentation, reference, disclosure, threshold, role, and
+  diff checks apply before publication. No credential, live source, protected
+  runtime, device, service, timer, evidence, database, collector, retention,
+  deployment, capture, network, or portal operation occurred. Publication uses
+  the authorized normal commit plan and one fast-forward push; repository
+  recovery is a normal Git revert with no operational rollback.

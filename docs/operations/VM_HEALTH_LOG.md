@@ -65,7 +65,7 @@ follow `CONTRIBUTING.md`; when uncertain, archive rather than delete.
 
 ## No automatic remediation
 
-The review is read-only unless a separate bounded work unit authorizes a
+The review is read-only unless an authorized milestone explicitly includes a
 corrective action. It must not automatically delete or rotate unique evidence,
 stop or restart services, change retention, move databases, resize disks,
 restart the VM, or change runtime configuration.

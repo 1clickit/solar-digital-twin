@@ -197,10 +197,50 @@ thresholds.
 
 Initial displayed research defaults are more than 30 seconds near zero, a
 2-minute pre-event window, a 20-minute post-collapse window, approximately
-250 W minimum baseline, approximately 90% collapse, and approximately 50 W
-near-zero ceiling. They are adjustable analysis parameters, not proven
-physical limits. Controls must not alter collectors, erase evidence, rewrite
+90% collapse, approximately 50 W near-zero ceiling, and:
+
+`Minimum pre-event production: 1,500 W`
+
+The immediate valid two-minute median must meet that minimum for a new primary
+episode. Lower-baseline declines remain versioned subthreshold observations.
+After an episode qualifies, lower-power recovery, staged reconnects, and
+relapses remain visible and are not subject to a new 1,500 W floor. These are
+adjustable, versioned research parameters, not proven physical, safety,
+equipment, or regulatory limits. Reanalysis under another threshold set must
+not rewrite evidence or change the meaning of results produced under the
+1,500 W default. Controls must not alter collectors, erase evidence, rewrite
 historical records, or imply causation.
+
+### Reusable calibration workspace
+
+The future LAN-only, unprivileged calibration workspace reuses the portal
+architecture on `solardt`; it is not a throwaway pilot UI. It supports
+`inventory`, `pilot`, `calibration`, `shadow`, `production`, and `reanalyze`
+modes through production-shaped lifecycle, checkpoint, source-health,
+reporting, and analysis interfaces.
+
+Display run ID and lifecycle state; mode and selected one-to-30-day interval;
+start/intended end and elapsed time; latest five-minute durable checkpoint;
+source health/freshness and last success; sample/invalid/rejected counts; gaps;
+storage use/growth; resolved SolarAssistant production when available; trusted
+SolarAssistant/JK BMS SOC; ESP32 forensic and EG4 comparison values; KVBT
+context; optional Volcast context; primary and subthreshold candidates;
+recovery/relapse activity; and pause/interruption history.
+
+Planned narrow controls are Start, Pause, Resume, Stop, Checkpoint now,
+partial/final report, rerun analysis, interval selection, threshold-version
+comparison, and sanitized ChatGPT evaluation/troubleshooting prompt generation.
+They must not expose a shell, arbitrary commands, unrestricted service control,
+credentials, authenticated raw responses, device/inverter/battery controls, or
+WAN access.
+
+Evaluation prompts summarize versioned run, interval, source, cadence,
+completeness, candidate, recovery, KVBT, optional Volcast, question, and safe
+artifact-reference information. Troubleshooting prompts summarize run state,
+intended operation, checkpoint/source success, freshness, sanitized errors,
+storage, interruption/pause history, growth, and the exact objective. Neither
+prompt may contain secrets, authorization headers, cookies, credential-bearing
+URLs, complete authenticated responses, or secret-bearing output.
 
 ## Complete Source-Data Tabs
 

@@ -51,6 +51,30 @@ Identifying it requires a separate sanitized fixture or authorized source
 inventory. Do not substitute the qualified EG4 aggregate AC-use/load display
 field described below.
 
+Tracked approved material does not currently establish that trigger binding.
+The event plan therefore uses `solar_production_trigger_metric` and specifies
+the smallest later proposal: one separately authorized read-only
+`GET /api/v1/metrics` inventory, a narrowly sanitized candidate fixture, and
+independent semantic/owner review. A single response is sufficient only if it
+unambiguously establishes topic, scope, unit, sign, instantaneous AC-coupled
+production meaning, exclusions, state/time behavior, and provenance; otherwise
+any short known-state comparison requires separate authorization and must stop
+if ambiguity remains.
+
+The next owner-authorized implementation milestone may use standing
+authenticated read-only authority for that inventory through the approved
+runtime identity. It must minimize requests and response volume, stop after
+limited authentication failures, avoid controls/writes, keep the full
+authenticated response outside Git, and create only the narrowly sanitized
+candidate fixture needed for review. Exact trigger acceptance remains a
+milestone gate; unresolved semantics may remain deferred without substituting
+another field.
+
+Once resolved, the trigger adapter must feed the reusable collection/analysis
+architecture in `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md`. Pilot collection
+uses canonical observations and durable five-minute run checkpoints; interval
+analysis remains rerunnable for one through 30 days without recollection.
+
 ## Source
 
 - host: `192.168.3.12`

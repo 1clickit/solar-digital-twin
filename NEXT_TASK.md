@@ -2,9 +2,8 @@
 
 ## Objective
 
-Finalize the source-neutral solar-collapse event specification and resolve the
-prerequisite for identifying the exact SolarAssistant solar-production trigger
-metric, without implementing detection or authorizing operational access.
+Implement and launch the reusable solar-collapse calibration pilot framework
+under one complete owner-authorized milestone.
 
 ## Accepted baseline
 
@@ -13,62 +12,62 @@ SolarAssistant combined-SOC adapter are independently reviewed and
 owner-accepted. SolarAssistant is the intended initial collapse-trigger
 authority; ESP32 and EG4 remain corroborating or contradictory evidence.
 
-The tracked battery-only SolarAssistant collector does not establish the exact
-native solar-production metric. The ambiguous aggregate AC-use/load field must
-not be substituted, and metric identity must not be invented or inferred.
+The source-neutral event/calibration plan preserves a 1,500 W immediate
+two-minute median for new primary episodes, subthreshold observations below
+that floor, and lower-power recovery/relapse evidence inside an already
+qualified episode. Collection and analysis are separate, reusable,
+production-shaped layers. Analysis supports one through 30 days; the initial
+pilot is approximately three days; KVBT begins with the pilot; Volcast is
+optional; and five-minute durable checkpoints support interruption recovery.
 
-## Planning and specification task
+The exact SolarAssistant production trigger remains **Conclusion B —
+Unresolved**. No friendly display name, Home Assistant entity, or ambiguous
+aggregate AC-use/load field may be substituted.
 
-First inspect whether an existing approved synthetic or sanitized repository
-fixture establishes the exact SolarAssistant solar-production native metric
-and its semantics. If it does not, specify the smallest separately
-authorizable inventory or sanitized-fixture work required to identify and
-semantically validate that metric.
+## Milestone deliverables
 
-Keep the source-neutral event specification usable while the trigger metric is
-unresolved. Preserve:
+The future milestone should include:
 
-- meaningful established production followed by an abrupt relative decline to
-  zero or near zero;
-- qualification for more than 30 seconds, with the detector armed through
-  sunset;
-- a two-minute pre-event and twenty-minute post-collapse window;
-- relapse resetting the twenty-minute observation period, while continuous
-  zero does not repeatedly create new collapses;
-- trusted SolarAssistant/JK BMS SOC below 98% as the research condition;
-- ESP32 and EG4 as corroborating or contradictory evidence;
-- Volcast, KVBT, sunrise/sunset, and NWS alerts as context only; and
-- no causal conclusion.
+- bounded authenticated read-only SolarAssistant metric inventory through the
+  approved runtime identity, minimum requests, and a narrowly sanitized fixture;
+- independent acceptance or explicit deferral of exact trigger binding;
+- canonical reusable source adapters and append-only evidence;
+- run manifests, lifecycle, pause/resume/stop, and five-minute checkpoints;
+- crash, source, server, and network interruption recovery;
+- rerunnable one-to-30-day interval and threshold-version analysis;
+- KVBT collection from pilot start and optional non-blocking Volcast context;
+- calibration recommendations with candidate impacts and confidence;
+- LAN-only unprivileged status/control portal using the existing architecture;
+- sanitized ChatGPT evaluation and troubleshooting prompts;
+- focused/full offline tests, disclosure checks, and repository health;
+- explicitly bounded runtime installation/deployment and launch of the
+  approximately three-day pilot;
+- rollback/recovery, documentation, audit, commit, push, and verification.
 
-## Acceptance gates
-
-- The exact trigger metric is either established from already approved
-  repository material or remains explicitly unresolved.
-- Any needed follow-up inventory or sanitized fixture is narrowly specified,
-  separately authorizable, read-only, and provenance-preserving.
-- Trigger authority, event state transitions, qualification, relapse, window,
-  source-disagreement, missing-data, and contextual-source rules are exact and
-  source-neutral.
-- Risks of metric ambiguity, stale or missing telemetry, gradual irradiance
-  change, sunset, source outage, copied evidence, and false causal inference
-  remain explicit.
-- Independent review confirms no operational access or detector implementation
-  was silently authorized.
+The milestone request must state exact source scope, duration, checkpointing,
+stop behavior, storage limits, runtime actions, rollback, publication plan, and
+owner gates. Standing authenticated read-only authority covers the bounded
+inventory but not deployment or persistent collection by itself.
 
 ## Scope
 
-This is planning/specification only. Do not contact live SolarAssistant or any
-device, inspect operational evidence, implement the detector, select production
-IDs, define storage schema, perform historical analysis, change collectors or
-retention, bind runtime/portal/Home Assistant, add weather integrations, or
-create live controls. Production gate 16, the HA native-ID fallback, and the
-`solardt` reboot/recovery procedure remain Deferred.
+This file proposes the next milestone; it does not authorize execution.
+Do not begin inventory, implementation, installation, deployment, collection,
+portal startup, service/timer work, evidence/database access, or device contact
+until Chris approves a complete Work Mode milestone. Production classification
+and threshold changes remain owner-gated. Public/WAN exposure, device control,
+firmware, inverter/battery configuration, destructive evidence/database work,
+Home Assistant binding, and the deferred `solardt` reboot/recovery procedure
+remain outside the proposed pilot.
 
 ## Success
 
-Success is an independently reviewable source-neutral specification plus an
-honest resolution path for the trigger-metric prerequisite. Recovery is a
-normal revert of the documentation commit; no operational rollback applies.
+Success is a reusable, tested, installed, recoverable framework; an honestly
+accepted or deferred trigger binding; a launched approximately three-day pilot
+with five-minute checkpoints; visible LAN-only status and narrow controls; and
+published documentation sufficient for independent milestone review. The
+pilot must stop at its configured end and must preserve partial results and
+interruption gaps without coercing them to zero.
 
 ## Deferred Post-Project Investigations
 

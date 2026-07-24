@@ -1,10 +1,10 @@
 # Solar Digital Twin - Project State
 
 Current Milestone:
-Synthetic ESP32 generator-frequency root adapter planning accepted
+Reusable solar-collapse calibration planning checkpoint
 
 Next Task:
-Implement and offline-test one synthetic ESP32 generator-frequency root adapter that preserves every finite reported value, without production binding or operational integration.
+Implement and launch the reusable solar-collapse calibration pilot framework under one separately authorized milestone.
 
 ## Repository
 https://github.com/1clickit/solar-digital-twin
@@ -19,25 +19,35 @@ solardt
 main
 
 ## Current Status
-- `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md` is the authoritative accepted
-  direction for investigating abrupt daytime AC-coupled production collapse.
-  SolarAssistant will supply the initial collapse/recovery trigger only after
-  one exact solar-production native metric is identified and reviewed; its
-  current tracked collector is battery-only, so that identity remains a
-  prerequisite rather than a guessed display field. EG4 and ESP32 remain
-  corroborating/explanatory sources, and weather/Volcast remain context. The
-  plan records configurable 2-minute/250 W/90%/50 W/30-second research
-  defaults, 20-minute extendable episodes, recovery observations, competing
-  hypotheses, and a separately gated milestone sequence. Nothing was
-  implemented or operationally authorized by accepting the direction
-- The next bounded telemetry-contract milestone is the synthetic ESP32
-  generator-frequency root adapter. It must preserve every finite value from
-  `sensor-01_gen_frequency`, including reported multiples/harmonics and values
-  near 5,000 or 30,000 Hz, while rejecting malformed, Boolean, nonnumeric, and
-  non-finite input. Firmware frequency thresholds are analytic thresholds, not
-  validity bounds. The 6000XP extreme-value history is operator-reported; the
-  12000XP remains unqualified. Production IDs, live evidence, collectors,
-  storage, portal binding, and runtime remain Deferred
+- `docs/SOLAR_COLLAPSE_FORENSIC_EVENT_PLAN.md` is the single detailed
+  authority for the source-neutral collapse-event specification now pending
+  independent ChatGPT and owner review. A new primary episode requires a valid
+  immediate two-minute baseline median of at least 1,500 W, a decline of at
+  least 90%, arrival near zero, and more than 30 continuous seconds of
+  qualification under the versioned initial research defaults. A valid decline
+  from a lower baseline is a distinct subthreshold observation, not a primary
+  episode. Once an episode qualifies, lower-power reconnect, recovery, staged
+  return, and relapse evidence remains in that episode; 1,500 W is not a
+  recovery or relapse floor and is not a physical, safety, equipment, or
+  regulatory limit
+- The same authority now defines a reusable production-shaped calibration
+  architecture: canonical append-only collection remains separate from
+  rerunnable versioned analysis; intervals span one through 30 days with an
+  approximately three-day pilot; checkpoints occur at least every five
+  minutes; interruption gaps remain unavailable rather than zero; KVBT is
+  nearby context from the start; Volcast is optional; and LAN-only lifecycle,
+  report, threshold-comparison, and sanitized-prompt portal behavior reuses
+  final-system interfaces rather than throwaway collectors or storage
+- SolarAssistant remains the intended initial trigger authority, but tracked
+  approved repository material establishes only the battery-oriented
+  `GET /api/v1/metrics` collector/allowlist and combined-SOC synthetic slice.
+  It does not establish an exact AC-coupled solar-production native metric,
+  scope, sign, quantity semantics, exclusions, or state behavior. The logical
+  `solar_production_trigger_metric` binding therefore remains unresolved; no
+  friendly name, Home Assistant field, or ambiguous aggregate AC-use/load
+  value may be substituted. The plan proposes, but does not authorize, one
+  minimal read-only inventory and narrowly sanitized candidate fixture,
+  followed by independent owner review
 - `solar-digital-twin.telemetry-observation.v1` is the owner-accepted
   authoritative common telemetry observation and provenance contract in
   `docs/TELEMETRY_OBSERVATION_CONTRACT.md`. The six review findings concerning
@@ -264,7 +274,7 @@ main
 - Strategic-review observations about SolarAssistant append behavior,
   retained-output failure handling, and other static collector details are
   candidates only. They are not implementation requirements until verified
-  locally in their own bounded work unit
+  locally in an authorized milestone
 - HA directly integrates `EG4 Forensic Probe v3` at `192.168.3.13`, with
   approximately 21 entities; an old frequency dashboard has stale/missing
   references. Do not remove it until reboot behavior and the preferred
@@ -669,20 +679,21 @@ Refresh command:
   `64949db0ec5b65443679fa3a05c744d820274e81` followed by
   `efa6fe453bc2b0184aba7f235bf830f89bb85aa0`. Production gate 16 remains
   Deferred.
-- The next milestone is source-neutral solar-collapse event specification and
-  resolution of the prerequisite for identifying the exact SolarAssistant
-  solar-production trigger metric. The tracked battery-only collector does not
-  establish that metric, and the ambiguous aggregate AC-use/load field must not
-  be substituted. This state document does not authorize detector
-  implementation, live inventory/access, installation, user/group
-  or permission changes, daemon reload, unit copying, service action, live
-  contact, firmware change, capture, credential, evidence, database/schema,
-  portal, Home Assistant, or network change
+- The next proposed milestone is implementation and launch of the reusable
+  solar-collapse calibration pilot framework. It may include one bounded
+  authenticated read-only SolarAssistant inventory, sanitized fixture and
+  accepted/deferred trigger binding, reusable adapters, lifecycle/manifests,
+  five-minute checkpoints, interruption recovery, one-to-30-day rerunnable
+  analysis, KVBT, optional Volcast, recommendations, LAN-only portal,
+  sanitized prompts, tests, installation/deployment, and an approximately
+  three-day pilot only when that complete operational milestone is separately
+  owner-authorized. The tracked battery-only collector still does not establish
+  the exact trigger, and ambiguous AC-use/load must not be substituted
 - Production IDs, storage, historical binding, live-device/runtime binding,
   portal work, weather integration, and collapse detection remain unauthorized
 - Do not change EG4 collector behavior, SQLite schema, Home Assistant
   integration, production retention policy, or other collectors without a new
-  bounded work unit
+  authorized milestone
 
 ## Startup Command
 cd /home/chris/solar-digital-twin
